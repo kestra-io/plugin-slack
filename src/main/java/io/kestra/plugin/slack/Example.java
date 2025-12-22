@@ -1,4 +1,4 @@
-package io.kestra.plugin.templates;
+package io.kestra.plugin.slack;
 
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
