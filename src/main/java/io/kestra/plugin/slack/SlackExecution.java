@@ -21,7 +21,7 @@ import java.util.Map;
 @Schema(
     title = "Send a Slack message with the execution information.",
     description = "The message will include a link to the execution page in the UI along with the execution ID, namespace, flow name, the start date, duration, the final status of the execution, and the last task ID in an execution.\n\n" +
-    "Use this notification task only in a flow that has a [Flow trigger](https://kestra.io/docs/administrator-guide/monitoring#alerting). Don't use this notification task in `errors` tasks. Instead, for `errors` tasks, use the [SlackIncomingWebhook](https://kestra.io/plugins/plugin-notifications/tasks/slack/io.kestra.plugin.notifications.slack.slackincomingwebhook) task."
+    "Use this notification task only in a flow that has a [Flow trigger](https://kestra.io/docs/administrator-guide/monitoring#alerting). Don't use this notification task in `errors` tasks. Instead, for `errors` tasks, use the [SlackIncomingWebhook](https://kestra.io/plugins/plugin-notifications/tasks/slack/io.kestra.plugin.slack.slackincomingwebhook) task."
 )
 @Plugin(
     examples = {
@@ -34,7 +34,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_alert
-                    type: io.kestra.plugin.notifications.slack.SlackExecution
+                    type: io.kestra.plugin.slack.SlackExecution
                     url: "{{ secret('SLACK_WEBHOOK') }}" # format: https://hooks.slack.com/services/xzy/xyz/xyz
                     executionId: "{{trigger.executionId}}"
 
@@ -60,7 +60,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_alert_to_rocket_chat
-                    type: io.kestra.plugin.notifications.slack.SlackExecution
+                    type: io.kestra.plugin.slack.SlackExecution
                     url: "{{ secret('ROCKET_CHAT_WEBHOOK') }}"
                     channel: "#errors"
                     username: "Kestra TEST"

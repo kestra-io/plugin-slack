@@ -47,7 +47,7 @@ import java.net.URI;
 
                 errors:
                   - id: alert_on_failure
-                    type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}" # https://hooks.slack.com/services/xzy/xyz/xyz
                     payload: |
                       {
@@ -64,7 +64,7 @@ import java.net.URI;
 
                 tasks:
                   - id: send_slack_message
-                    type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}"
                     payload: |
                       {
@@ -81,7 +81,7 @@ import java.net.URI;
 
                 tasks:
                   - id: send_slack_message
-                    type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}"
                     payload: |
                       {
@@ -126,7 +126,7 @@ import java.net.URI;
                          country: DE
 
                  - id: send_via_slack
-                   type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+                   type: io.kestra.plugin.slack.SlackIncomingWebhook
                    url: https://kestra.io/api/mock
                    messageText: "Current news from Berlin: {{ outputs.news.outputText }}"
                 """
@@ -139,7 +139,7 @@ import java.net.URI;
                 namespace: company.team
                 tasks:
                   - id: send_rocket_chat_message
-                    type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.SlackIncomingWebhook
                     url: "{{ secret('ROCKET_CHAT_WEBHOOK') }}"
                     payload: |
                       {
