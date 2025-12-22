@@ -1,0 +1,24 @@
+{
+    "channel": "#random",
+    "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": {{ block.text | json }}
+            }
+        },
+        {
+            "type": "section",
+            "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": {{ block.field | json }}
+                }
+            ]
+        },
+        {
+        "type": "divider"
+        }
+    ]
+}

@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack
 name: "slack"
 title: "Slack"
-description: "Plugin Slack for Kestra"
-body: ""
+description: "Tasks that send messages to Slack."
+body: "Provide the Slack webhook URL or bot token with channel/user targets and message text or blocks to post notifications or alerts from Kestra workflows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
