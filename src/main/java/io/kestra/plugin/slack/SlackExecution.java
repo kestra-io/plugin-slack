@@ -80,7 +80,8 @@ import java.util.Map;
                         prefix: true
                 """
         )
-    }
+    },
+    aliases = "io.kestra.plugin.notifications.slack.SlackExecution"
 )
 public class SlackExecution extends SlackTemplate implements ExecutionInterface {
     @Builder.Default

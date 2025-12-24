@@ -174,7 +174,8 @@ import java.net.URI;
                       }
                 """
         ),
-    }
+    },
+    aliases = "io.kestra.plugin.notifications.slack.SlackIncomingWebhook"
 )
 public class SlackIncomingWebhook extends AbstractSlackConnection {
     @Schema(
