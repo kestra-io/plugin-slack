@@ -1,7 +1,6 @@
 @PluginSubGroup(
-    title = "Example plugin",
-    description = "A plugin to show how to build a plugin in Kestra.",
-    categories = PluginSubGroup.PluginCategory.TOOL
+    description = "This sub-group of plugins contains tasks for Slack notifications.",
+    categories = PluginSubGroup.PluginCategory.ALERTING
 )
 package io.kestra.plugin.slack;
 
