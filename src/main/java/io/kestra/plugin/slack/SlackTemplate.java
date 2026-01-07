@@ -23,23 +23,33 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 public abstract class SlackTemplate extends SlackIncomingWebhook {
-    @Schema(title = "Slack channel to send the message to.", description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific channel. "
-            +
-            "For more details, see: [Legacy Webhooks](https://api.slack.com/legacy/custom-integrations/messaging/webhooks#legacy-customizations) and "
-            +
-            "[Current Webhooks](https://api.slack.com/messaging/webhooks).")
+    @Schema(
+        title = "Slack channel to send the message to.",
+        description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific channel. " +
+            "For more details, see: [Legacy Webhooks](https://api.slack.com/legacy/custom-integrations/messaging/webhooks#legacy-customizations) and " +
+            "[Current Webhooks](https://api.slack.com/messaging/webhooks)."
+    )
     @Deprecated
     protected Property<String> channel;
 
-    @Schema(title = "Author of the slack message", description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific username.")
+    @Schema(
+        title = "Author of the slack message",
+        description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific username."
+    )
     @Deprecated
     protected Property<String> username;
 
-    @Schema(title = "Url of the icon to use", description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon URL.")
+    @Schema(
+        title = "Url of the icon to use",
+        description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon URL."
+    )
     @Deprecated
     protected Property<String> iconUrl;
 
-    @Schema(title = "Emoji icon to use", description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon.")
+    @Schema(
+        title = "Emoji icon to use",
+        description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon."
+    )
     @Deprecated
     protected Property<String> iconEmoji;
 
