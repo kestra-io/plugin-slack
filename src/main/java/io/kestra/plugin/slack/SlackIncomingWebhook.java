@@ -1,8 +1,8 @@
 package io.kestra.plugin.slack;
 
-import io.kestra.core.http.HttpRequest;
-import io.kestra.core.http.HttpResponse;
-import io.kestra.core.http.client.HttpClient;
+import com.slack.api.Slack;
+import com.slack.api.SlackConfig;
+import com.slack.api.webhook.WebhookResponse;
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.annotations.PluginProperty;
@@ -18,7 +18,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.net.URI;
+import java.io.IOException;
+import java.util.Map;
+
+import okhttp3.*;
+import org.slf4j.Logger;
 
 @SuperBuilder
 @ToString
@@ -197,64 +201,150 @@ public class SlackIncomingWebhook extends AbstractSlackConnection {
     )
     private Property<String> messageText;
 
-    @Override
-    public VoidOutput run(RunContext runContext) throws Exception {
-        String url = runContext.render(this.url);
-        Object payloadObject = prepareMessage(runContext);
+  @Override
+  public VoidOutput run(RunContext runContext) throws Exception {
+    // Render variables once with 'r' prefix
+    String rUrl = runContext.render(this.url);
+    String rPayloadJson = prepareMessageAsJson(runContext);
+    Logger logger = runContext.logger();
 
-        runContext.logger().debug("Send Slack webhook: {}", payloadObject);
-        try (HttpClient client = new HttpClient(runContext, super.httpClientConfigurationWithOptions())) {
-            HttpRequest.HttpRequestBuilder requestBuilder = createRequestBuilder(runContext)
-                .addHeader("Content-Type", "application/json")
-                .uri(URI.create(url))
-                .method("POST")
-                .body(HttpRequest.JsonRequestBody.builder()
-                    .content(payloadObject)
-                    .build());
+    logger.debug("Send Slack webhook: {}", rPayloadJson);
 
-            HttpRequest request = requestBuilder.build();
+    // Check if custom headers are provided
+    if (this.options != null && this.options.getHeaders() != null) {
+      WebhookResponse response = sendWithCustomHeaders(runContext, rUrl, rPayloadJson);
 
-            HttpResponse<String> response = client.request(request, String.class);
+      logger.debug("Response: code={}, message={}, body={}",
+          response.getCode(), response.getMessage(), response.getBody());
 
-            runContext.logger().debug("Response: {}", response.getBody());
+      if (response.getCode() == 200) {
+        logger.info("Request succeeded");
+      } else {
+        throw new IOException("Slack webhook request failed with status " + response.getCode() +
+            ": " + response.getMessage() + " - " + response.getBody());
+      }
+    } else {
+      Slack slack = createConfiguredSlackInstance(runContext);
+      WebhookResponse response = slack.send(rUrl, rPayloadJson);
 
-            if (response.getStatus().getCode() == 200) {
-                runContext.logger().info("Request succeeded");
-            }
-        }
-        return null;
+      logger.debug("Response: code={}, message={}, body={}",
+          response.getCode(), response.getMessage(), response.getBody());
+
+      if (response.getCode() == 200) {
+        logger.info("Request succeeded");
+      } else {
+        throw new IOException("Slack webhook request failed with status " + response.getCode() +
+            ": " + response.getMessage() + " - " + response.getBody());
+      }
     }
 
-    private Object prepareMessage(RunContext runContext) throws Exception {
-        if (payload != null) {
-            String renderedPayload = runContext.render(payload).as(String.class).orElse(null);
-            return JacksonMapper.ofJson().readTree(renderedPayload);
-        }
+    return null;
+  }
 
-        if (messageText != null) {
-            String renderedMessageText = runContext.render(this.messageText).as(String.class).orElseThrow();
+  private Slack createConfiguredSlackInstance(RunContext runContext) throws Exception {
+    SlackConfig config = new SlackConfig();
 
-            try {
-                // first we try as Json for more flexibility
-                return JacksonMapper.ofJson().readTree(renderedMessageText);
-            } catch (Exception e) {
-                // not valid Json, so proceed with markdown text
-                renderedMessageText = toSlackMrkdwn(renderedMessageText);
-                return JacksonMapper.ofJson().createObjectNode().put("text", renderedMessageText);
-            }
-        }
+    if (options != null) {
+      var rReadTimeout = runContext.render(options.getReadTimeout()).as(java.time.Duration.class).orElse(null);
+      if (rReadTimeout != null) {
+        config.setHttpClientReadTimeoutMillis((int) rReadTimeout.toMillis());
+      }
 
-        throw new IllegalArgumentException("Either 'messageText' or 'payload' must be provided");
+      var rWriteTimeout = runContext.render(options.getReadIdleTimeout()).as(java.time.Duration.class).orElse(null);
+      if (rWriteTimeout != null) {
+        config.setHttpClientWriteTimeoutMillis((int) rWriteTimeout.toMillis());
+      }
+
+      var rCallTimeout = runContext.render(options.getConnectTimeout()).as(java.time.Duration.class).orElse(null);
+      if (rCallTimeout != null) {
+        config.setHttpClientCallTimeoutMillis((int) rCallTimeout.toMillis());
+      }
     }
 
-    private String toSlackMrkdwn(String text) {
-        if (text == null) return null;
-        // for bold text
-        text = text.replaceAll("\\*\\*(.*?)\\*\\*", "*$1*");
-        // for italic text
-        text = text.replaceAll("__(.*?)__", "_$1_");
-        // for links
-        text = text.replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<$2|$1>");
-        return text;
+    return Slack.getInstance(config);
+  }
+
+  private WebhookResponse sendWithCustomHeaders(RunContext runContext, String url, String payloadJson)
+      throws Exception {
+    Map<String, String> rHeaders = runContext.render(this.options.getHeaders())
+        .asMap(String.class, String.class);
+
+    SlackConfig config = new SlackConfig();
+
+    var rReadTimeout = runContext.render(options.getReadTimeout()).as(java.time.Duration.class).orElse(null);
+    if (rReadTimeout != null) {
+      config.setHttpClientReadTimeoutMillis((int) rReadTimeout.toMillis());
     }
+
+    var rWriteTimeout = runContext.render(options.getReadIdleTimeout()).as(java.time.Duration.class).orElse(null);
+    if (rWriteTimeout != null) {
+      config.setHttpClientWriteTimeoutMillis((int) rWriteTimeout.toMillis());
+    }
+
+    var rCallTimeout = runContext.render(options.getConnectTimeout()).as(java.time.Duration.class).orElse(null);
+    if (rCallTimeout != null) {
+      config.setHttpClientCallTimeoutMillis((int) rCallTimeout.toMillis());
+    }
+
+    Slack slack = Slack.getInstance(config);
+
+    OkHttpClient httpClient = slack.getHttpClient().getOkHttpClient();
+
+    Request.Builder requestBuilder = new Request.Builder()
+        .url(url)
+        .post(RequestBody.create(payloadJson, MediaType.parse("application/json; charset=utf-8")));
+
+    if (rHeaders != null) {
+      rHeaders.forEach(requestBuilder::addHeader);
+    }
+
+    Request request = requestBuilder.build();
+
+    try (Response response = httpClient.newCall(request).execute()) {
+      String body = response.body() != null ? response.body().string() : "";
+
+      return WebhookResponse.builder()
+          .code(response.code())
+          .message(response.message())
+          .body(body)
+          .build();
+    }
+  }
+
+  private String prepareMessageAsJson(RunContext runContext) throws Exception {
+    if (payload != null) {
+      String rPayload = runContext.render(payload).as(String.class).orElse(null);
+      Object jsonNode = JacksonMapper.ofJson().readTree(rPayload);
+      return JacksonMapper.ofJson().writeValueAsString(jsonNode);
+    }
+
+    if (messageText != null) {
+      String rMessageText = runContext.render(this.messageText).as(String.class).orElseThrow();
+
+      try {
+        // first we try as Json for more flexibility
+        Object jsonNode = JacksonMapper.ofJson().readTree(rMessageText);
+        return JacksonMapper.ofJson().writeValueAsString(jsonNode);
+      } catch (Exception e) {
+        // not valid Json, so proceed with markdown text
+        String rMessageTextMrkdwn = toSlackMrkdwn(rMessageText);
+        return JacksonMapper.ofJson().writeValueAsString(
+            JacksonMapper.ofJson().createObjectNode().put("text", rMessageTextMrkdwn));
+      }
+    }
+
+    throw new IllegalArgumentException("Either 'messageText' or 'payload' must be provided");
+  }
+
+  private String toSlackMrkdwn(String text) {
+    if (text == null)
+      return null;
+    // for bold text
+    text = text.replaceAll("\\*\\*(.*?)\\*\\*", "*$1*");
+    // for italic text
+    text = text.replaceAll("__(.*?)__", "_$1_");
+    // for links
+    text = text.replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<$2|$1>");
+    return text;
+  }
 }
