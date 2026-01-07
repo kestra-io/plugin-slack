@@ -53,10 +53,15 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
     @Deprecated
     protected Property<String> iconEmoji;
 
-    @Schema(title = "Template to use", hidden = true)
+    @Schema(
+        title = "Template to use",
+        hidden = true
+    )
     protected Property<String> templateUri;
 
-    @Schema(title = "Map of variables to use for the message template")
+    @Schema(
+        title = "Map of variables to use for the message template"
+    )
     protected Property<Map<String, Object>> templateRenderMap;
 
     @SuppressWarnings("unchecked")
@@ -64,39 +69,34 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
     public VoidOutput run(RunContext runContext) throws Exception {
         Map<String, Object> map = new HashMap<>();
 
-        // Render templateUri once with 'r' prefix
-        final var rTemplateUri = runContext.render(this.templateUri).as(String.class);
-        if (rTemplateUri.isPresent()) {
+        final var renderedTemplateUri = runContext.render(this.templateUri).as(String.class);
+        if (renderedTemplateUri.isPresent()) {
             String template = IOUtils.toString(
-                    Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(rTemplateUri.get())),
-                    StandardCharsets.UTF_8);
+                Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(renderedTemplateUri.get())),
+                StandardCharsets.UTF_8
+            );
 
-            String render = runContext.render(template,
-                    templateRenderMap != null ? runContext.render(templateRenderMap).asMap(String.class, Object.class)
-                            : Map.of());
+            String render = runContext.render(template, templateRenderMap != null ?
+                runContext.render(templateRenderMap).asMap(String.class, Object.class) :
+                Map.of()
+            );
             map = (Map<String, Object>) JacksonMapper.ofJson().readValue(render, Object.class);
         }
 
-        // Render all properties once with 'r' prefix - runContext.render is
-        // null-friendly
-        var rChannel = runContext.render(this.channel).as(String.class);
-        if (rChannel.isPresent()) {
-            map.put("channel", rChannel.get());
+        if (runContext.render(this.channel).as(String.class).isPresent()) {
+            map.put("channel", runContext.render(this.channel).as(String.class).get());
         }
 
-        var rUsername = runContext.render(this.username).as(String.class);
-        if (rUsername.isPresent()) {
-            map.put("username", rUsername.get());
+        if (runContext.render(this.username).as(String.class).isPresent()) {
+            map.put("username", runContext.render(this.username).as(String.class).get());
         }
 
-        var rIconUrl = runContext.render(this.iconUrl).as(String.class);
-        if (rIconUrl.isPresent()) {
-            map.put("icon_url", rIconUrl.get());
+        if (runContext.render(this.iconUrl).as(String.class).isPresent()) {
+            map.put("icon_url", runContext.render(this.iconUrl).as(String.class).get());
         }
 
-        var rIconEmoji = runContext.render(this.iconEmoji).as(String.class);
-        if (rIconEmoji.isPresent()) {
-            map.put("icon_emoji", rIconEmoji.get());
+        if (runContext.render(this.iconEmoji).as(String.class).isPresent()) {
+            map.put("icon_emoji", runContext.render(this.iconEmoji).as(String.class).get());
         }
 
         this.payload = Property.ofValue(JacksonMapper.ofJson().writeValueAsString(map));
