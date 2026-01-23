@@ -1,15 +1,10 @@
 package io.kestra.plugin.slack;
 
-import io.kestra.core.exceptions.IllegalVariableEvaluationException;
-import io.kestra.core.http.HttpRequest;
-import io.kestra.core.http.client.configurations.HttpConfiguration;
-import io.kestra.core.http.client.configurations.TimeoutConfiguration;
 import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
-import io.kestra.core.runners.RunContext;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -32,38 +27,6 @@ public abstract class AbstractSlackConnection extends Task implements RunnableTa
     )
     @PluginProperty(dynamic = true)
     protected RequestOptions options;
-
-    protected HttpConfiguration httpClientConfigurationWithOptions() throws IllegalVariableEvaluationException {
-        HttpConfiguration.HttpConfigurationBuilder configuration = HttpConfiguration.builder();
-
-        if (this.options != null) {
-
-            configuration
-                .timeout(TimeoutConfiguration.builder()
-                    .connectTimeout(this.options.getConnectTimeout())
-                    .readIdleTimeout(this.options.getReadIdleTimeout())
-                .build())
-                .defaultCharset(this.options.getDefaultCharset());
-        }
-
-        return configuration.build();
-    }
-
-    protected HttpRequest.HttpRequestBuilder createRequestBuilder(
-        RunContext runContext) throws IllegalVariableEvaluationException {
-
-        HttpRequest.HttpRequestBuilder builder = HttpRequest.builder();
-
-        if (this.options != null && this.options.getHeaders() != null) {
-            Map<String, String> headers = runContext.render(this.options.getHeaders())
-                .asMap(String.class, String.class);
-
-            if (headers != null) {
-                headers.forEach(builder::addHeader);
-            }
-        }
-        return builder;
-    }
 
     @Getter
     @Builder
