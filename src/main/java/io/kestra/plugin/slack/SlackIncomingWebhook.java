@@ -38,7 +38,21 @@ import java.util.Map;
 @Plugin(
     examples = {
         @Example(
-            title = "Send a Slack notification on a failed flow execution.",
+            title = "Send a Slack message via incoming webhook with a text argument with 'messageText' (handles Slack markdown, no escaping needed)",
+            full = true,
+            code = """
+                id: slack_incoming_webhook
+                namespace: company.team
+
+                tasks:
+                  - id: send_slack_message
+                    type: io.kestra.plugin.slack.SlackIncomingWebhook
+                    url: "{{ secret('SLACK_WEBHOOK') }}"
+                    messageText: "text": "Hello from the workflow {{ flow.id }}"
+                """
+        ),
+        @Example(
+            title = "Send a Slack notification on a failed flow execution with `payload`.",
             full = true,
             code = """
                 id: unreliable_flow
@@ -58,23 +72,6 @@ import java.util.Map;
                     payload: |
                       {
                         "text": "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"
-                      }
-                """
-        ),
-        @Example(
-            title = "Send a Slack message via incoming webhook with a text argument.",
-            full = true,
-            code = """
-                id: slack_incoming_webhook
-                namespace: company.team
-
-                tasks:
-                  - id: send_slack_message
-                    type: io.kestra.plugin.slack.SlackIncomingWebhook
-                    url: "{{ secret('SLACK_WEBHOOK') }}"
-                    payload: |
-                      {
-                        "text": "Hello from the workflow {{ flow.id }}"
                       }
                 """
         ),
@@ -101,40 +98,6 @@ import java.util.Map;
                     		}
                     	]
                       }
-                """
-        ),
-        @Example(
-            title = "Send a Slack message with 'messageText' (handles Slack markdown, no escaping needed)",
-            full = true,
-            code = """
-                id: slack_incoming_webhook
-                namespace: company.team
-
-                inputs:
-                 - id: prompt
-                   type: STRING
-                   defaults: Summarize top 5 news from my region.
-
-                tasks:
-                 - id: news
-                   type: io.kestra.plugin.openai.Responses
-                   apiKey: "{{ kv('OPENAI_API_KEY') }}"
-                   model: gpt-4.1-mini
-                   input: "{{ inputs.prompt }}"
-                   toolChoice: REQUIRED
-                   tools:
-                     - type: web_search_preview
-                       search_context_size: low
-                       user_location:
-                         type: approximate
-                         city: Berlin
-                         region: Berlin
-                         country: DE
-
-                 - id: send_via_slack
-                   type: io.kestra.plugin.slack.SlackIncomingWebhook
-                   url: https://kestra.io/api/mock
-                   messageText: "Current news from Berlin: {{ outputs.news.outputText }}"
                 """
         ),
         @Example(
