@@ -48,7 +48,7 @@ import java.util.Map;
                   - id: send_slack_message
                     type: io.kestra.plugin.slack.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}"
-                    messageText: "text": "Hello from the workflow {{ flow.id }}"
+                    messageText: "Hello from the workflow {{ flow.id }}"
                 """
         ),
         @Example(
