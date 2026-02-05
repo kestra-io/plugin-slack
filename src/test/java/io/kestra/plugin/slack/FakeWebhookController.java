@@ -3,10 +3,7 @@ package io.kestra.plugin.slack;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Consumes;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,5 +32,21 @@ public class FakeWebhookController {
         });
 
         return HttpResponse.ok("ok");
+    }
+
+    @Get("/mock/{method}")
+    @Consumes({MediaType.ALL})
+    public HttpResponse<?> mockGet(HttpRequest<?> request, String method, @Body String data) {
+        FakeWebhookController.data = data;
+
+        return HttpResponse.ok(Map.of("ok", "true"));
+    }
+
+    @Post("/mock/{method}")
+    @Consumes({MediaType.ALL})
+    public HttpResponse<?> mockPost(HttpRequest<?> request, String method, @Body String data) {
+        FakeWebhookController.data = data;
+
+        return HttpResponse.ok(Map.of("ok", "true"));
     }
 }

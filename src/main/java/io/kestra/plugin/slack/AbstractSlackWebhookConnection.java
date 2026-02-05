@@ -20,7 +20,7 @@ import java.util.Map;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-public abstract class AbstractSlackConnection extends Task implements RunnableTask<VoidOutput> {
+public abstract class AbstractSlackWebhookConnection extends Task implements RunnableTask<VoidOutput> {
     @Schema(
         title = "Options",
         description = "The options to set to customize the HTTP client"

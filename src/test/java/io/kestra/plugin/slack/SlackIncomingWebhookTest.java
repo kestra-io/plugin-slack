@@ -81,7 +81,7 @@ class SlackIncomingWebhookTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("demo-api-key", "{{demoApiKey}}");
 
-        AbstractSlackConnection.RequestOptions options = AbstractSlackConnection.RequestOptions.builder()
+        AbstractSlackWebhookConnection.RequestOptions options = AbstractSlackWebhookConnection.RequestOptions.builder()
             .headers(new Property<>(headers))
             .build();
 

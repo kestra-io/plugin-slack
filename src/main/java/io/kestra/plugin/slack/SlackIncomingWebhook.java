@@ -10,7 +10,7 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
-import io.kestra.core.serializers.JacksonMapper;
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.EqualsAndHashCode;
@@ -146,7 +146,10 @@ import java.util.Map;
     },
     aliases = "io.kestra.plugin.notifications.slack.SlackIncomingWebhook"
 )
-public class SlackIncomingWebhook extends AbstractSlackConnection {
+public class SlackIncomingWebhook extends AbstractSlackWebhookConnection implements MessagePayloadInterface {
+    protected Property<String> payload;
+    private Property<String> messageText;
+
     @Schema(
         title = "Slack incoming webhook URL",
         description = "Check the <a href=\"https://api.slack.com/messaging/webhooks#create_a_webhook\">Create an Incoming Webhook</a> documentation for more details."
@@ -155,22 +158,12 @@ public class SlackIncomingWebhook extends AbstractSlackConnection {
     @NotEmpty
     private String url;
 
-    @Schema(
-        title = "Slack message payload"
-    )
-    protected Property<String> payload;
-
-    @Schema(
-        title = "Message Text or JSON String",
-        description = "The message content as a raw string. It can be plain text with markdown, or a JSON object. If not a valid JSON object, it is automatically wrapped in `{\"text\": \"...\"}`. This property is ignored if the `payload` property is set."
-    )
-    private Property<String> messageText;
 
     @Override
     public VoidOutput run(RunContext runContext) throws Exception {
         // Render variables once with 'r' prefix
         String rUrl = runContext.render(this.url);
-        String rPayloadJson = prepareMessageAsJson(runContext);
+        String rPayloadJson = MessageService.prepareMessageAsJson(runContext, this.payload, this.messageText);
         Logger logger = runContext.logger();
 
         logger.debug("Send Slack webhook: {}", rPayloadJson);
@@ -264,42 +257,5 @@ public class SlackIncomingWebhook extends AbstractSlackConnection {
         Slack slack = Slack.getInstance(config, httpClient);
 
         return slack.send(url, payloadJson);
-    }
-
-    private String prepareMessageAsJson(RunContext runContext) throws Exception {
-        if (payload != null) {
-            String rPayload = runContext.render(payload).as(String.class).orElse(null);
-            Object jsonNode = JacksonMapper.ofJson().readTree(rPayload);
-            return JacksonMapper.ofJson().writeValueAsString(jsonNode);
-        }
-
-        if (messageText != null) {
-            String rMessageText = runContext.render(this.messageText).as(String.class).orElseThrow();
-
-            try {
-                // first we try as Json for more flexibility
-                Object jsonNode = JacksonMapper.ofJson().readTree(rMessageText);
-                return JacksonMapper.ofJson().writeValueAsString(jsonNode);
-            } catch (Exception e) {
-                // not valid Json, so proceed with markdown text
-                String rMessageTextMrkdwn = toSlackMrkdwn(rMessageText);
-                return JacksonMapper.ofJson().writeValueAsString(
-                    JacksonMapper.ofJson().createObjectNode().put("text", rMessageTextMrkdwn));
-            }
-        }
-
-        throw new IllegalArgumentException("Either 'messageText' or 'payload' must be provided");
-    }
-
-    private String toSlackMrkdwn(String text) {
-        if (text == null)
-            return null;
-        // for bold text
-        text = text.replaceAll("\\*\\*(.*?)\\*\\*", "*$1*");
-        // for italic text
-        text = text.replaceAll("__(.*?)__", "_$1_");
-        // for links
-        text = text.replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<$2|$1>");
-        return text;
     }
 }
