@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +34,8 @@ class SlackExecutionTest extends AbstractSlackTest {
     void flow() throws Exception {
         var execution = runAndCaptureExecution(
             "main-flow-that-fails",
-            "slack"
+            "slack",
+            Map.of("url", embeddedServer.getURL().toString())
         );
 
         String receivedData = waitForWebhookData(() -> FakeWebhookController.data,5000);
@@ -51,7 +53,8 @@ class SlackExecutionTest extends AbstractSlackTest {
     void flow_successfullFlowShowLastTaskId() throws Exception {
         var execution = runAndCaptureExecution(
             "main-flow-that-succeeds",
-            "slack-successful"
+            "slack-successful",
+            Map.of("url", embeddedServer.getURL().toString())
         );
 
         String receivedData = waitForWebhookData(() -> FakeWebhookController.data,5000);

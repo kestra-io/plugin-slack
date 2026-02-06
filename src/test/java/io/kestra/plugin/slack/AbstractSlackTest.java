@@ -2,8 +2,10 @@ package io.kestra.plugin.slack;
 
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.models.executions.Execution;
+import io.kestra.core.models.flows.Flow;
 import io.kestra.core.queues.QueueFactoryInterface;
 import io.kestra.core.queues.QueueInterface;
+import io.kestra.core.repositories.FlowRepositoryInterface;
 import io.kestra.core.runners.TestRunnerUtils;
 import io.kestra.core.utils.Await;
 import io.kestra.core.utils.TestsUtils;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.TestInstance;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -37,6 +40,9 @@ public class AbstractSlackTest {
 
     @Inject
     protected ApplicationContext applicationContext;
+
+    @Inject
+    protected FlowRepositoryInterface flowRepository;
 
     @Inject
     @Named(QueueFactoryInterface.EXECUTION_NAMED)
@@ -85,6 +91,10 @@ public class AbstractSlackTest {
     }
 
     protected Execution runAndCaptureExecution(String triggeringFlowId, String notificationFlowId) throws Exception {
+        return runAndCaptureExecution(triggeringFlowId, notificationFlowId, null);
+    }
+
+    protected Execution runAndCaptureExecution(String triggeringFlowId, String notificationFlowId, Map<String, Object> inputs) throws Exception {
         CountDownLatch queueCount = new CountDownLatch(1);
         AtomicReference<Execution> last = new AtomicReference<>();
 
@@ -97,10 +107,11 @@ public class AbstractSlackTest {
 
         Execution execution;
 
+        Flow flow = flowRepository.findById(MAIN_TENANT, "io.kestra.tests", triggeringFlowId).orElseThrow();
+
         execution = runnerUtils.runOne(
-            MAIN_TENANT,
-            "io.kestra.tests",
-            triggeringFlowId
+            flow,
+            (f, e) -> inputs != null ? inputs : Map.of()
         );
 
         boolean await = queueCount.await(20, TimeUnit.SECONDS);

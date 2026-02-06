@@ -4,6 +4,7 @@ namespace: io.kestra.tests
 inputs:
   - id: url
     type: STRING
+    required: true
     defaults: "http://localhost:59443"
 
 
@@ -21,6 +22,8 @@ tasks:
 triggers:
   - id: on_success
     type: io.kestra.plugin.core.trigger.Flow
+    inputs:
+      url: "{{ inputs.url }}"
     preconditions:
       id: flow_trigger
       flows:
