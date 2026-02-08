@@ -108,6 +108,28 @@ public class FakeWebhookController {
         )));
     }
 
+    @Post("/mock/reactionsget/{method}")
+    @Consumes({MediaType.ALL})
+    public HttpResponse<?> mockReactionsGet(HttpRequest<?> request, @Body String data) {
+        FakeWebhookController.data = data;
+
+        var reactions = IntStream.range(0, 20)
+            .mapToObj(i -> Reaction.builder()
+                        .name("thumbsup-" + i)
+                        .users(List.of("U1234567890", "U0987654321"))
+                        .count(2)
+                        .build()
+            )
+            .toList();
+
+        return HttpResponse.ok(convertToSlack(Map.of(
+            "ok", true,
+            "message", Map.of(
+                "reactions", reactions
+            )
+        )));
+    }
+
     @Get("/mock/conversations/{method}")
     @Consumes({MediaType.ALL})
     public HttpResponse<?> mockConversation(HttpRequest<?> request, @Body String data) {
