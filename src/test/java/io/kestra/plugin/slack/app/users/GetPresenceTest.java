@@ -1,0 +1,40 @@
+package io.kestra.plugin.slack.app.users;
+
+import io.kestra.core.junit.annotations.KestraTest;
+import io.kestra.core.models.property.Property;
+import io.kestra.core.runners.RunContextFactory;
+import io.kestra.core.utils.IdUtils;
+import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.slack.app.AbstractSlackClientTest;
+import io.kestra.plugin.slack.FakeWebhookController;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@KestraTest
+public class GetPresenceTest extends AbstractSlackClientTest {
+    @Inject
+    private RunContextFactory runContextFactory;
+
+    @Test
+    void run() throws Exception {
+        GetPresence task = GetPresence.builder()
+            .id(IdUtils.create())
+            .type(GetPresence.class.getName())
+            .slack(this.client("usersgetpresence"))
+            .token(Property.ofValue("token"))
+            .user(Property.ofValue("U1234567890"))
+            .build();
+
+        GetPresence.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
+
+        assertThat(output).isNotNull();
+        assertThat(output.getPresence()).isEqualTo("active");
+        assertThat(output.getOnline()).isTrue();
+        assertThat(output.getConnectionCount()).isEqualTo(2);
+        assertThat(FakeWebhookController.data).contains("user=U1234567890");
+    }
+}
