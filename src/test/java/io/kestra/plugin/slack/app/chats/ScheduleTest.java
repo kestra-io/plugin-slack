@@ -10,6 +10,7 @@ import io.kestra.plugin.slack.FakeWebhookController;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +28,7 @@ public class ScheduleTest extends AbstractSlackClientTest {
             .slack(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
-            .postAt(Property.ofValue(1609459200))
+            .postAt(Property.ofValue(Instant.ofEpochSecond(1609459200)))
             .messageText(Property.ofValue("Scheduled message *with some bold text*"))
             .build();
 

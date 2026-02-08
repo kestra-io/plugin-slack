@@ -46,22 +46,6 @@ public class ListTest extends AbstractSlackClientTest {
     }
 
     @Test
-    void runWithLimit() throws Exception {
-        List task = List.builder()
-            .id(IdUtils.create())
-            .type(List.class.getName())
-            .slack(this.client("userslist"))
-            .token(Property.ofValue("token"))
-            .limit(Property.ofValue(50))
-            .build();
-
-        List.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
-
-        assertThat(output).isNotNull();
-        assertThat(FakeWebhookController.data).contains("limit=50");
-    }
-
-    @Test
     void runWithPresence() throws Exception {
         List task = List.builder()
             .id(IdUtils.create())

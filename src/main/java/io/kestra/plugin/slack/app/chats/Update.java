@@ -16,6 +16,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
 import java.util.Map;
 
 @SuperBuilder
@@ -31,7 +32,7 @@ public class Update extends AbstractSlackClientConnection implements RunnableTas
     private Property<String> messageText;
     private Property<String> channel;
     @NotNull
-    private Property<String> timestamp;
+    private Property<Instant> timestamp;
     private Property<String> username;
     private Property<String> iconUrl;
     private Property<String> iconEmoji;
@@ -40,7 +41,7 @@ public class Update extends AbstractSlackClientConnection implements RunnableTas
     @Override
     public Output run(RunContext runContext) throws Exception {
         var builder = ChatUpdateRequest.builder()
-            .ts(runContext.render(this.timestamp).as(String.class).orElseThrow());
+            .ts(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElseThrow());
 
         String json = MessageService.prepareMessageAsJson(runContext, this.payload, this.messageText);
         Map<String, Object> map = JacksonMapper.toMap(json);

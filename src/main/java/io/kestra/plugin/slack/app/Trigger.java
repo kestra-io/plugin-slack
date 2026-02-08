@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.slack.api.app_backend.events.payload.EventsApiPayload;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
-import com.slack.api.bolt.context.Context;
 import com.slack.api.bolt.request.Request;
 import com.slack.api.bolt.request.RequestHeaders;
 import com.slack.api.bolt.response.Response;
@@ -64,7 +63,7 @@ import java.util.regex.Pattern;
     }
 )
 //@WebhookValidation
-public class AppTrigger extends AbstractWebhookTrigger implements TriggerOutput<AppTrigger.Output> {
+public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Trigger.Output> {
     private static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<>() {};
     private static final ObjectMapper MAPPER = JacksonMapper.ofJson().copy().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 

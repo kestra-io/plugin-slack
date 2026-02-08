@@ -57,19 +57,6 @@ import java.net.URI;
 )
 public class List extends AbstractSlackClientConnection implements RunnableTask<List.Output> {
     @Schema(
-        title = "The maximum number of users to return per request.",
-        description = "Maximum number of items to return per page. Default is 100, maximum is 1000."
-    )
-    private Property<Integer> limit;
-
-    @Schema(
-        title = "Include presence data for each user.",
-        description = "Set to true to include presence data in the output. Default is false."
-    )
-    @Builder.Default
-    private Property<Boolean> includePresence = Property.ofValue(false);
-
-    @Schema(
         title = "Include locale for each user.",
         description = "Set to true to include locale information in the output. Default is false."
     )
@@ -78,13 +65,12 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = UsersListRequest.builder();
+        var builder = UsersListRequest.builder()
+            .limit(1000);
 
-        runContext.render(this.limit).as(Integer.class).ifPresent(builder::limit);
-        runContext.render(this.includePresence).as(Boolean.class).ifPresent(builder::presence);
         runContext.render(this.includeLocale).as(Boolean.class).ifPresent(builder::includeLocale);
 
-        Long size = 0L;
+        long size = 0L;
         File tempFile = runContext.workingDir().createTempFile(".ion").toFile();
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(tempFile), FileSerde.BUFFER_SIZE)) {
             String cursor = null;
@@ -100,7 +86,10 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
                 );
                 FileSerde.writeAll(fileWriter, flux).block();
 
-                cursor = response.getResponseMetadata() != null ? response.getResponseMetadata().getNextCursor() : null;
+                var newCursor = response.getResponseMetadata() != null && !response.getResponseMetadata().getNextCursor().isEmpty() ?
+                    response.getResponseMetadata().getNextCursor() :
+                    null;
+                cursor = newCursor == null || newCursor.equals(cursor) ? null : newCursor;
             } while (cursor != null && !cursor.isEmpty());
         }
 

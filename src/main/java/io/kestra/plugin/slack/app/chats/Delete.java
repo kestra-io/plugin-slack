@@ -6,11 +6,14 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.slack.AbstractSlackClientConnection;
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+
+import java.time.Instant;
 
 @SuperBuilder
 @ToString
@@ -27,13 +30,13 @@ public class Delete extends AbstractSlackClientConnection implements RunnableTas
 
     @Schema(title = "The timestamp of the message to remove.")
     @NotNull
-    protected Property<String> timestamp;
+    protected Property<Instant> timestamp;
 
     @Override
     public Output run(RunContext runContext) throws Exception {
         var builder = ChatDeleteRequest.builder()
             .channel(runContext.render(this.channel).as(String.class).orElseThrow())
-            .ts(runContext.render(this.timestamp).as(String.class).orElseThrow());
+            .ts(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElseThrow());
 
         var response = call(runContext, (client) -> client.chatDelete(builder.build()));
 

@@ -67,7 +67,8 @@ public class Members extends AbstractSlackClientConnection implements RunnableTa
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = ConversationsMembersRequest.builder();
+        var builder = ConversationsMembersRequest.builder()
+            .limit(1000);
 
         runContext.render(this.channel).as(String.class).ifPresent(builder::channel);
 
@@ -87,7 +88,10 @@ public class Members extends AbstractSlackClientConnection implements RunnableTa
                 );
                 FileSerde.writeAll(fileWriter, flux).block();
 
-                cursor = response.getResponseMetadata() != null ? response.getResponseMetadata().getNextCursor() : null;
+                var newCursor = response.getResponseMetadata() != null && !response.getResponseMetadata().getNextCursor().isEmpty() ?
+                    response.getResponseMetadata().getNextCursor() :
+                    null;
+                cursor = newCursor == null || newCursor.equals(cursor) ? null : newCursor;
             } while (cursor != null);
         }
 

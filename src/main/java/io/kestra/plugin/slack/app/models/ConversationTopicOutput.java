@@ -9,6 +9,10 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
+
+import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
+
 @Value
 @Builder
 @Jacksonized
@@ -27,7 +31,7 @@ public class ConversationTopicOutput implements io.kestra.core.models.tasks.Outp
 
     @Schema(title = "The timestamp when the channel was created.")
     @PluginProperty
-    Integer lastSet;
+    Instant lastSet;
 
     public static ConversationTopicOutput of(Topic topic) {
         if (topic == null) {
@@ -37,7 +41,7 @@ public class ConversationTopicOutput implements io.kestra.core.models.tasks.Outp
         return ConversationTopicOutput.builder()
             .value(topic.getValue())
             .creator(topic.getCreator())
-            .lastSet(topic.getLastSet())
+            .lastSet(fromSlackTimestamp(topic.getLastSet()))
             .build();
     }
 
@@ -49,7 +53,7 @@ public class ConversationTopicOutput implements io.kestra.core.models.tasks.Outp
         return ConversationTopicOutput.builder()
             .value(purpose.getValue())
             .creator(purpose.getCreator())
-            .lastSet(purpose.getLastSet())
+            .lastSet(fromSlackTimestamp(purpose.getLastSet()))
             .build();
     }
 }

@@ -7,6 +7,7 @@ import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.slack.app.AbstractSlackClientTest;
 import io.kestra.plugin.slack.FakeWebhookController;
+import io.kestra.plugin.slack.services.MessageService;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -27,11 +28,11 @@ public class DeleteTest extends AbstractSlackClientTest {
             .slack(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
-            .timestamp(Property.ofValue("2023-0101T00:00:00Z"))
+            .timestamp(Property.ofValue(MessageService.fromSlackTimestamp("2023-01-01T00:00:00Z")))
             .build();
 
         task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
 
-        assertThat(FakeWebhookController.data).isEqualTo("channel=%40channel&ts=2023-0101T00%3A00%3A00Z");
+        assertThat(FakeWebhookController.data).isEqualTo("channel=%40channel&ts=1672531200");
     }
 }

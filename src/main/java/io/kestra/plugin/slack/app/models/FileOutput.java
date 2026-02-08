@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
 import java.util.List;
+
+import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 
 @Value
 @Builder
@@ -15,10 +18,10 @@ public class FileOutput implements io.kestra.core.models.tasks.Output  {
     String id;
 
     @Schema(title = "The timestamp when the file was created.")
-    Integer created;
+    Instant created;
 
     @Schema(title = "The file timestamp.")
-    Integer timestamp;
+    Instant timestamp;
 
     @Schema(title = "The file name.")
     String name;
@@ -102,8 +105,8 @@ public class FileOutput implements io.kestra.core.models.tasks.Output  {
 
         return FileOutput.builder()
             .id(file.getId())
-            .created(file.getCreated())
-            .timestamp(file.getTimestamp())
+            .created(fromSlackTimestamp(file.getCreated()))
+            .timestamp(fromSlackTimestamp(file.getTimestamp()))
             .name(file.getName())
             .title(file.getTitle())
             .subject(file.getSubject())

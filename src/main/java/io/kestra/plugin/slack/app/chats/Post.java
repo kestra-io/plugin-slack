@@ -16,6 +16,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
 import java.util.Map;
 
 @SuperBuilder
@@ -30,7 +31,7 @@ public class Post extends AbstractSlackClientConnection implements RunnableTask<
     private Property<String> payload;
     private Property<String> messageText;
     private Property<String> channel;
-    private Property<String> timestamp;
+    private Property<Instant> timestamp;
     private Property<String> username;
     private Property<String> iconUrl;
     private Property<String> iconEmoji;
@@ -51,7 +52,7 @@ public class Post extends AbstractSlackClientConnection implements RunnableTask<
         if (map.containsKey("thread_ts")) {
             builder.threadTs((String) map.get("thread_ts"));
         } else if (this.timestamp != null) {
-            builder.threadTs(runContext.render(this.timestamp).as(String.class).orElseThrow());
+            builder.threadTs(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElseThrow());
         }
 
         if (map.containsKey("icon_emoji")) {

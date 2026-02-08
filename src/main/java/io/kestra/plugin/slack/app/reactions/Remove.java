@@ -7,6 +7,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.slack.AbstractSlackClientConnection;
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+
+import java.time.Instant;
 
 @SuperBuilder
 @ToString
@@ -34,14 +37,14 @@ public class Remove extends AbstractSlackClientConnection implements RunnableTas
 
     @Schema(title = "Timestamp of the message to remove reaction from.")
     @NotNull
-    protected Property<String> timestamp;
+    protected Property<Instant> timestamp;
 
     @Override
     public VoidOutput run(RunContext runContext) throws Exception {
         var builder = ReactionsRemoveRequest.builder()
             .channel(runContext.render(this.channel).as(String.class).orElseThrow())
             .name(runContext.render(this.name).as(String.class).orElseThrow())
-            .timestamp(runContext.render(this.timestamp).as(String.class).orElseThrow());
+            .timestamp(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElseThrow());
 
         call(runContext, (client) -> client.reactionsRemove(builder.build()));
 

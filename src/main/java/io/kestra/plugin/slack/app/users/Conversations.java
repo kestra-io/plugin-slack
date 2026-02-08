@@ -65,12 +65,6 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
     private Property<String> user;
 
     @Schema(
-        title = "The maximum number of conversations to return per request.",
-        description = "Default is 100, maximum is 1000."
-    )
-    private Property<Integer> limit;
-
-    @Schema(
         title = "Exclude archived channels from the list.",
         description = "Default is false."
     )
@@ -81,14 +75,15 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
         title = "Filter by conversation types.",
         description = "A comma-separated list of channel types (e.g., 'public_channel,private_channel')."
     )
+    @Builder.Default
     private Property<java.util.List<ConversationType>> types = Property.ofValue(java.util.List.of(ConversationType.PUBLIC_CHANNEL));
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = UsersConversationsRequest.builder();
+        var builder = UsersConversationsRequest.builder()
+            .limit(1000);
 
         runContext.render(this.user).as(String.class).ifPresent(builder::user);
-        runContext.render(this.limit).as(Integer.class).ifPresent(builder::limit);
         runContext.render(this.excludeArchived).as(Boolean.class).ifPresent(builder::excludeArchived);
         builder.types(runContext.render(this.types).asList(ConversationType.class));
 
@@ -109,7 +104,10 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
                 );
                 FileSerde.writeAll(fileWriter, flux).block();
 
-                cursor = response.getResponseMetadata() != null ? response.getResponseMetadata().getNextCursor() : null;
+                var newCursor = response.getResponseMetadata() != null && !response.getResponseMetadata().getNextCursor().isEmpty() ?
+                    response.getResponseMetadata().getNextCursor() :
+                    null;
+                cursor = newCursor == null || newCursor.equals(cursor) ? null : newCursor;
             } while (cursor != null && !cursor.isEmpty());
         }
 

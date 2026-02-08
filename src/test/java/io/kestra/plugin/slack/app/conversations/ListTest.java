@@ -11,6 +11,7 @@ import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
 import io.kestra.plugin.slack.app.AbstractSlackClientTest;
 import io.kestra.plugin.slack.FakeWebhookController;
+import io.micronaut.context.annotation.Value;
 import jakarta.inject.Inject;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ import static org.hamcrest.Matchers.containsString;
 
 @KestraTest
 public class ListTest extends AbstractSlackClientTest {
+    @Value("${slack.bot-token}")
+    private String botToken;
+
     @Inject
     private RunContextFactory runContextFactory;
 
@@ -68,5 +72,23 @@ public class ListTest extends AbstractSlackClientTest {
         assertThat(FakeWebhookController.data).contains("types=private_channel%2Cpublic_channel");
         assertThat(ionResult).contains("test1");
         assertThat(ionResult).contains("test19");
+    }
+
+    @Test
+    void runReal() throws Exception {
+        List task = List.builder()
+            .id(IdUtils.create())
+            .type(List.class.getName())
+            .token(Property.ofValue(botToken))
+            .types(Property.ofValue(java.util.List.of(ConversationType.PRIVATE_CHANNEL, ConversationType.PUBLIC_CHANNEL)))
+            .excludeArchived(Property.ofValue(true))
+            .build();
+
+        List.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
+        String ionResult = CharStreams.toString(new InputStreamReader(storageInterface.get(TenantService.MAIN_TENANT, null, output.getUri())));
+
+        assertThat(output).isNotNull();
+        assertThat(output.getSize()).isGreaterThan(1L);
+        assertThat(ionResult).contains("help");
     }
 }

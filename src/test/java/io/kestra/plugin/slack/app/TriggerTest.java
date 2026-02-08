@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @KestraTest
-class AppTriggerTest {
+class TriggerTest {
     private final String signingSecret = "foo-bar-baz";
     private final SlackSignature.Generator generator = new SlackSignature.Generator(signingSecret);
 
@@ -47,7 +47,7 @@ class AppTriggerTest {
             .build();
     }
 
-    private WebhookContext webhookContext(Flow flow, AppTrigger appTrigger, String body) {
+    private WebhookContext webhookContext(Flow flow, Trigger appTrigger, String body) {
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
 
         var headers =  HttpHeaders.of(Map.of(
@@ -82,9 +82,9 @@ class AppTriggerTest {
 
     @Test
     void challenge() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -109,9 +109,9 @@ class AppTriggerTest {
 
     @Test
     void command() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -141,9 +141,9 @@ class AppTriggerTest {
 
     @Test
     void events() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -161,9 +161,9 @@ class AppTriggerTest {
 
     @Test
     void blockActions() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -182,9 +182,9 @@ class AppTriggerTest {
 
     @Test
     void messageAction() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -203,9 +203,9 @@ class AppTriggerTest {
 
     @Test
     void viewSubmission() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -224,9 +224,9 @@ class AppTriggerTest {
 
     @Test
     void viewClosed() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -245,9 +245,9 @@ class AppTriggerTest {
 
     @Test
     void shortcut() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -266,9 +266,9 @@ class AppTriggerTest {
 
     @Test
     void globalShortcut() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -287,9 +287,9 @@ class AppTriggerTest {
 
     @Test
     void workflowStepEdit() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -308,9 +308,9 @@ class AppTriggerTest {
 
     @Test
     void selectMenuAction() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -329,9 +329,9 @@ class AppTriggerTest {
 
     @Test
     void multiSelectMenuAction() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -350,9 +350,9 @@ class AppTriggerTest {
 
     @Test
     void datePickerAction() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();
@@ -371,9 +371,9 @@ class AppTriggerTest {
 
     @Test
     void overflowMenuAction() throws Exception {
-        AppTrigger appTrigger = AppTrigger.builder()
+        Trigger appTrigger = Trigger.builder()
             .id(IdUtils.create())
-            .type(AppTrigger.class.getName())
+            .type(Trigger.class.getName())
             .key("zzzz")
             .signingSecret(Property.ofValue(signingSecret))
             .build();

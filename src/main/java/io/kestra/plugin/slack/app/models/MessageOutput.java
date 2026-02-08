@@ -1,14 +1,18 @@
 package io.kestra.plugin.slack.app.models;
 
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 
 @Value
 @Builder
@@ -39,7 +43,7 @@ public class MessageOutput implements io.kestra.core.models.tasks.Output {
     Map<String, Object> payload;
 
     @Schema(title = "The timestamp of the message.")
-    String timestamp;
+    Instant timestamp;
 
     @Schema(title = "The timestamp of the parent message if this is a thread reply.")
     String threadTimestamp;
@@ -157,7 +161,7 @@ public class MessageOutput implements io.kestra.core.models.tasks.Output {
             .username(message.getUsername())
             .text(message.getText())
             .payload(!payload.isEmpty() ? payload : null)
-            .timestamp(message.getTs())
+            .timestamp(MessageService.fromSlackTimestamp(message.getTs()))
             .threadTimestamp(message.getThreadTs())
             .pinnedTo(message.getPinnedTo())
             .reactions(message.getReactions() != null ? message.getReactions().stream().map(ReactionOutput::of).collect(Collectors.toList()) : null)

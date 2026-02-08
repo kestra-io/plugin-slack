@@ -11,6 +11,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.FileSerde;
 import io.kestra.core.utils.FileUtils;
 import io.kestra.plugin.slack.AbstractSlackClientConnection;
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 @SuperBuilder
@@ -84,7 +86,7 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
     private Property<String> snippetType;
 
     @Schema(title = "Thread timestamp to upload file as a reply.")
-    private Property<String> timestamp;
+    private Property<Instant> timestamp;
 
     @Override
     public Output run(RunContext runContext) throws Exception {
@@ -107,7 +109,7 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
         FilesUploadV2Request.FilesUploadV2RequestBuilder builder = FilesUploadV2Request.builder()
             .channels(runContext.render(this.channels).asList(String.class))
             .uploadFiles(List.of(slackUploadFiles))
-            .threadTs(runContext.render(this.timestamp).as(String.class).orElse(null));
+            .threadTs(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElse(null));
 
         FilesUploadV2Response response = call(runContext, (client) -> client.filesUploadV2(builder.build()));
         com.slack.api.model.File uploadedFile = response.getFiles().getFirst();

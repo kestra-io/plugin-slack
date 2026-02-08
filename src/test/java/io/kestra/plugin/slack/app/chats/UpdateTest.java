@@ -10,6 +10,7 @@ import io.kestra.plugin.slack.FakeWebhookController;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +28,7 @@ public class UpdateTest extends AbstractSlackClientTest {
             .slack(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
-            .timestamp(Property.ofValue("1234567890.123456"))
+            .timestamp(Property.ofValue(Instant.ofEpochSecond(1234567890L, 123456000L)))
             .messageText(Property.ofValue("Updated message *with some bold text*"))
             .build();
 

@@ -12,6 +12,7 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.FileSerde;
 import io.kestra.plugin.slack.AbstractSlackClientConnection;
 import io.kestra.plugin.slack.app.models.MessageOutput;
+import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,6 +24,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URI;
+import java.time.Instant;
 
 @SuperBuilder
 @ToString
@@ -69,13 +71,13 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
         title = "Start of time range of messages to include.",
         description = "Unix timestamp of the least recent message to include."
     )
-    private Property<String> oldest;
+    private Property<Instant> oldest;
 
     @Schema(
         title = "End of time range of messages to include.",
         description = "Unix timestamp of the most recent message to include."
     )
-    private Property<String> latest;
+    private Property<Instant> latest;
 
     @Schema(
         title = "Include messages from all threads.",
@@ -84,21 +86,15 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
     @Builder.Default
     private Property<Boolean> inclusive = Property.ofValue(false);
 
-    @Schema(
-        title = "The maximum number of messages to return per request.",
-        description = "Maximum number of items to return per page. Recommended value is 200 or less. The default is 100."
-    )
-    private Property<Integer> limit;
-
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = ConversationsHistoryRequest.builder();
+        var builder = ConversationsHistoryRequest.builder()
+            .limit(200);
 
         runContext.render(this.channel).as(String.class).ifPresent(builder::channel);
         builder.inclusive(runContext.render(this.inclusive).as(Boolean.class).orElse(false));
-        runContext.render(this.oldest).as(String.class).ifPresent(builder::oldest);
-        runContext.render(this.latest).as(String.class).ifPresent(builder::latest);
-        runContext.render(this.limit).as(Integer.class).ifPresent(builder::limit);
+        runContext.render(this.oldest).as(Instant.class).map(MessageService::toSlackTimestamp).ifPresent(builder::oldest);
+        runContext.render(this.latest).as(Instant.class).map(MessageService::toSlackTimestamp).ifPresent(builder::latest);
 
         Long size = 0L;
         File tempFile = runContext.workingDir().createTempFile(".ion").toFile();
@@ -116,7 +112,10 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
                 );
                 FileSerde.writeAll(fileWriter, flux).block();
 
-                cursor = response.getResponseMetadata() != null ? response.getResponseMetadata().getNextCursor() : null;
+                var newCursor = response.getResponseMetadata() != null && !response.getResponseMetadata().getNextCursor().isEmpty() ?
+                    response.getResponseMetadata().getNextCursor() :
+                    null;
+                cursor = newCursor == null || newCursor.equals(cursor) ? null : newCursor;
             } while (cursor != null);
         }
 

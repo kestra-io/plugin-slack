@@ -83,7 +83,8 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = ConversationsListRequest.builder();
+        var builder = ConversationsListRequest.builder()
+            .limit(1000);
 
         builder.types(runContext
             .render(this.types)
@@ -111,7 +112,10 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
                 );
                 FileSerde.writeAll(fileWriter, flux).block();
 
-                cursor = response.getResponseMetadata() != null ? response.getResponseMetadata().getNextCursor() : null;
+                var newCursor = response.getResponseMetadata() != null && !response.getResponseMetadata().getNextCursor().isEmpty() ?
+                    response.getResponseMetadata().getNextCursor() :
+                    null;
+                cursor = newCursor == null || newCursor.equals(cursor) ? null : newCursor;
             } while (cursor != null);
         }
 

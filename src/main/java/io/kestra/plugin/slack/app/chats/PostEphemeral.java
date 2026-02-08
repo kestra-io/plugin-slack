@@ -15,6 +15,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.Instant;
 import java.util.Map;
 
 @SuperBuilder
@@ -26,17 +27,22 @@ import java.util.Map;
     title = "Post an ephemeral message to a channel."
 )
 public class PostEphemeral extends AbstractSlackClientConnection implements RunnableTask<PostEphemeral.Output>, MessagePayloadInterface, ChatInterface {
+    @NotNull
+    @Schema(title = "id of the user who will receive the ephemeral message.", description = "The user should be in the channel specified by the channel argument.")
+    private Property<String> user;
+
     private Property<String> payload;
     private Property<String> messageText;
     private Property<String> channel;
-    private Property<String> timestamp;
+    private Property<Instant> timestamp;
     private Property<String> username;
     private Property<String> iconUrl;
     private Property<String> iconEmoji;
 
     @Override
     public Output run(RunContext runContext) throws Exception {
-        var builder = ChatPostEphemeralRequest.builder();
+        var builder = ChatPostEphemeralRequest.builder()
+            .user(runContext.render(this.user).as(String.class).orElseThrow());
 
         String json = MessageService.prepareMessageAsJson(runContext, this.payload, this.messageText);
         Map<String, Object> map = JacksonMapper.toMap(json);
@@ -50,7 +56,7 @@ public class PostEphemeral extends AbstractSlackClientConnection implements Runn
         if (map.containsKey("thread_ts")) {
             builder.threadTs((String) map.get("thread_ts"));
         } else if (this.timestamp != null) {
-            builder.threadTs(runContext.render(this.timestamp).as(String.class).orElseThrow());
+            builder.threadTs(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElseThrow());
         }
 
         if (map.containsKey("icon_emoji")) {

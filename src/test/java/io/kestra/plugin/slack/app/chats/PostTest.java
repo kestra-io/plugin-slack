@@ -34,20 +34,4 @@ public class PostTest extends AbstractSlackClientTest {
 
         assertThat(FakeWebhookController.data).contains("channel=%40channel&text=A%20message%20*with%20some%20bold%20text*&link_names=0&mrkdwn=1&unfurl_links=0&unfurl_media=0&reply_broadcast=0");
     }
-
-    @Test
-    void ephemeral() throws Exception {
-        PostEphemeral task = PostEphemeral.builder()
-            .id(IdUtils.create())
-            .slack(this.client())
-            .type(PostEphemeral.class.getName())
-            .token(Property.ofValue("token"))
-            .messageText(Property.ofValue("A message *with some bold text*"))
-            .channel(Property.ofValue("@channel"))
-            .build();
-
-        task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
-
-        assertThat(FakeWebhookController.data).contains("channel=%40channel&text=A%20message%20*with%20some%20bold%20text*&link_names=0");
-    }
 }

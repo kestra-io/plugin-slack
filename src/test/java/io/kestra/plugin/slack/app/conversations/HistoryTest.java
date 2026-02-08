@@ -15,6 +15,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,8 +60,8 @@ public class HistoryTest extends AbstractSlackClientTest {
             .slack(this.client("conversationshistory"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
-            .oldest(Property.ofValue("1609459200"))
-            .latest(Property.ofValue("1612137600"))
+            .oldest(Property.ofValue(Instant.ofEpochSecond(1609459200)))
+            .latest(Property.ofValue(Instant.ofEpochSecond(1612137600)))
             .inclusive(Property.ofValue(true))
             .build();
 

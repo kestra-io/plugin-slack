@@ -9,6 +9,10 @@ import lombok.extern.jackson.Jacksonized;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.Instant;
+
+import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
+
 @Value
 @Builder
 @Jacksonized
@@ -47,7 +51,7 @@ public class ConversationOutput implements io.kestra.core.models.tasks.Output {
 
     @Schema(title = "The timestamp when the channel was created.")
     @PluginProperty
-    Integer created;
+    Instant created;
 
     @Schema(title = "Whether the channel is archived.")
     @PluginProperty
@@ -74,7 +78,7 @@ public class ConversationOutput implements io.kestra.core.models.tasks.Output {
             .isInstantMessage(channel.isIm())
             .isMultiPersonInstantMessage(channel.isMpim())
             .isPrivate(channel.isPrivate())
-            .created(channel.getCreated())
+            .created(fromSlackTimestamp(channel.getCreated()))
             .isArchived(channel.isArchived())
             .isGeneral(channel.isGeneral())
             .topic(ConversationTopicOutput.of(channel.getTopic()))
