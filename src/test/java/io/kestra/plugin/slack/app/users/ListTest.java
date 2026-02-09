@@ -52,7 +52,6 @@ public class ListTest extends AbstractSlackClientTest {
             .type(List.class.getName())
             .slack(this.client("userslist"))
             .token(Property.ofValue("token"))
-            .includePresence(Property.ofValue(true))
             .build();
 
         List.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));

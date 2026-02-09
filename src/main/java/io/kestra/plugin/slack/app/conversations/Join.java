@@ -34,7 +34,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: join_channel
-                    type: io.kestra.plugin.slack.conversations.Join
+                    type: io.kestra.plugin.slack.app.conversations.Join
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                 """

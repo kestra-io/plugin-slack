@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: close_dm
-                    type: io.kestra.plugin.slack.conversations.Close
+                    type: io.kestra.plugin.slack.app.conversations.Close
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "D1234567890"
                 """

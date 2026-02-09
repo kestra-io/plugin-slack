@@ -34,7 +34,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: rename_channel
-                    type: io.kestra.plugin.slack.conversations.Rename
+                    type: io.kestra.plugin.slack.app.conversations.Rename
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                     name: "new-channel-name"

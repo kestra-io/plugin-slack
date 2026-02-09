@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: leave_channel
-                    type: io.kestra.plugin.slack.conversations.Leave
+                    type: io.kestra.plugin.slack.app.conversations.Leave
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                 """

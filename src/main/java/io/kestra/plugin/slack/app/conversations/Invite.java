@@ -36,7 +36,7 @@ import java.util.List;
 
                 tasks:
                   - id: invite_users
-                    type: io.kestra.plugin.slack.conversations.Invite
+                    type: io.kestra.plugin.slack.app.conversations.Invite
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                     users: ["U1234567890", "U0987654321"]

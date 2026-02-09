@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: create_channel
-                    type: io.kestra.plugin.slack.conversations.Create
+                    type: io.kestra.plugin.slack.app.conversations.Create
                     token: "{{ secret('SLACK_TOKEN') }}"
                     name: "new-project-channel"
                     isPrivate: false

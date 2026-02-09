@@ -35,7 +35,7 @@ import java.util.List;
 
                 tasks:
                   - id: open_dm
-                    type: io.kestra.plugin.slack.conversations.Open
+                    type: io.kestra.plugin.slack.app.conversations.Open
                     token: "{{ secret('SLACK_TOKEN') }}"
                     users: ["U1234567890"]
                 """
@@ -49,7 +49,7 @@ import java.util.List;
 
                 tasks:
                   - id: open_mpim
-                    type: io.kestra.plugin.slack.conversations.Open
+                    type: io.kestra.plugin.slack.app.conversations.Open
                     token: "{{ secret('SLACK_TOKEN') }}"
                     users: ["U1234567890", "U0987654321", "U1122334455"]
                 """

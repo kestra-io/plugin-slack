@@ -33,7 +33,10 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Upload a file to Slack."
+    title = "Upload a file to Slack.",
+    description = "Upload a file from Kestra's internal storage to one or more Slack channels. " +
+        "The file can be shared to multiple channels simultaneously. " +
+        "You need the `files:write` and `chat:write` scopes in your Slack app to use this task."
 )
 @Plugin(
     examples = {
@@ -46,13 +49,48 @@ import java.util.List;
 
                 tasks:
                   - id: upload_file
-                    type: io.kestra.plugin.slack.files.Upload
+                    type: io.kestra.plugin.slack.app.files.Upload
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channels: ["#general"]
-                    file: "{{ outputs.previous_task.uri }}"
+                    from: "{{ outputs.previous_task.uri }}"
                     filename: "report.pdf"
                     title: "Monthly Report"
-                    initialComment: "Here is the monthly report"
+                """
+        ),
+        @Example(
+            title = "Upload a file with a title and alt text",
+            full = true,
+            code = """
+                id: slack_file_upload_detailed
+                namespace: company.team
+
+                tasks:
+                  - id: upload_file
+                    type: io.kestra.plugin.slack.app.files.Upload
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channels: ["#general", "#reports"]
+                    from: "{{ inputs.file }}"
+                    filename: "analysis.png"
+                    title: "Data Analysis Chart"
+                    altTxt: "Chart showing sales trends over the last quarter"
+                """
+        ),
+        @Example(
+            title = "Upload a file as a thread reply",
+            full = true,
+            code = """
+                id: slack_file_thread_upload
+                namespace: company.team
+
+                tasks:
+                  - id: upload_file
+                    type: io.kestra.plugin.slack.app.files.Upload
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channels: ["#general"]
+                    from: "{{ outputs.generate_report.uri }}"
+                    filename: "detailed_report.pdf"
+                    title: "Detailed Report"
+                    timestamp: "{{ outputs.send_message.timestamp }}"
                 """
         )
     }
@@ -76,16 +114,29 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
     @NotNull
     private Property<String> filename;
 
-    @Schema(title = "Title of the file.")
+    @Schema(
+        title = "Title of the file.",
+        description = "A descriptive title for the file that will be displayed in Slack."
+    )
     private Property<String> title;
 
-    @Schema(title = "Initial comment to add with the file.")
+    @Schema(
+        title = "Alternative text for the file.",
+        description = "Text description of the file for accessibility purposes, useful for images and visual content."
+    )
     private Property<String> altTxt;
 
-    @Schema(title = "Initial comment to add with the file.")
+    @Schema(
+        title = "Snippet type.",
+        description = "Syntax highlighting type for code snippets (e.g., 'python', 'java', 'javascript')."
+    )
     private Property<String> snippetType;
 
-    @Schema(title = "Thread timestamp to upload file as a reply.")
+    @Schema(
+        title = "Thread timestamp to upload file as a reply.",
+        description = "If provided, the file will be uploaded as a reply to an existing message thread. " +
+            "Use the timestamp from a previous message to thread the file upload."
+    )
     private Property<Instant> timestamp;
 
     @Override

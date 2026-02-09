@@ -34,7 +34,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: set_purpose
-                    type: io.kestra.plugin.slack.conversations.SetPurpose
+                    type: io.kestra.plugin.slack.app.conversations.SetPurpose
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                     purpose: "This channel is for discussing the new project"

@@ -2,6 +2,8 @@ package io.kestra.plugin.slack.app.chats;
 
 
 import com.slack.api.methods.request.chat.ChatPostEphemeralRequest;
+import io.kestra.core.models.annotations.Example;
+import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
@@ -24,11 +26,65 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Post an ephemeral message to a channel."
+    title = "Post an ephemeral message to a channel.",
+    description = "Send an ephemeral (temporary) message that is only visible to a specific user in a channel. " +
+        "Ephemeral messages disappear when the user navigates away. " +
+        "You need the `chat:write` scope in your Slack app to use this task."
+)
+@Plugin(
+    examples = {
+        @Example(
+            title = "Send an ephemeral message to a user",
+            full = true,
+            code = """
+                id: slack_ephemeral_message
+                namespace: company.team
+
+                tasks:
+                  - id: post_ephemeral
+                    type: io.kestra.plugin.slack.app.chats.PostEphemeral
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    user: "U1234567890"
+                    messageText: "This message is only visible to you"
+                """
+        ),
+        @Example(
+            title = "Send an ephemeral notification",
+            full = true,
+            code = """
+                id: slack_ephemeral_notification
+                namespace: company.team
+
+                tasks:
+                  - id: notify_user
+                    type: io.kestra.plugin.slack.app.chats.PostEphemeral
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    user: "U1234567890"
+                    payload: |
+                      {
+                        "text": "Task completed",
+                        "blocks": [
+                          {
+                            "type": "section",
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": ":white_check_mark: Your task has been completed successfully"
+                            }
+                          }
+                        ]
+                      }
+                """
+        )
+    }
 )
 public class PostEphemeral extends AbstractSlackClientConnection implements RunnableTask<PostEphemeral.Output>, MessagePayloadInterface, ChatInterface {
     @NotNull
-    @Schema(title = "id of the user who will receive the ephemeral message.", description = "The user should be in the channel specified by the channel argument.")
+    @Schema(
+        title = "ID of the user who will receive the ephemeral message.",
+        description = "The user should be in the channel specified by the channel argument. User IDs typically start with 'U' (e.g., U1234567890)."
+    )
     private Property<String> user;
 
     private Property<String> payload;

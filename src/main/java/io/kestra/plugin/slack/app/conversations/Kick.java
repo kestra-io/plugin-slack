@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: kick_user
-                    type: io.kestra.plugin.slack.conversations.Kick
+                    type: io.kestra.plugin.slack.app.conversations.Kick
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                     user: "U1234567890"

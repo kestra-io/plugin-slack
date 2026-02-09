@@ -1,6 +1,8 @@
 package io.kestra.plugin.slack.app.chats;
 
 import com.slack.api.methods.request.chat.ChatDeleteScheduledMessageRequest;
+import io.kestra.core.models.annotations.Example;
+import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.VoidOutput;
@@ -20,14 +22,63 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a scheduled message from a channel."
+    title = "Delete a scheduled message from a channel.",
+    description = "Delete a previously scheduled message before it is sent. " +
+        "You need the `chat:write` scope in your Slack app to use this task."
+)
+@Plugin(
+    examples = {
+        @Example(
+            title = "Delete a scheduled message",
+            full = true,
+            code = """
+                id: slack_delete_scheduled
+                namespace: company.team
+
+                tasks:
+                  - id: delete_scheduled
+                    type: io.kestra.plugin.slack.app.chats.DeleteScheduled
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    scheduledMessageId: "Q1234567890"
+                """
+        ),
+        @Example(
+            title = "Schedule and cancel a message",
+            full = true,
+            code = """
+                id: slack_schedule_and_cancel
+                namespace: company.team
+
+                tasks:
+                  - id: schedule_message
+                    type: io.kestra.plugin.slack.app.chats.Schedule
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "This will be cancelled"
+                    postAt: "{{ now() | dateAdd(1, 'HOURS') }}"
+
+                  - id: cancel_message
+                    type: io.kestra.plugin.slack.app.chats.DeleteScheduled
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    scheduledMessageId: "{{ outputs.schedule_message.messageId }}"
+                """
+        )
+    }
 )
 public class DeleteScheduled extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
-    @Schema(title = "The channel ID where the scheduled message should be removed.")
+    @Schema(
+        title = "The channel ID where the scheduled message should be removed.",
+        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+    )
     @NotNull
     protected Property<String> channel;
 
-    @Schema(title = "The scheduled message ID to delete.")
+    @Schema(
+        title = "The scheduled message ID to delete.",
+        description = "The ID is returned when scheduling a message and uniquely identifies the scheduled message."
+    )
     @NotNull
     protected Property<String> scheduledMessageId;
 

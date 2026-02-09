@@ -50,19 +50,61 @@ import java.util.regex.Pattern;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "TODO",
-    description = "TODO"
+    title = "Trigger a flow from Slack events via webhook.",
+    description = "Listen to Slack Events API and trigger workflows based on events in your Slack workspace. " +
+        "This trigger receives events like messages, reactions, channel changes, user actions, and more. " +
+        "You need to configure your Slack app's Event Subscriptions with the webhook URL and subscribe to the events you want to receive. " +
+        "Requires a bot token and signing secret from your Slack app."
 )
 @Plugin(
     examples = {
         @Example(
-            title = "TODO",
-            code = "TODO",
+            title = "Trigger on new messages",
+            code = """
+                id: slack_message_trigger
+                namespace: company.team
+
+                triggers:
+                  - id: slack_event
+                    type: io.kestra.plugin.slack.app.Trigger
+                    botToken: "{{ secret('SLACK_BOT_TOKEN') }}"
+                    signingSecret: "{{ secret('SLACK_SIGNING_SECRET') }}"
+                    conditions:
+                      - type: io.kestra.plugin.core.condition.ExecutionFlowCondition
+                        namespace: company.team
+                        flowId: slack_message_trigger
+
+                tasks:
+                  - id: log_event
+                    type: io.kestra.plugin.core.log.Log
+                    message: "Received Slack event: {{ trigger.body }}"
+                """,
             full = true
         ),
+        @Example(
+            title = "Trigger on app mentions",
+            code = """
+                id: slack_mention_trigger
+                namespace: company.team
+
+                triggers:
+                  - id: slack_mention
+                    type: io.kestra.plugin.slack.app.Trigger
+                    botToken: "{{ secret('SLACK_BOT_TOKEN') }}"
+                    signingSecret: "{{ secret('SLACK_SIGNING_SECRET') }}"
+
+                tasks:
+                  - id: respond_to_mention
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_BOT_TOKEN') }}"
+                    channel: "{{ trigger.body.channel }}"
+                    messageText: "Hello! You mentioned me."
+                    timestamp: "{{ trigger.body.ts }}"
+                """,
+            full = true
+        )
     }
 )
-//@WebhookValidation
 public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Trigger.Output> {
     private static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<>() {};
     private static final ObjectMapper MAPPER = JacksonMapper.ofJson().copy().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);

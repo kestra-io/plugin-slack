@@ -24,7 +24,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get information about a file in Slack."
+    title = "Get information about a file in Slack.",
+    description = "Retrieve detailed metadata about a specific file from Slack, including its name, title, " +
+        "timestamps, user who uploaded it, and other properties. You need the `files:read` scope in your Slack app to use this task."
 )
 @Plugin(
     examples = {
@@ -37,9 +39,31 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: get_file_info
-                    type: io.kestra.plugin.slack.files.Info
+                    type: io.kestra.plugin.slack.app.files.Info
                     token: "{{ secret('SLACK_TOKEN') }}"
                     fileId: "F1234567890"
+                """
+        ),
+        @Example(
+            title = "Get file info after uploading",
+            full = true,
+            code = """
+                id: slack_upload_and_get_info
+                namespace: company.team
+
+                tasks:
+                  - id: upload_file
+                    type: io.kestra.plugin.slack.app.files.Upload
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channels: ["#general"]
+                    from: "{{ inputs.file }}"
+                    filename: "report.pdf"
+                    title: "Report"
+
+                  - id: get_file_info
+                    type: io.kestra.plugin.slack.app.files.Info
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    fileId: "{{ outputs.upload_file.id }}"
                 """
         )
     }
@@ -47,7 +71,8 @@ import lombok.experimental.SuperBuilder;
 public class Info extends AbstractSlackClientConnection implements RunnableTask<FileOutput> {
     @Schema(
         title = "The ID of the file.",
-        description = "The file ID can be obtained from the Upload task output or from the Slack API."
+        description = "The file ID can be obtained from the Upload task output or from the Slack API. " +
+            "File IDs typically start with 'F' (e.g., F1234567890)."
     )
     @NotNull
     private Property<String> fileId;

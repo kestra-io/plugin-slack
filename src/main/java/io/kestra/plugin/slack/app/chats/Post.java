@@ -3,6 +3,8 @@ package io.kestra.plugin.slack.app.chats;
 
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import io.kestra.core.models.annotations.Example;
+import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
@@ -25,7 +27,77 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Post a message to a channel."
+    title = "Post a message to a channel.",
+    description = "Send a message to a Slack channel. Supports text, blocks, and attachments. " +
+        "You need the `chat:write` scope in your Slack app to use this task."
+)
+@Plugin(
+    examples = {
+        @Example(
+            title = "Post a simple text message",
+            full = true,
+            code = """
+                id: slack_post_message
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "Hello from Kestra!"
+                """
+        ),
+        @Example(
+            title = "Post a message with custom payload",
+            full = true,
+            code = """
+                id: slack_post_custom
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    payload: |
+                      {
+                        "text": "Workflow completed successfully",
+                        "blocks": [
+                          {
+                            "type": "section",
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": "*Status:* :white_check_mark: Success"
+                            }
+                          }
+                        ]
+                      }
+                """
+        ),
+        @Example(
+            title = "Post a message to a thread",
+            full = true,
+            code = """
+                id: slack_post_thread
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "Main message"
+
+                  - id: reply_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "Reply in thread"
+                    timestamp: "{{ outputs.post_message.timestamp }}"
+                """
+        )
+    }
 )
 public class Post extends AbstractSlackClientConnection implements RunnableTask<Post.Output>, MessagePayloadInterface, ChatInterface {
     private Property<String> payload;

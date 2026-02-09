@@ -20,7 +20,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a file from Slack."
+    title = "Delete a file from Slack.",
+    description = "Delete a file from Slack using the Slack API. This action is permanent and cannot be undone. " +
+        "You need the `files:write` scope in your Slack app to use this task."
 )
 @Plugin(
     examples = {
@@ -33,9 +35,31 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: delete_file
-                    type: io.kestra.plugin.slack.files.Delete
+                    type: io.kestra.plugin.slack.app.files.Delete
                     token: "{{ secret('SLACK_TOKEN') }}"
                     fileId: "F1234567890"
+                """
+        ),
+        @Example(
+            title = "Delete a file after uploading it",
+            full = true,
+            code = """
+                id: slack_file_upload_and_delete
+                namespace: company.team
+
+                tasks:
+                  - id: upload_file
+                    type: io.kestra.plugin.slack.app.files.Upload
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channels: ["#general"]
+                    from: "{{ inputs.file }}"
+                    filename: "document.pdf"
+                    title: "Document"
+
+                  - id: delete_file
+                    type: io.kestra.plugin.slack.app.files.Delete
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    fileId: "{{ outputs.upload_file.id }}"
                 """
         )
     }
@@ -43,7 +67,8 @@ import lombok.experimental.SuperBuilder;
 public class Delete extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
         title = "The ID of the file to delete.",
-        description = "The file ID can be obtained from the Upload task output or from the Slack API."
+        description = "The file ID can be obtained from the Upload task output or from the Slack API. " +
+            "File IDs typically start with 'F' (e.g., F1234567890)."
     )
     @NotNull
     private Property<String> fileId;

@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: archive_channel
-                    type: io.kestra.plugin.slack.conversations.Archive
+                    type: io.kestra.plugin.slack.app.conversations.Archive
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                 """

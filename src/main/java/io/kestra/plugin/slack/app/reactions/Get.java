@@ -2,6 +2,7 @@ package io.kestra.plugin.slack.app.reactions;
 
 import com.slack.api.methods.request.reactions.ReactionsGetRequest;
 import com.slack.api.methods.response.reactions.ReactionsGetResponse;
+import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Metric;
 import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.executions.metrics.Counter;
@@ -31,9 +32,53 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get reactions for an item."
+    title = "Get reactions for an item.",
+    description = "Retrieve all reactions on a specific message or file. Returns a list of reactions with user information. " +
+        "You need the `reactions:read` scope in your Slack app to use this task."
 )
 @Plugin(
+    examples = {
+        @Example(
+            title = "Get reactions for a message",
+            full = true,
+            code = """
+                id: slack_get_reactions
+                namespace: company.team
+
+                tasks:
+                  - id: get_reactions
+                    type: io.kestra.plugin.slack.app.reactions.Get
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    timestamp: "{{ outputs.previous_task.timestamp }}"
+                """
+        ),
+        @Example(
+            title = "Get reactions and process them",
+            full = true,
+            code = """
+                id: slack_process_reactions
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "React to this message!"
+
+                  - id: get_reactions
+                    type: io.kestra.plugin.slack.app.reactions.Get
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    timestamp: "{{ outputs.post_message.timestamp }}"
+
+                  - id: log_reactions
+                    type: io.kestra.plugin.core.log.Log
+                    message: "Reactions file: {{ outputs.get_reactions.uri }}"
+                """
+        )
+    },
     metrics = {
         @Metric(
             name = "records",
@@ -43,17 +88,29 @@ import java.time.Instant;
     }
 )
 public class Get extends AbstractSlackClientConnection implements RunnableTask<Get.Output> {
-    @Schema(title = "Channel, private group, or IM channel to send message to.", description = "Can be an encoded ID, or a name.")
+    @Schema(
+        title = "Channel, private group, or IM channel containing the message.",
+        description = "Can be an encoded ID or a name. To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+    )
     @NotNull
     protected Property<String> channel;
 
-    @Schema(title = "File to get reactions for.")
+    @Schema(
+        title = "File to get reactions for.",
+        description = "File ID if getting reactions for a file instead of a message."
+    )
     protected Property<String> file;
 
-    @Schema(title = "File comment to get reactions for.")
+    @Schema(
+        title = "File comment to get reactions for.",
+        description = "File comment ID if getting reactions for a file comment."
+    )
     protected Property<String> fileComment;
 
-    @Schema(title = "Timestamp of the message to add reaction to.")
+    @Schema(
+        title = "Timestamp of the message to get reactions for.",
+        description = "The timestamp uniquely identifies the message within the channel."
+    )
     protected Property<Instant> timestamp;
 
     @Override

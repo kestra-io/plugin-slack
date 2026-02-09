@@ -3,6 +3,8 @@ package io.kestra.plugin.slack.app.chats;
 
 import com.slack.api.methods.request.chat.ChatUpdateRequest;
 import com.slack.api.methods.response.chat.ChatUpdateResponse;
+import io.kestra.core.models.annotations.Example;
+import io.kestra.core.models.annotations.Plugin;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.runners.RunContext;
@@ -25,7 +27,63 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Update a message in a channel."
+    title = "Update a message in a channel.",
+    description = "Update an existing message in a Slack channel. The message content and formatting can be changed. " +
+        "You need the `chat:write` scope in your Slack app to use this task."
+)
+@Plugin(
+    examples = {
+        @Example(
+            title = "Update a message",
+            full = true,
+            code = """
+                id: slack_update_message
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "Processing..."
+
+                  - id: update_message
+                    type: io.kestra.plugin.slack.app.chats.Update
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    timestamp: "{{ outputs.post_message.timestamp }}"
+                    messageText: "Processing complete!"
+                """
+        ),
+        @Example(
+            title = "Update with custom blocks",
+            full = true,
+            code = """
+                id: slack_update_custom
+                namespace: company.team
+
+                tasks:
+                  - id: update_message
+                    type: io.kestra.plugin.slack.app.chats.Update
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    timestamp: "{{ outputs.previous_task.timestamp }}"
+                    payload: |
+                      {
+                        "text": "Updated status",
+                        "blocks": [
+                          {
+                            "type": "section",
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": "*Status:* :white_check_mark: Completed"
+                            }
+                          }
+                        ]
+                      }
+                """
+        )
+    }
 )
 public class Update extends AbstractSlackClientConnection implements RunnableTask<Update.Output>, MessagePayloadInterface, ChatInterface {
     private Property<String> payload;

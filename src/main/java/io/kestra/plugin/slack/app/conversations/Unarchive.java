@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: unarchive_channel
-                    type: io.kestra.plugin.slack.conversations.Unarchive
+                    type: io.kestra.plugin.slack.app.conversations.Unarchive
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                 """

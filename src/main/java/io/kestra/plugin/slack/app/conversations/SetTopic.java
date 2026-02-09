@@ -37,7 +37,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: set_topic
-                    type: io.kestra.plugin.slack.conversations.SetTopic
+                    type: io.kestra.plugin.slack.app.conversations.SetTopic
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                     topic: "Discussion about the new project"

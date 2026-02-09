@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 
                 tasks:
                   - id: get_channel_info
-                    type: io.kestra.plugin.slack.conversations.Info
+                    type: io.kestra.plugin.slack.app.conversations.Info
                     token: "{{ secret('SLACK_TOKEN') }}"
                     channel: "C1234567890"
                 """
