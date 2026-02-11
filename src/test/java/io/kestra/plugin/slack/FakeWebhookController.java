@@ -173,6 +173,15 @@ public class FakeWebhookController {
     public HttpResponse<?> mockPost(HttpRequest<?> request, String method, @Body String data) {
         FakeWebhookController.data = data;
 
+        // Mock canvas method responses
+        if (method.contains("canvases")) {
+            if (method.contains("create") && !method.contains("conversations")) {
+                return HttpResponse.ok(Map.of("ok", true, "canvas_id", "F1234567890"));
+            } else if (method.contains("sectionslookup") || method.contains("sections.lookup")) {
+                return HttpResponse.ok(Map.of("ok", true, "sections", List.of()));
+            }
+        }
+
         return HttpResponse.ok(Map.of("ok", "true"));
     }
 

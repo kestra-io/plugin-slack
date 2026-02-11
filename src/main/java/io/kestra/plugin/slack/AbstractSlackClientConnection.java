@@ -55,7 +55,7 @@ public abstract class AbstractSlackClientConnection extends Task {
                 return response;
             }
 
-            throw new IllegalStateException(response.getError());
+            throw new IllegalStateException(response.getError() + ": " + response);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
