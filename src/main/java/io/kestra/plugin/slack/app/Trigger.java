@@ -34,6 +34,7 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.net.http.HttpHeaders;
@@ -126,15 +127,15 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
     private Property<String> signingSecret;
 
     @Override
-    public HttpResponse<?> evaluate(WebhookContext context) throws Exception {
+    public Mono<HttpResponse<?>> evaluate(WebhookContext context) throws Exception {
         // Reject path since not expected
-        if (context.getPath() != null || context.getRequest().getUri().getPath().endsWith("/")) {
-            return HttpResponse.of(HttpResponse.Status.NOT_FOUND);
+        if (context.path() != null || context.request().getUri().getPath().endsWith("/")) {
+            return Mono.just(HttpResponse.of(HttpResponse.Status.NOT_FOUND));
         }
 
-        RunContext runContext = context.getWebhookService().runContext(context.getFlow(), this);
+        RunContext runContext = context.webhookService().runContext(context.flow(), this);
 
-        Request<?> slackReq = this.parseRequest(context.getRequest(), context, runContext);
+        Request<?> slackReq = this.parseRequest(context.request(), context, runContext);
 
         if (slackReq != null) {
             App app = app(context, runContext);
@@ -142,17 +143,18 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
             try {
                 Response slackResp = app.run(slackReq);
 
-                return HttpResponse.builder()
+                return Mono.just(HttpResponse.builder()
                     .status(HttpResponse.Status.valueOf(slackResp.getStatusCode()))
                     .body(slackResp.getBody() != null ? slackResp.getBody() : null)
                     .headers(httpHeaders(slackResp))
-                    .build();
+                    .build()
+                );
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to handle a slack request", e);
             }
         }
 
-        return HttpResponse.of(HttpResponse.Status.BAD_REQUEST, "Invalid Request");
+        return Mono.just(HttpResponse.of(HttpResponse.Status.BAD_REQUEST, "Invalid Request"));
     }
 
     private static HttpHeaders httpHeaders(Response response) {
@@ -229,14 +231,14 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
 
         Output output = Output.builder()
             .body(body)
-            .headers(context.getRequest().getHeaders().map())
-            .parameters(context.getWebhookService().parseParameters(context))
+            .headers(context.request().getHeaders().map())
+            .parameters(context.webhookService().parseParameters(context))
             .token(token)
             .build();
 
-        Optional<Execution> maybeExecution = context.getWebhookService().newExecution(
+        Optional<Execution> maybeExecution = context.webhookService().newExecution(
             context,
-            context.getFlow(),
+            context.flow(),
             this,
             output
         );
@@ -245,13 +247,13 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
             return slackContext.ack();
         } else {
             try {
-                context.getWebhookService().startExecution(maybeExecution.get());
+                context.webhookService().startExecution(maybeExecution.get());
             } catch (QueueException e) {
                 runContext.logger().error("Failed to start execution for slack webhook", e);
                 throw new RuntimeException(e);
             }
 
-            WebhookResponse webhookResponse = context.getWebhookService().executionResponse(maybeExecution.get());
+            WebhookResponse webhookResponse = context.webhookService().executionResponse(maybeExecution.get());
 
             try {
                 return Response.json(200, JacksonMapper.ofJson().writeValueAsString(webhookResponse));

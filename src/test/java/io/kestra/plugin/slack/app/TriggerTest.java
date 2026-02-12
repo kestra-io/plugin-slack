@@ -17,6 +17,7 @@ import io.kestra.plugin.core.trigger.WebhookContext;
 import io.kestra.plugin.core.trigger.WebhookResponse;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.net.http.HttpHeaders;
@@ -73,7 +74,10 @@ class TriggerTest {
         return build;
     }
 
-    private static void assertResponse(HttpResponse<?> evaluate) throws JsonProcessingException {
+    private static void assertResponse(Mono<HttpResponse<?>> mono) throws JsonProcessingException {
+        HttpResponse<?> evaluate = mono.block();
+
+        assertThat(evaluate, is(notNullValue()));
         assertThat(evaluate.getStatus().getCode(), is(200));
         assertThat(evaluate.contentType(), is("application/json; charset=utf-8"));
         WebhookResponse webhookResponse = JacksonMapper.ofJson().readValue((String) evaluate.getBody(), WebhookResponse.class);
@@ -100,8 +104,10 @@ class TriggerTest {
 
         WebhookContext build = webhookContext(flow, appTrigger, body);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var mono = appTrigger.evaluate(build);
+        HttpResponse<?> evaluate = mono.block();
 
+        assertThat(evaluate, is(notNullValue()));
         assertThat(evaluate.getStatus().getCode(), is(200));
         assertThat(evaluate.contentType(), is("text/plain"));
         assertThat(evaluate.getBody(), is("challenge-value"));
@@ -134,7 +140,7 @@ class TriggerTest {
 
         WebhookContext build = webhookContext(flow, appTrigger, body);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -154,7 +160,7 @@ class TriggerTest {
 
         WebhookContext build = webhookContext(flow, appTrigger, body);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -175,7 +181,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -196,7 +202,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -217,7 +223,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -238,7 +244,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -259,7 +265,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -280,7 +286,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -301,7 +307,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -322,7 +328,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -343,7 +349,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -364,7 +370,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
@@ -385,7 +391,7 @@ class TriggerTest {
         String requestBody = "payload=" + URLEncoder.encode(body, StandardCharsets.UTF_8);
         WebhookContext build = webhookContext(flow, appTrigger, requestBody);
 
-        HttpResponse<?> evaluate = appTrigger.evaluate(build);
+        var evaluate = appTrigger.evaluate(build);
 
         assertResponse(evaluate);
     }
