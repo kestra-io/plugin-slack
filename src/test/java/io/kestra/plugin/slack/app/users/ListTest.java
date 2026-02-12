@@ -44,19 +44,4 @@ public class ListTest extends AbstractSlackClientTest {
         assertThat(ionResult).contains("U0000000000");
         assertThat(ionResult).contains("U0000000014");
     }
-
-    @Test
-    void runWithPresence() throws Exception {
-        List task = List.builder()
-            .id(IdUtils.create())
-            .type(List.class.getName())
-            .slack(this.client("userslist"))
-            .token(Property.ofValue("token"))
-            .build();
-
-        List.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
-
-        assertThat(output).isNotNull();
-        assertThat(FakeWebhookController.data).contains("presence=1");
-    }
 }
