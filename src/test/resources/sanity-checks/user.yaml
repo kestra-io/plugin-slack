@@ -1,0 +1,40 @@
+id: user
+namespace: sanitychecks.plugin-slack
+
+inputs:
+  - id: token
+    type: SECRET
+
+tasks:
+  - id: getPresence
+    type: io.kestra.plugin.slack.app.users.GetPresence
+    token: "{{ inputs.token }}"
+    user: "U01JA8ZTC07"
+
+  - id: assertChatsSend
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.getPresence }}"
+    conditions:
+      - "{{ outputs.getPresence.presence is defined }}"
+
+  - id: info
+    type: io.kestra.plugin.slack.app.users.Info
+    token: "{{ inputs.token }}"
+    user: "U01JA8ZTC07"
+
+  - id: assertInfo
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.info }}"
+    conditions:
+      - "{{ outputs.info.teamId == 'T01JX6XH5KN' }}"
+
+  - id: profileGet
+    type: io.kestra.plugin.slack.app.users.ProfileGet
+    token: "{{ inputs.token }}"
+    user: "U01JA8ZTC07"
+
+  - id: assertProfileGet
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.profileGet }}"
+    conditions:
+      - "{{ outputs.profileGet.title == 'CTO @ kestra.io' }}"

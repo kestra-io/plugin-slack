@@ -1,0 +1,21 @@
+id: all_slack
+namespace: sanitychecks.plugin-slack
+
+tasks:
+  - id: call_subflows_in_loop
+    type: io.kestra.plugin.core.flow.ForEach
+    values:
+      - chat-reactions
+      - chat-schedule
+      - chat-stream
+      - file
+      - user
+    tasks:
+      - id: call-subflow-task
+        type: io.kestra.plugin.core.flow.Subflow
+        namespace: "{{ flow.namespace }}"
+        flowId: "{{ taskrun.value }}"
+        wait: true
+        transmitFailed: true
+        inputs:
+          token: "{{ secret('SLACK_BOT_TOKEN') }}"

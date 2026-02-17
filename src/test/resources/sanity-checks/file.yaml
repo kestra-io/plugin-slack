@@ -1,0 +1,37 @@
+id: file
+namespace: sanitychecks.plugin-slack
+
+inputs:
+  - id: token
+    type: SECRET
+
+tasks:
+  - id: write
+    type: io.kestra.plugin.core.storage.Write
+    content: Hello World
+    extension: .txt
+
+  - id: filesUpload
+    type: io.kestra.plugin.slack.app.files.Upload
+    token: "{{ inputs.token }}"
+    from: "{{ outputs.write.uri }}"
+    channels:
+      - "C0ACC6BT2GK"
+    filename: "Hello From Kestra"
+
+  - id: upload
+    type: io.kestra.plugin.slack.app.files.Info
+    token: "{{ inputs.token }}"
+    fileId: "{{ outputs.filesUpload.id }}"
+
+  - id: assert
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.upload }}"
+    conditions:
+      - "{{ outputs.upload.name == 'Hello From Kestra' }}"
+
+  - id: delete
+    type: io.kestra.plugin.slack.app.files.Delete
+    token: "{{ inputs.token }}"
+    fileId: "{{ outputs.filesUpload.id }}"
+

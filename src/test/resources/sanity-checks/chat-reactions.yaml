@@ -1,0 +1,67 @@
+id: chat-reactions
+namespace: sanitychecks.plugin-slack
+
+inputs:
+  - id: token
+    type: SECRET
+
+tasks:
+  - id: chatsSend
+    type: io.kestra.plugin.slack.app.chats.Post
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    messageText: Hello World! 🚀
+
+  - id: assertChatsSend
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.chatsSend }}"
+    conditions:
+      - "{{ outputs.chatsSend.timestamp is defined }}"
+
+  - id: reactionsAdd
+    type: io.kestra.plugin.slack.app.reactions.Add
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+    name: "poop"
+
+  - id: reactionsGet
+    type: io.kestra.plugin.slack.app.reactions.Get
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+
+  - id: assertReactionsGet
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.reactionsGet }}"
+    conditions:
+      - "{{ outputs.reactionsGet.uri is defined }}"
+
+  - id: chatsUpdate
+    type: io.kestra.plugin.slack.app.chats.Update
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+    messageText: Hello Updated World! 🚀
+
+  - id: chatsEphemeral
+    type: io.kestra.plugin.slack.app.chats.PostEphemeral
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+    user: "U01JA8ZTC07"
+    messageText: Hello Ephemeral World! 🚀
+
+  - id: reactionsDelete
+    type: io.kestra.plugin.slack.app.reactions.Remove
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+    name: "poop"
+
+  - id: chatsDelete
+    type: io.kestra.plugin.slack.app.chats.Delete
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+

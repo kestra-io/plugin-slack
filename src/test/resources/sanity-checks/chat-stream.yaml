@@ -1,0 +1,43 @@
+id: chat-stream
+namespace: sanitychecks.plugin-slack
+
+inputs:
+  - id: token
+    type: SECRET
+
+tasks:
+  - id: chatsSend
+    type: io.kestra.plugin.slack.app.chats.Post
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    messageText: Hello World! 🚀
+
+  - id: start_stream
+    type: io.kestra.plugin.slack.app.chats.StartStream
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    recipientTeamId: "T01JX6XH5KN"
+    recipientUserId: "U01JA8ZTC07"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+    markdownText: "Processing workflow..."
+
+  - id: append_stream
+    type: io.kestra.plugin.slack.app.chats.AppendStream
+    token: "{{ inputs.token }}"
+    channel: "{{ outputs.start_stream.channel }}"
+    timestamp: "{{ outputs.start_stream.timestamp }}"
+    markdownText: "Step 1 completed"
+
+  - id: stop_stream
+    type: io.kestra.plugin.slack.app.chats.StopStream
+    token: "{{ inputs.token }}"
+    channel: "{{ outputs.start_stream.channel }}"
+    timestamp: "{{ outputs.start_stream.timestamp }}"
+    markdownText: "All steps completed!"
+
+  - id: chatsDelete
+    type: io.kestra.plugin.slack.app.chats.Delete
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    timestamp: "{{ outputs.chatsSend.timestamp }}"
+

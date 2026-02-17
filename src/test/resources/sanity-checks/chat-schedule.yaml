@@ -1,0 +1,27 @@
+id: chat-schedule
+namespace: sanitychecks.plugin-slack
+
+inputs:
+  - id: token
+    type: SECRET
+
+tasks:
+  - id: chatsSend
+    type: io.kestra.plugin.slack.app.chats.Schedule
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    messageText: Hello World! 🚀
+    postAt: "{{ now() | dateAdd(1, 'DAYS') }}"
+
+  - id: assertChatsSend
+    type: io.kestra.plugin.core.execution.Assert
+    errorMessage: "Invalid get data {{ outputs.chatsSend }}"
+    conditions:
+      - "{{ outputs.chatsSend.messageId is defined }}"
+
+  - id: cancelMessage
+    type: io.kestra.plugin.slack.app.chats.DeleteScheduled
+    token: "{{ inputs.token }}"
+    channel: "C0ACC6BT2GK"
+    scheduledMessageId: "{{ outputs.chatsSend.messageId }}"
+
