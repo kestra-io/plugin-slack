@@ -32,7 +32,7 @@ import lombok.extern.jackson.Jacksonized;
 
                 tasks:
                   - id: get_profile
-                    type: io.kestra.plugin.slack.app.users.profile.Get
+                    type: io.kestra.plugin.slack.app.users.ProfileGet
                     token: "{{ secret('SLACK_TOKEN') }}"
                     user: "U1234567890"
                 """
