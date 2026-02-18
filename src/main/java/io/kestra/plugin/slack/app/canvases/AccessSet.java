@@ -62,13 +62,17 @@ public class AccessSet extends AbstractSlackClientConnection implements Runnable
 
     @Schema(
         title = "List of channel IDs to grant access to.",
-        description = "Channel IDs that should have access to the canvas."
+        description = """
+            List of channels you wish to update access for. Can only be used if `userIds` is not provided.
+            """
     )
     private Property<List<String>> channelIds;
 
     @Schema(
         title = "List of user IDs to grant access to.",
-        description = "User IDs that should have access to the canvas."
+        description = """
+            List of users you wish to update access for. Can only be used if `channelIds` is not provided.
+            """
     )
     private Property<List<String>> userIds;
 
@@ -79,14 +83,20 @@ public class AccessSet extends AbstractSlackClientConnection implements Runnable
         runContext.render(this.canvasId).as(String.class).ifPresent(builder::canvasId);
         runContext.render(this.accessLevel).as(AccessLevel.class).ifPresent(level -> builder.accessLevel(level.getValue()));
 
-        var channelIdsList = runContext.render(this.channelIds).asList(String.class);
-        if (channelIdsList != null && !channelIdsList.isEmpty()) {
-            builder.channelIds(channelIdsList);
+        var rChannelIds = runContext.render(this.channelIds).asList(String.class);
+        var rUserIds = runContext.render(this.userIds).asList(String.class);
+
+        boolean hasChannels = rChannelIds != null && !rChannelIds.isEmpty();
+        boolean hasUsers = rUserIds != null && !rUserIds.isEmpty();
+
+        if (hasChannels == hasUsers) {
+            throw new IllegalArgumentException("Exactly one of 'userIds' or 'channelIds' must be provided.");
         }
 
-        var userIdsList = runContext.render(this.userIds).asList(String.class);
-        if (userIdsList != null && !userIdsList.isEmpty()) {
-            builder.userIds(userIdsList);
+        if (hasChannels) {
+            builder.channelIds(rChannelIds);
+        } else {
+            builder.userIds(rUserIds);
         }
 
         call(runContext, (client) -> client.canvasesAccessSet(builder.build()));
@@ -104,6 +114,5 @@ public class AccessSet extends AbstractSlackClientConnection implements Runnable
         AccessLevel(String value) {
             this.value = value;
         }
-
     }
 }
