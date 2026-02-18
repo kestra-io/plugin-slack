@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
                   - id: list_channels
                     type: io.kestra.plugin.slack.app.conversations.List
                     token: "{{ secret('SLACK_TOKEN') }}"
-                    types: ["public_channel"]
+                    types: ["PUBLIC_CHANNEL"]
                 """
         )
     },
