@@ -20,7 +20,16 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Unarchive a Slack conversation (channel)."
+    title = "Unarchive a Slack conversation (channel).",
+    description = """
+        This task unarchives a conversation. The calling user is added to the conversation.
+
+        Note:
+        Bot tokens (xoxb-...) cannot currently be used to unarchive conversations.
+        You must use a user token (xoxp-...) to unarchive the conversation rather than a bot token.
+
+        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.unarchive/)
+        """
 )
 @Plugin(
     examples = {
