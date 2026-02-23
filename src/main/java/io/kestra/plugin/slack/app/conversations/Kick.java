@@ -20,7 +20,16 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Remove a user from a Slack conversation (channel)."
+    title = "Remove a user from a Slack conversation (channel).",
+    description = """
+        This task removes a user from a conversation. The user will not receive a notification of this action.
+
+        Note:
+        Bot tokens (xoxb-...) cannot currently be used to remove users from conversations.
+        You must use a user token (xoxp-...) to remove the user rather than a bot token.
+
+        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.kick/)
+        """
 )
 @Plugin(
     examples = {

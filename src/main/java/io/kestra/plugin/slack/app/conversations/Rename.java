@@ -21,7 +21,16 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Rename a Slack conversation (channel)."
+    title = "Rename a Slack conversation (channel).",
+    description = """
+        This task renames a conversation.
+
+        Note:
+        Bot tokens (xoxb-...) cannot currently be used to rename conversations.
+        You must use a user token (xoxp-...) to rename the conversation rather than a bot token.
+
+        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.rename)
+        """
 )
 @Plugin(
     examples = {
