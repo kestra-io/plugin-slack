@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Leave a Slack conversation (channel)."
+    title = "Leave a Slack channel",
+    description = "Removes the caller from the specified channel. Public channels can be rejoined; private channels may need an invite."
 )
 @Plugin(
     examples = {
@@ -42,8 +43,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Leave extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the channel to leave.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to leave; provide the Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;

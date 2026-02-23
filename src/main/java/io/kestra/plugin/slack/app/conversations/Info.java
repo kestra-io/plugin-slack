@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get information about a Slack conversation (channel)."
+    title = "Get Slack channel details",
+    description = "Retrieves metadata for a conversation. Optionally includes locale. Requires the channel ID."
 )
 @Plugin(
     examples = {
@@ -42,15 +43,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class Info extends AbstractSlackClientConnection implements RunnableTask<ConversationOutput> {
     @Schema(
-        title = "The ID of the channel.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Slack channel ID to describe (e.g., C123...)."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "Include locale for this conversation.",
-        description = "Set this to true to receive the locale for this conversation. Default is false."
+        title = "Include locale flag",
+        description = "Set to true to include locale; defaults to false."
     )
     @Builder.Default
     private Property<Boolean> includeLocale = Property.ofValue(false);

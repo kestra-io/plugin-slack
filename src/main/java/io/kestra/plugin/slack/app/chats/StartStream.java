@@ -21,10 +21,8 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Start a streaming conversation in a Slack channel.",
-    description = "Initiates a streaming message that can be appended to incrementally. " +
-        "Use this task to start a stream, then use AppendStream to add content, and finally StopStream to complete it. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Start a streaming Slack message",
+    description = "Begins a stream that can be appended (AppendStream) and finalized (StopStream). Requires `chat:write`; provide channel plus optional thread and recipient identifiers when streaming into channels."
 )
 @Plugin(
     examples = {
@@ -98,31 +96,32 @@ import lombok.extern.jackson.Jacksonized;
 )
 public class StartStream extends AbstractSlackClientConnection implements RunnableTask<StartStream.Output> {
     @Schema(
-        title = "Channel, group, or IM channel to send stream to.",
-        description = "Can be an encoded ID, or a name."
+        title = "Channel for the stream",
+        description = "Channel ID or name where the streaming message is posted."
     )
     private Property<String> channel;
 
     @Schema(
-        title = "The markdown text to include in the stream.",
-        description = "Initial content for the stream message."
+        title = "Initial markdown content",
+        description = "Markdown body to seed the streaming message."
     )
     private Property<String> markdownText;
 
     @Schema(
-        title = "Provide another message's timestamp value to make this stream a reply in a thread."
+        title = "Thread timestamp to reply to",
+        description = "Slack `ts` to nest the stream inside an existing thread."
     )
     private Property<String> timestamp;
 
     @Schema(
-        title = "The encoded ID of the user to receive the streaming text.",
-        description = "Required when streaming to channels."
+        title = "Recipient user ID",
+        description = "Required when streaming into channels to target a specific user."
     )
     private Property<String> recipientUserId;
 
     @Schema(
-        title = "The encoded ID of the team the user receiving the streaming text belongs to.",
-        description = "Required when streaming to channels."
+        title = "Recipient team ID",
+        description = "Team ID for the recipient; required alongside `recipientUserId` for channel streams."
     )
     private Property<String> recipientTeamId;
 
@@ -148,11 +147,11 @@ public class StartStream extends AbstractSlackClientConnection implements Runnab
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the stream message.", description = "Used to reference this stream in AppendStream and StopStream tasks.")
+        @Schema(title = "Stream message timestamp", description = "Use with AppendStream and StopStream.")
         @NotNull
         String timestamp;
 
-        @Schema(title = "The channel where the stream was started.")
+        @Schema(title = "Stream channel")
         @NotNull
         String channel;
     }

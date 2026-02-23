@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get information about a Slack user."
+    title = "Get Slack user details",
+    description = "Retrieves user profile metadata; locale can be included."
 )
 @Plugin(
     examples = {
@@ -42,15 +43,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class Info extends AbstractSlackClientConnection implements RunnableTask<UserOutput> {
     @Schema(
-        title = "The ID of the user.",
-        description = "The user ID to retrieve information about."
+        title = "User ID",
+        description = "Slack user ID to describe."
     )
     @NotNull
     private Property<String> user;
 
     @Schema(
-        title = "Include locale for this user.",
-        description = "Set this to true to receive the locale for this user. Default is false."
+        title = "Include locale",
+        description = "If true, locale is returned. Default false."
     )
     @Builder.Default
     private Property<Boolean> includeLocale = Property.ofValue(false);

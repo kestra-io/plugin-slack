@@ -26,9 +26,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Remove a reaction from a message.",
-    description = "Remove an emoji reaction from a Slack message. " +
-        "You need the `reactions:write` scope in your Slack app to use this task."
+    title = "Remove a Slack reaction",
+    description = "Removes an emoji reaction from a message by channel and timestamp. Requires `reactions:write`."
 )
 @Plugin(
     examples = {
@@ -75,22 +74,22 @@ import java.time.Instant;
 )
 public class Remove extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "Channel, private group, or IM channel containing the message.",
-        description = "Can be an encoded ID or a name. To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel containing the message",
+        description = "Channel ID or name where the target message lives. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     protected Property<String> channel;
 
     @Schema(
-        title = "The Reaction (emoji) name.",
-        description = "The name of the emoji without colons (e.g., 'thumbsup', 'white_check_mark', 'heart')."
+        title = "Emoji name",
+        description = "Name without colons (e.g., thumbsup, white_check_mark, heart)."
     )
     @NotNull
     protected Property<String> name;
 
     @Schema(
-        title = "Timestamp of the message to remove reaction from.",
-        description = "The timestamp uniquely identifies the message within the channel."
+        title = "Message timestamp",
+        description = "Slack `ts` of the message to remove the reaction from."
     )
     @NotNull
     protected Property<Instant> timestamp;

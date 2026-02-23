@@ -21,10 +21,8 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Append text to a streaming conversation in a Slack channel.",
-    description = "Appends additional content to an existing stream started with StartStream. " +
-        "The stream must be active (not yet stopped with StopStream). " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Append to a Slack stream",
+    description = "Adds markdown to an active streaming message started with StartStream. Requires the original channel and timestamp and `chat:write`; fails if the stream is already stopped."
 )
 @Plugin(
     examples = {
@@ -112,22 +110,22 @@ import lombok.extern.jackson.Jacksonized;
 )
 public class AppendStream extends AbstractSlackClientConnection implements RunnableTask<AppendStream.Output> {
     @Schema(
-        title = "The channel ID where the stream is active.",
-        description = "Must match the channel where the stream was started."
+        title = "Stream channel",
+        description = "Channel ID or name where the stream was started."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "The timestamp of the stream message to append to.",
-        description = "This is the timestamp returned by the StartStream task."
+        title = "Stream message timestamp",
+        description = "Slack `ts` returned by StartStream."
     )
     @NotNull
     private Property<String> timestamp;
 
     @Schema(
-        title = "The markdown text to append to the stream.",
-        description = "Additional content to add to the stream message."
+        title = "Markdown to append",
+        description = "Additional markdown content appended to the stream."
     )
     @NotNull
     private Property<String> markdownText;
@@ -151,11 +149,11 @@ public class AppendStream extends AbstractSlackClientConnection implements Runna
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the stream message.")
+        @Schema(title = "Stream message timestamp")
         @NotNull
         String timestamp;
 
-        @Schema(title = "The channel where the stream is active.")
+        @Schema(title = "Stream channel")
         @NotNull
         String channel;
     }

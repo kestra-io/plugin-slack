@@ -22,9 +22,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a scheduled message from a channel.",
-    description = "Delete a previously scheduled message before it is sent. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Cancel a scheduled Slack message",
+    description = "Removes a pending scheduled message before it posts. Requires `chat:write`; provide the channel and scheduled message ID."
 )
 @Plugin(
     examples = {
@@ -69,15 +68,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class DeleteScheduled extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The channel ID where the scheduled message should be removed.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel of scheduled message",
+        description = "Channel ID or name that holds the scheduled post."
     )
     @NotNull
     protected Property<String> channel;
 
     @Schema(
-        title = "The scheduled message ID to delete.",
-        description = "The ID is returned when scheduling a message and uniquely identifies the scheduled message."
+        title = "Scheduled message ID",
+        description = "Value returned by Schedule; uniquely identifies the pending post."
     )
     @NotNull
     protected Property<String> scheduledMessageId;

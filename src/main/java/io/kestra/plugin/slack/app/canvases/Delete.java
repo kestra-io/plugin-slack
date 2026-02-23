@@ -19,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a Slack canvas."
+    title = "Delete a canvas",
+    description = "Permanently deletes the specified canvas; Slack cannot recover it after deletion."
 )
 @Plugin(
     examples = {
@@ -41,8 +42,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Delete extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the canvas to delete.",
-        description = "Once a canvas is deleted, there is no way to get it back."
+        title = "Canvas ID",
+        description = "Canvas to delete; deletion is irreversible in Slack."
     )
     @NotNull
     private Property<String> canvasId;

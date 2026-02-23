@@ -17,55 +17,55 @@ import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 @Builder
 @Jacksonized
 @Schema(
-    title = "Channel output information"
+    title = "Conversation details output"
 )
 public class ConversationOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "The ID of the channel.")
+    @Schema(title = "Channel ID")
     @NotNull
     @PluginProperty
     String id;
 
-    @Schema(title = "The name of the channel.")
+    @Schema(title = "Channel name")
     @PluginProperty
     String name;
 
-    @Schema(title = "Whether the channel is private.")
+    @Schema(title = "Is private")
     @PluginProperty
     Boolean isPrivate;
 
-    @Schema(title = "Whether the conversation is a channel.")
+    @Schema(title = "Is channel")
     @PluginProperty
     Boolean isChannel;
 
-    @Schema(title = "Whether the conversation is a group.")
+    @Schema(title = "Is group")
     @PluginProperty
     Boolean isGroup;
 
-    @Schema(title = "Whether the conversation is an instant message.")
+    @Schema(title = "Is instant message")
     @PluginProperty
     Boolean isInstantMessage;
 
-    @Schema(title = "Whether the conversation is a multi-person instant message.")
+    @Schema(title = "Is multi-person IM")
     @PluginProperty
     Boolean isMultiPersonInstantMessage;
 
-    @Schema(title = "The timestamp when the channel was created.")
+    @Schema(title = "Created at")
     @PluginProperty
     Instant created;
 
-    @Schema(title = "Whether the channel is archived.")
+    @Schema(title = "Is archived")
     @PluginProperty
     Boolean isArchived;
 
-    @Schema(title = "Whether the channel is the general channel.")
+    @Schema(title = "Is general")
     @PluginProperty
     Boolean isGeneral;
 
-    @Schema(title = "The topic of the channel.")
+    @Schema(title = "Channel topic")
     @PluginProperty
     ConversationTopicOutput topic;
 
-    @Schema(title = "The purpose of the channel.")
+    @Schema(title = "Channel purpose")
     @PluginProperty
     ConversationTopicOutput purpose;
 

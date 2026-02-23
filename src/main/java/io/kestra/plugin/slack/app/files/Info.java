@@ -24,9 +24,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get information about a file in Slack.",
-    description = "Retrieve detailed metadata about a specific file from Slack, including its name, title, " +
-        "timestamps, user who uploaded it, and other properties. You need the `files:read` scope in your Slack app to use this task."
+    title = "Get Slack file metadata",
+    description = "Fetches file details (name, title, uploader, timestamps, links). Requires `files:read` and the file ID."
 )
 @Plugin(
     examples = {
@@ -70,9 +69,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Info extends AbstractSlackClientConnection implements RunnableTask<FileOutput> {
     @Schema(
-        title = "The ID of the file.",
-        description = "The file ID can be obtained from the Upload task output or from the Slack API. " +
-            "File IDs typically start with 'F' (e.g., F1234567890)."
+        title = "File ID",
+        description = "Slack file ID (e.g., F123...); obtain from Upload output or Slack API."
     )
     @NotNull
     private Property<String> fileId;

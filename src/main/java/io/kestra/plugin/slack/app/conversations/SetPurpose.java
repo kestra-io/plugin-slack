@@ -21,7 +21,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Set the purpose of a Slack conversation (channel)."
+    title = "Set Slack channel purpose",
+    description = "Updates the channel purpose text (up to 250 characters)."
 )
 @Plugin(
     examples = {
@@ -44,15 +45,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class SetPurpose extends AbstractSlackClientConnection implements RunnableTask<ConversationTopicOutput> {
     @Schema(
-        title = "The ID of the channel.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel whose purpose to update; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "The new purpose for the channel.",
-        description = "The purpose can be up to 250 characters."
+        title = "Channel purpose",
+        description = "New purpose text, maximum 250 characters."
     )
     @NotNull
     private Property<String> purpose;

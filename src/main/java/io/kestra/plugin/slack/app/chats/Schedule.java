@@ -26,9 +26,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Schedule a message to be sent to a channel at a specified time.",
-    description = "Schedule a message to be posted to a Slack channel at a future time. The message can be cancelled before it's sent. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Schedule a Slack message",
+    description = "Queues a message to post at a future time; cancellable with DeleteScheduled. Requires `chat:write` and a post-at timestamp in the future."
 )
 @Plugin(
     examples = {
@@ -88,8 +87,8 @@ public class Schedule extends AbstractSlackClientConnection implements RunnableT
     private Property<String> iconEmoji;
 
     @Schema(
-        title = "Unix EPOCH timestamp of time in future to send the message.",
-        description = "The time when the message should be posted. Must be a future time."
+        title = "Post time (Unix seconds)",
+        description = "Future time to post the message; the Instant is converted to epoch seconds for Slack."
     )
     @NotNull
     protected Property<Instant> postAt;
@@ -154,11 +153,11 @@ public class Schedule extends AbstractSlackClientConnection implements RunnableT
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The ID of the scheduled message.")
+        @Schema(title = "Scheduled message ID")
         @NotNull
         String messageId;
 
-        @Schema(title = "The Unix timestamp when the message will be posted.")
+        @Schema(title = "Post time (Unix seconds)")
         @NotNull
         Integer postAt;
     }

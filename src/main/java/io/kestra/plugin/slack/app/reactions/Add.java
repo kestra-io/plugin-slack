@@ -26,9 +26,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Add a reaction to a message.",
-    description = "Add an emoji reaction to a Slack message. " +
-        "You need the `reactions:write` scope in your Slack app to use this task."
+    title = "Add a Slack reaction",
+    description = "Adds an emoji reaction to a message by channel and timestamp. Requires `reactions:write`."
 )
 @Plugin(
     examples = {
@@ -74,22 +73,22 @@ import java.time.Instant;
 )
 public class Add extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "Channel, private group, or IM channel containing the message.",
-        description = "Can be an encoded ID or a name. To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel containing the message",
+        description = "Channel ID or name where the target message lives. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     protected Property<String> channel;
 
     @Schema(
-        title = "Reaction (emoji) name.",
-        description = "The name of the emoji without colons (e.g., 'thumbsup', 'white_check_mark', 'heart')."
+        title = "Emoji name",
+        description = "Name without colons (e.g., thumbsup, white_check_mark, heart)."
     )
     @NotNull
     protected Property<String> name;
 
     @Schema(
-        title = "Timestamp of the message to add reaction to.",
-        description = "The timestamp uniquely identifies the message within the channel."
+        title = "Message timestamp",
+        description = "Slack `ts` of the message to react to."
     )
     @NotNull
     protected Property<Instant> timestamp;

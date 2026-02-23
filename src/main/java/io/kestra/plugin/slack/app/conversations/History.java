@@ -32,7 +32,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Fetch conversation history from a Slack channel."
+    title = "Fetch Slack channel history",
+    description = "Streams channel messages within optional time bounds into internal storage. Supports pagination and counts fetched messages."
 )
 @Plugin(
     examples = {
@@ -61,27 +62,27 @@ import java.time.Instant;
 )
 public class History extends AbstractSlackClientConnection implements RunnableTask<History.Output> {
     @Schema(
-        title = "The ID of the channel.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel whose history to export; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "Start of time range of messages to include.",
-        description = "Unix timestamp of the least recent message to include."
+        title = "Oldest timestamp",
+        description = "Inclusive lower bound (Instant) converted to Slack ts."
     )
     private Property<Instant> oldest;
 
     @Schema(
-        title = "End of time range of messages to include.",
-        description = "Unix timestamp of the most recent message to include."
+        title = "Latest timestamp",
+        description = "Inclusive upper bound (Instant) converted to Slack ts."
     )
     private Property<Instant> latest;
 
     @Schema(
-        title = "Include messages from all threads.",
-        description = "Return all messages including those in threads. Default is false."
+        title = "Include threaded messages",
+        description = "If true, returns thread messages as well; defaults to false."
     )
     @Builder.Default
     private Property<Boolean> inclusive = Property.ofValue(false);
@@ -131,10 +132,10 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored messages file")
+        @Schema(title = "URI of stored messages file")
         URI uri;
 
-        @Schema(title = "The number of messages fetched")
+        @Schema(title = "Number of messages fetched")
         Long size;
     }
 

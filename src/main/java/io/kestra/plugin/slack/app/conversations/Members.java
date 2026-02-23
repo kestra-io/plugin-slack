@@ -30,7 +30,8 @@ import java.net.URI;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "List members in a Slack conversation (channel)."
+    title = "List members of a Slack channel",
+    description = "Streams member IDs for a channel into internal storage and emits a count."
 )
 @Plugin(
     examples = {
@@ -59,8 +60,8 @@ import java.net.URI;
 )
 public class Members extends AbstractSlackClientConnection implements RunnableTask<Members.Output> {
     @Schema(
-        title = "The ID of the channel.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel whose members to list; provide the Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
@@ -107,10 +108,10 @@ public class Members extends AbstractSlackClientConnection implements RunnableTa
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored members file")
+        @Schema(title = "URI of stored members file")
         URI uri;
 
-        @Schema(title = "The number of members fetched")
+        @Schema(title = "Number of members fetched")
         Long size;
     }
 
@@ -118,7 +119,7 @@ public class Members extends AbstractSlackClientConnection implements RunnableTa
     @Builder
     @Jacksonized
     public static class MemberOutput {
-        @Schema(title = "The member user ID")
+        @Schema(title = "Member user ID")
         String memberId;
     }
 }

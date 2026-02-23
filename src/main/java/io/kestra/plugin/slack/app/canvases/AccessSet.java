@@ -21,7 +21,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Set access level for a Slack canvas."
+    title = "Set canvas access controls",
+    description = "Updates a canvas's read/write access for specific users or channels. Exactly one of `userIds` or `channelIds` must be provided; Slack rejects mixed input."
 )
 @Plugin(
     examples = {
@@ -47,32 +48,28 @@ import java.util.List;
 )
 public class AccessSet extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the canvas.",
-        description = "The canvas ID to set access for."
+        title = "Canvas ID",
+        description = "Target canvas to update access for (e.g., `F1234567890`)."
     )
     @NotNull
     private Property<String> canvasId;
 
     @Schema(
-        title = "Access level to set.",
-        description = "The access level for the canvas."
+        title = "Access level",
+        description = "New access level to apply."
     )
     @NotNull
     private Property<AccessLevel> accessLevel;
 
     @Schema(
-        title = "List of channel IDs to grant access to.",
-        description = """
-            List of channels you wish to update access for. Can only be used if `userIds` is not provided.
-            """
+        title = "Channel IDs with access",
+        description = "Channel IDs to update; cannot be set together with `userIds`."
     )
     private Property<List<String>> channelIds;
 
     @Schema(
-        title = "List of user IDs to grant access to.",
-        description = """
-            List of users you wish to update access for. Can only be used if `channelIds` is not provided.
-            """
+        title = "User IDs with access",
+        description = "User IDs to update; cannot be set together with `channelIds`."
     )
     private Property<List<String>> userIds;
 

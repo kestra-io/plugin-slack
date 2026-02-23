@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Find a Slack user by email address."
+    title = "Find a Slack user by email",
+    description = "Looks up a user by email address and returns their user object."
 )
 @Plugin(
     examples = {
@@ -42,8 +43,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class LookupByEmail extends AbstractSlackClientConnection implements RunnableTask<UserOutput> {
     @Schema(
-        title = "The email address to look up.",
-        description = "An email address belonging to a user in the workspace."
+        title = "Email address",
+        description = "Workspace email to look up."
     )
     @NotNull
     private Property<String> email;

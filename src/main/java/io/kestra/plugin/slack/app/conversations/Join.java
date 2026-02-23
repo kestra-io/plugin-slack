@@ -21,7 +21,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Join a Slack conversation (channel)."
+    title = "Join a Slack channel",
+    description = "Adds the caller to the specified channel. Fails if already a member or if the channel is archived."
 )
 @Plugin(
     examples = {
@@ -43,8 +44,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Join extends AbstractSlackClientConnection implements RunnableTask<ConversationOutput> {
     @Schema(
-        title = "The ID of the channel to join.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to join; provide the Slack channel ID (e.g., C123...). To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;

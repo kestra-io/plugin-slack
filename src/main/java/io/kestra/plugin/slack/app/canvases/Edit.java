@@ -26,7 +26,8 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Edit a Slack canvas."
+    title = "Apply changes to a canvas",
+    description = "Submits one or more Canvas API changes (insert, replace, delete, rename). Each change must include an operation plus either `documentContent` or `titleContent` depending on the operation."
 )
 @Plugin(
     examples = {
@@ -94,18 +95,15 @@ public class Edit extends AbstractSlackClientConnection implements RunnableTask<
     private static final ObjectMapper OBJECT_MAPPER = JacksonMapper.ofJson();
 
     @Schema(
-        title = "The ID of the canvas to edit.",
-        description = "The canvas ID can be found in the canvas URL or retrieved from canvas creation."
+        title = "Canvas ID",
+        description = "Canvas to edit; find it in the canvas URL or from creation output."
     )
     @NotNull
     private Property<String> canvasId;
 
     @Schema(
-        title = "Array of changes to apply to the canvas.",
-        description = """
-            Each change contains an 'operation' and either 'documentContent' or 'titleContent'.
-            Supported operations: insert_after, insert_before, insert_at_start, insert_at_end, replace, delete, rename.
-            """
+        title = "Canvas change list",
+        description = "Each entry must set `operation` plus `documentContent` or `titleContent`. Supported operations: insert_after, insert_before, insert_at_start, insert_at_end, replace, delete, rename."
     )
     @NotNull
     private Property<List<Map<String, Object>>> changes;

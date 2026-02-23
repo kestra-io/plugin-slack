@@ -30,7 +30,8 @@ import java.net.URI;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "List conversations the user is a member of."
+    title = "List a user's Slack conversations",
+    description = "Fetches channels the user belongs to, filtered by type and archived flag, and stores results to internal storage."
 )
 @Plugin(
     examples = {
@@ -59,21 +60,21 @@ import java.net.URI;
 )
 public class Conversations extends AbstractSlackClientConnection implements RunnableTask<Conversations.Output> {
     @Schema(
-        title = "The user ID to get conversations for.",
-        description = "If not provided, uses the authenticated user."
+        title = "User ID (optional)",
+        description = "User to query; defaults to the authenticated user."
     )
     private Property<String> user;
 
     @Schema(
-        title = "Exclude archived channels from the list.",
-        description = "Default is false."
+        title = "Exclude archived channels",
+        description = "If true, archived conversations are omitted. Default false."
     )
     @Builder.Default
     private Property<Boolean> excludeArchived = Property.ofValue(false);
 
     @Schema(
-        title = "Filter by conversation types.",
-        description = "A comma-separated list of channel types (e.g., 'public_channel,private_channel')."
+        title = "Conversation types",
+        description = "List of types to include (public_channel, private_channel, mpim, im)."
     )
     @Builder.Default
     private Property<java.util.List<ConversationType>> types = Property.ofValue(java.util.List.of(ConversationType.PUBLIC_CHANNEL));
@@ -123,10 +124,10 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored conversations file")
+        @Schema(title = "URI of stored conversations file")
         URI uri;
 
-        @Schema(title = "The number of conversations fetched")
+        @Schema(title = "Number of conversations fetched")
         Long size;
     }
 }

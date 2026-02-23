@@ -20,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a new Slack conversation (channel)."
+    title = "Create a Slack channel",
+    description = "Creates a public or private channel with the given name. Channel names must follow Slack limits."
 )
 @Plugin(
     examples = {
@@ -43,22 +44,22 @@ import lombok.experimental.SuperBuilder;
 )
 public class Create extends AbstractSlackClientConnection implements RunnableTask<ConversationOutput> {
     @Schema(
-        title = "Name of the channel to create.",
-        description = "Channel names may only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less."
+        title = "Channel name",
+        description = "Lowercase letters, numbers, hyphens, underscores only; max 80 characters."
     )
     @NotNull
     private Property<String> name;
 
     @Schema(
-        title = "Create a private channel instead of a public one.",
-        description = "Default is false (public channel)."
+        title = "Create as private",
+        description = "If true, creates a private channel; defaults to public."
     )
     @Builder.Default
     private Property<Boolean> isPrivate = Property.ofValue(false);
 
     @Schema(
-        title = "Team ID to create the channel in.",
-        description = "Encoded team id to create the channel in, required if org token is used."
+        title = "Team ID",
+        description = "Encoded team ID required when using an org token."
     )
     private Property<String> teamId;
 

@@ -12,10 +12,10 @@ import jakarta.validation.constraints.NotNull;
 @Builder
 @Jacksonized
 @Schema(
-    title = "Canvas output information"
+    title = "Canvas output"
 )
 public class CanvasOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "The ID of the canvas.")
+    @Schema(title = "Canvas ID")
     @NotNull
     @PluginProperty
     String canvasId;

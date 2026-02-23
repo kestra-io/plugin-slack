@@ -19,15 +19,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Close a Slack conversation (Direct Message).",
+    title = "Close a direct message",
     description = """
-        This task closes a direct message or multi-person direct message.
-
-        Note:
-        Bot tokens (xoxb-...) cannot currently be used to close conversations.
-        You must use a user token (xoxp-...) to close the conversation rather than a bot token.
-
-        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.close/)
+        Closes a DM or MPIM for the caller. Requires a user token (xoxp-); Slack does not allow bot tokens for this method. See Slack docs for [conversations.close](https://docs.slack.dev/reference/methods/conversations.close/).
         """
 )
 @Plugin(
@@ -50,8 +44,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Close extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the conversation to close.",
-        description = "Conversation ID to close. This can be a direct message or multi-person direct message."
+        title = "Conversation ID",
+        description = "DM or MPIM ID to close (e.g., D123..., G123...)."
     )
     @NotNull
     private Property<String> channel;

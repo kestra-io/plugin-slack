@@ -51,11 +51,10 @@ import java.util.regex.Pattern;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Trigger a flow from Slack events via webhook.",
-    description = "Listen to Slack Events API and trigger workflows based on events in your Slack workspace. " +
-        "This trigger receives events like messages, reactions, channel changes, user actions, and more. " +
-        "You need to configure your Slack app's Event Subscriptions with the webhook URL and subscribe to the events you want to receive. " +
-        "Requires a bot token and signing secret from your Slack app."
+    title = "Trigger flows from Slack Events API",
+    description = "Exposes a webhook compatible with Slack Event Subscriptions and slash/interactive payloads to start a Flow execution. " +
+        "Validates requests with your app signing secret and uses the bot token to decrypt the incoming context. " +
+        "Configure Slack to send the events you want to this trigger URL; unsupported paths return 404."
 )
 @Plugin(
     examples = {
@@ -112,17 +111,15 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
 
     @PluginProperty
     @Schema(
-        title = "The bot token to use to receive the events.",
-        description = "Bot tokens represent a bot associated with an app installed in a workspace. Starting wtih `xoxb-`"
+        title = "Slack bot token",
+        description = "Bot token for the installed app, rendered at runtime (typically starts with `xoxb-`)."
     )
     private Property<String> botToken;
 
     @PluginProperty
     @Schema(
-        title = "The application signing secret.",
-        description = """
-            Slack signs the requests we send you using this secret. Confirm that each request comes from Slack by verifying its unique signature.
-           """
+        title = "Slack signing secret",
+        description = "Secret used to verify Slack signatures on every webhook request; required for all Event API calls."
     )
     private Property<String> signingSecret;
 
@@ -488,20 +485,20 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
     @AllArgsConstructor
     public static class Output implements io.kestra.core.models.tasks.Output {
         @Schema(
-            title = "The full body for the webhook request"
+            title = "Webhook payload body"
         )
         @NotNull
         private Object body;
 
-        @Schema(title = "The headers for the webhook request")
+        @Schema(title = "Webhook request headers")
         @NotNull
         private Map<String, List<String>> headers;
 
-        @Schema(title = "The parameters for the webhook request")
+        @Schema(title = "Webhook query parameters")
         @NotNull
         private Map<String, List<String>> parameters;
 
-        @Schema(title = "The bot token used to receive the event")
+        @Schema(title = "Encrypted bot token for the event")
         @NotNull
         private EncryptedString token;
     }

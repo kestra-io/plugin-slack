@@ -27,9 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Post a message to a channel.",
-    description = "Send a message to a Slack channel. Supports text, blocks, and attachments. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Post a Slack message",
+    description = "Sends a message with text, blocks, or attachments. Accepts either raw JSON `payload` or `messageText`; channel and thread can also come from the payload. Requires `chat:write`."
 )
 @Plugin(
     examples = {
@@ -188,7 +187,7 @@ public class Post extends AbstractSlackClientConnection implements RunnableTask<
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the posted message.")
+        @Schema(title = "Timestamp of posted message")
         @NotNull
         String timestamp;
     }

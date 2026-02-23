@@ -21,15 +21,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Rename a Slack conversation (channel).",
+    title = "Rename a Slack channel",
     description = """
-        This task renames a conversation.
-
-        Note:
-        Bot tokens (xoxb-...) cannot currently be used to rename conversations.
-        You must use a user token (xoxp-...) to rename the conversation rather than a bot token.
-
-        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.rename)
+        Renames a channel. Requires a user token (xoxp-); Slack blocks bot tokens for this method. Follow Slack naming rules and limits; see Slack [conversations.rename](https://docs.slack.dev/reference/methods/conversations.rename).
         """
 )
 @Plugin(
@@ -53,15 +47,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class Rename extends AbstractSlackClientConnection implements RunnableTask<ConversationOutput> {
     @Schema(
-        title = "The ID of the channel to rename.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to rename; Slack channel ID required. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "New name for the channel.",
-        description = "Channel names may only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less."
+        title = "New channel name",
+        description = "Lowercase letters, numbers, hyphens, and underscores only; max 80 characters."
     )
     @NotNull
     private Property<String> name;

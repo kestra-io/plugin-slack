@@ -25,7 +25,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Create a new Slack canvas."
+    title = "Create a Slack canvas",
+    description = "Creates a canvas with the provided title and markdown content. Content must specify `type: markdown`; Slack rejects other formats."
 )
 @Plugin(
     examples = {
@@ -58,15 +59,15 @@ public class Create extends AbstractSlackClientConnection implements RunnableTas
     private static final ObjectMapper OBJECT_MAPPER = JacksonMapper.ofJson();
 
     @Schema(
-        title = "Title of the canvas.",
-        description = "The title text for the canvas."
+        title = "Canvas title",
+        description = "Title displayed at the top of the canvas."
     )
     @NotNull
     private Property<String> title;
 
     @Schema(
-        title = "Document content of the canvas.",
-        description = "A map containing 'type' (must be 'markdown') and 'markdown' with the canvas content."
+        title = "Canvas content",
+        description = "Map with `type` and `markdown`; only markdown content is supported by the Slack API."
     )
     @NotNull
     private Property<Map<String, String>> documentContent;

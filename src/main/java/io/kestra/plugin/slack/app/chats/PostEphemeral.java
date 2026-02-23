@@ -26,10 +26,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Post an ephemeral message to a channel.",
-    description = "Send an ephemeral (temporary) message that is only visible to a specific user in a channel. " +
-        "Ephemeral messages disappear when the user navigates away. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Send an ephemeral Slack message",
+    description = "Sends a message visible only to a specific user in the target channel. Ephemeral content disappears when the user leaves the channel view. Requires `chat:write`."
 )
 @Plugin(
     examples = {
@@ -82,8 +80,8 @@ import java.util.Map;
 public class PostEphemeral extends AbstractSlackClientConnection implements RunnableTask<PostEphemeral.Output>, MessagePayloadInterface, ChatInterface {
     @NotNull
     @Schema(
-        title = "ID of the user who will receive the ephemeral message.",
-        description = "The user should be in the channel specified by the channel argument. User IDs typically start with 'U' (e.g., U1234567890)."
+        title = "Recipient user ID",
+        description = "User who sees the ephemeral message; must be a member of the channel (IDs usually start with `U`)."
     )
     private Property<String> user;
 
@@ -156,7 +154,7 @@ public class PostEphemeral extends AbstractSlackClientConnection implements Runn
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the posted message.")
+        @Schema(title = "Timestamp of ephemeral message")
         @NotNull
         String timestamp;
     }

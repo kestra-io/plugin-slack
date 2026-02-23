@@ -11,16 +11,16 @@ import java.util.List;
 @Builder
 @Jacksonized
 public class ReactionOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "The reaction name (emoji name without colons).")
+    @Schema(title = "Reaction name (emoji without colons)")
     String name;
 
-    @Schema(title = "The number of users who reacted with this emoji.")
+    @Schema(title = "Reaction user count")
     Integer count;
 
-    @Schema(title = "The list of user IDs who reacted with this emoji.")
+    @Schema(title = "User IDs who reacted")
     List<String> users;
 
-    @Schema(title = "The URL of the custom emoji if applicable.")
+    @Schema(title = "Custom emoji URL")
     String url;
 
     public static ReactionOutput of(com.slack.api.model.Reaction reaction) {

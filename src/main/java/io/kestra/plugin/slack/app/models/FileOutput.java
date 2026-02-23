@@ -14,88 +14,88 @@ import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 @Builder
 @Jacksonized
 public class FileOutput implements io.kestra.core.models.tasks.Output  {
-    @Schema(title = "The file ID.")
+    @Schema(title = "File ID")
     String id;
 
-    @Schema(title = "The timestamp when the file was created.")
+    @Schema(title = "Created at")
     Instant created;
 
-    @Schema(title = "The file timestamp.")
+    @Schema(title = "File timestamp")
     Instant timestamp;
 
-    @Schema(title = "The file name.")
+    @Schema(title = "File name")
     String name;
 
-    @Schema(title = "The file title.")
+    @Schema(title = "File title")
     String title;
 
-    @Schema(title = "The file subject.")
+    @Schema(title = "File subject")
     String subject;
 
-    @Schema(title = "The MIME type of the file.")
+    @Schema(title = "MIME type")
     String mimetype;
 
-    @Schema(title = "The file type.")
+    @Schema(title = "File type")
     String filetype;
 
-    @Schema(title = "A human-readable file type (e.g., 'Plain Text').")
+    @Schema(title = "Pretty file type")
     String prettyType;
 
-    @Schema(title = "The user ID who uploaded the file.")
+    @Schema(title = "Uploader user ID")
     String user;
 
-    @Schema(title = "The team ID of the user who uploaded the file.")
+    @Schema(title = "Uploader team ID")
     String userTeamId;
 
-    @Schema(title = "The source team ID.")
+    @Schema(title = "Source team ID")
     String sourceTeamId;
 
-    @Schema(title = "The file mode.")
+    @Schema(title = "File mode")
     String mode;
 
-    @Schema(title = "Whether the file is editable.")
+    @Schema(title = "Is editable")
     Boolean isEditable;
 
-    @Schema(title = "The file size in bytes.")
+    @Schema(title = "File size (bytes)")
     Integer size;
 
-    @Schema(title = "The private download URL.")
+    @Schema(title = "Private download URL")
     String urlPrivate;
 
-    @Schema(title = "The private download URL with download forced.")
+    @Schema(title = "Private forced-download URL")
     String urlPrivateDownload;
 
-    @Schema(title = "The public permalink to the file.")
+    @Schema(title = "Public permalink")
     String permalink;
 
-    @Schema(title = "The public permalink.")
+    @Schema(title = "Public permalink (alt)")
     String permalinkPublic;
 
-    @Schema(title = "Whether the file is public.")
+    @Schema(title = "Is public")
     Boolean isPublic;
 
-    @Schema(title = "Whether the file is external.")
+    @Schema(title = "Is external")
     Boolean isExternal;
 
-    @Schema(title = "The external file type.")
+    @Schema(title = "External file type")
     String externalType;
 
-    @Schema(title = "The external file ID.")
+    @Schema(title = "External file ID")
     String externalId;
 
-    @Schema(title = "The external file URL.")
+    @Schema(title = "External file URL")
     String externalUrl;
 
-    @Schema(title = "The Thumbnail.")
+    @Schema(title = "Thumbnail")
     Thumbnail thumbnail;
 
-    @Schema(title = "The list of channels the file is shared in.")
+    @Schema(title = "Channels where shared")
     List<String> channels;
 
-    @Schema(title = "The list of groups the file is shared in.")
+    @Schema(title = "Groups where shared")
     List<String> groups;
 
-    @Schema(title = "The list of IMs the file is shared in.")
+    @Schema(title = "IMs where shared")
     List<String> ims;
 
     public static FileOutput of(com.slack.api.model.File file) {
@@ -139,19 +139,19 @@ public class FileOutput implements io.kestra.core.models.tasks.Output  {
     @Builder
     @Jacksonized
     public static class Thumbnail {
-        @Schema(title = "Thumbnail 64x64.")
+        @Schema(title = "Thumbnail 64x64")
         String thumb64;
 
-        @Schema(title = "Thumbnail 80x80.")
+        @Schema(title = "Thumbnail 80x80")
         String thumb80;
 
-        @Schema(title = "Thumbnail 160x160.")
+        @Schema(title = "Thumbnail 160x160")
         String thumb160;
 
-        @Schema(title = "Thumbnail 360x360.")
+        @Schema(title = "Thumbnail 360x360")
         String thumb360;
 
-        @Schema(title = "Thumbnail 480x480.")
+        @Schema(title = "Thumbnail 480x480")
         String thumb480;
 
         public static Thumbnail of(com.slack.api.model.File file) {

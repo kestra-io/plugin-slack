@@ -20,9 +20,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a file from Slack.",
-    description = "Delete a file from Slack using the Slack API. This action is permanent and cannot be undone. " +
-        "You need the `files:write` scope in your Slack app to use this task."
+    title = "Delete a Slack file",
+    description = "Permanently removes a file by ID. Requires `files:write`; deletion cannot be undone."
 )
 @Plugin(
     examples = {
@@ -66,9 +65,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Delete extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the file to delete.",
-        description = "The file ID can be obtained from the Upload task output or from the Slack API. " +
-            "File IDs typically start with 'F' (e.g., F1234567890)."
+        title = "File ID",
+        description = "Slack file ID to delete (e.g., F123...). Use Upload output or Slack API to obtain."
     )
     @NotNull
     private Property<String> fileId;

@@ -20,15 +20,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Unarchive a Slack conversation (channel).",
+    title = "Unarchive a Slack channel",
     description = """
-        This task unarchives a conversation. The calling user is added to the conversation.
-
-        Note:
-        Bot tokens (xoxb-...) cannot currently be used to unarchive conversations.
-        You must use a user token (xoxp-...) to unarchive the conversation rather than a bot token.
-
-        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.unarchive/)
+        Restores an archived channel and adds the caller to it. Requires a user token (xoxp-); Slack does not allow bot tokens for this method. See [Slack conversations.unarchive documentation](https://docs.slack.dev/reference/methods/conversations.unarchive/) for details.
         """
 )
 @Plugin(
@@ -51,8 +45,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Unarchive extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the channel to unarchive.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to unarchive; must be provided as a Slack channel ID (e.g., C123...). To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;

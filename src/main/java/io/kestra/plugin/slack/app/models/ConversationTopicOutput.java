@@ -17,19 +17,19 @@ import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 @Builder
 @Jacksonized
 @Schema(
-    title = "Channel output information"
+    title = "Conversation topic/purpose output"
 )
 public class ConversationTopicOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "")
+    @Schema(title = "Value")
     @NotNull
     @PluginProperty
     String value;
 
-    @Schema(title = "")
+    @Schema(title = "Creator ID")
     @PluginProperty
     String creator;
 
-    @Schema(title = "The timestamp when the channel was created.")
+    @Schema(title = "Last set timestamp")
     @PluginProperty
     Instant lastSet;
 

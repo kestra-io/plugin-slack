@@ -6,19 +6,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
 
 public interface ChatInterface {
-    @Schema(title = "Channel, group, or IM channel to send message to.", description = "Can be an encoded ID, or a name.")
+    @Schema(title = "Channel to send message", description = "Channel ID or name; can also be set inside the payload.")
     Property<String> getChannel();
 
-    @Schema(title = "Provide another message's `timestamp` value to make this message a reply.")
+    @Schema(title = "Thread timestamp to reply to", description = "Slack `ts` value for replying in a thread; must belong to the same channel.")
     Property<Instant> getTimestamp();
 
-    @Schema(title = "The username of the message.")
+    @Schema(title = "Display username", description = "Overrides the bot's default display name for this message.")
     Property<String> getUsername();
 
-    @Schema(title = "URL to an image to use as the icon for this message.")
+    @Schema(title = "Message icon URL", description = "HTTPS image used as icon when `iconEmoji` is not provided.")
     Property<String> getIconUrl();
 
-    @Schema(title = "Emoji to use as the icon for this message.", description = "Overrides `iconUrl`.")
+    @Schema(title = "Message icon emoji", description = "Emoji code (e.g., :wave:) that overrides `iconUrl`.")
     Property<String> getIconEmoji();
 
 }

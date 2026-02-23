@@ -33,10 +33,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Upload a file to Slack.",
-    description = "Upload a file from Kestra's internal storage to one or more Slack channels. " +
-        "The file can be shared to multiple channels simultaneously. " +
-        "You need the `files:write` and `chat:write` scopes in your Slack app to use this task."
+    title = "Upload a file to Slack",
+    description = "Uploads a file from Kestra internal storage to one or more channels (optionally threaded). Requires `files:write`; threads need the `chat:write` scope."
 )
 @Plugin(
     examples = {
@@ -97,45 +95,44 @@ import java.util.List;
 )
 public class Upload extends AbstractSlackClientConnection implements RunnableTask<Upload.Output> {
     @Schema(
-        title = "The file from Kestra's internal storage to upload.",
-        description = "URI of the file in Kestra's internal storage. Can be from inputs, outputs, or other tasks."
+        title = "Source file URI",
+        description = "Internal storage URI of the file to upload (inputs/outputs/other tasks)."
     )
     @NotNull
     @PluginProperty(internalStorageURI = true)
     private Property<String> from;
 
     @Schema(
-        title = "Channel IDs or names where the file will be shared.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Target channels",
+        description = "Channel IDs or names to share the file to; multiple allowed."
     )
     private Property<List<String>> channels;
 
-    @Schema(title = "Filename of the file.")
+    @Schema(title = "Filename")
     @NotNull
     private Property<String> filename;
 
     @Schema(
-        title = "Title of the file.",
-        description = "A descriptive title for the file that will be displayed in Slack."
+        title = "File title",
+        description = "Optional display title shown in Slack."
     )
     private Property<String> title;
 
     @Schema(
-        title = "Alternative text for the file.",
-        description = "Text description of the file for accessibility purposes, useful for images and visual content."
+        title = "Alt text",
+        description = "Accessibility text, useful for images or visual content."
     )
     private Property<String> altTxt;
 
     @Schema(
-        title = "Snippet type.",
-        description = "Syntax highlighting type for code snippets (e.g., 'python', 'java', 'javascript')."
+        title = "Snippet language",
+        description = "Syntax highlighting label for code snippets (e.g., python, java, javascript)."
     )
     private Property<String> snippetType;
 
     @Schema(
-        title = "Thread timestamp to upload file as a reply.",
-        description = "If provided, the file will be uploaded as a reply to an existing message thread. " +
-            "Use the timestamp from a previous message to thread the file upload."
+        title = "Thread timestamp",
+        description = "Slack `ts` to post the file as a thread reply; requires matching channel and `chat:write`."
     )
     private Property<Instant> timestamp;
 
@@ -179,23 +176,23 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The ID of the uploaded file.")
+        @Schema(title = "Uploaded file ID")
         @NotNull
         String id;
 
-        @Schema(title = "The title of the file.")
+        @Schema(title = "File title")
         String title;
 
-        @Schema(title = "The name of the file.")
+        @Schema(title = "Filename")
         String name;
 
-        @Schema(title = "The permanent link to the file.")
+        @Schema(title = "Permalink")
         String permalink;
 
-        @Schema(title = "The public permanent link to the file.")
+        @Schema(title = "Public permalink")
         String permalinkPublic;
 
-        @Schema(title = "The private URL to the file.")
+        @Schema(title = "Private URL")
         String urlPrivate;
     }
 }

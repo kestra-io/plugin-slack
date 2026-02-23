@@ -18,127 +18,127 @@ import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 @Builder
 @Jacksonized
 public class MessageOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "The message type.")
+    @Schema(title = "Message type")
     String type;
 
-    @Schema(title = "The message subtype.")
+    @Schema(title = "Message subtype")
     String subtype;
 
-    @Schema(title = "The team ID.")
+    @Schema(title = "Team ID")
     String team;
 
-    @Schema(title = "The channel ID.")
+    @Schema(title = "Channel ID")
     String channel;
 
-    @Schema(title = "The user ID who posted the message.")
+    @Schema(title = "User ID who posted")
     String user;
 
-    @Schema(title = "The user name who posted the message.")
+    @Schema(title = "Username who posted")
     String username;
 
-    @Schema(title = "The message text.")
+    @Schema(title = "Message text")
     String text;
 
-    @Schema(title = "The message payload.")
+    @Schema(title = "Message payload")
     Map<String, Object> payload;
 
-    @Schema(title = "The timestamp of the message.")
+    @Schema(title = "Message timestamp")
     Instant timestamp;
 
-    @Schema(title = "The timestamp of the parent message if this is a thread reply.")
+    @Schema(title = "Thread parent timestamp")
     String threadTimestamp;
 
-    @Schema(title = "Whether this is an intro message.")
+    @Schema(title = "Is intro")
     Boolean isIntro;
 
-    @Schema(title = "Whether the message is starred by the calling user.")
+    @Schema(title = "Is starred")
     Boolean isStarred;
 
-    @Schema(title = "List of channel IDs where this message is pinned.")
+    @Schema(title = "Pinned channel IDs")
     List<String> pinnedTo;
 
-    @Schema(title = "List of reactions to this message.")
+    @Schema(title = "Reactions")
     List<ReactionOutput> reactions;
 
-    @Schema(title = "The app ID if the message was posted by an app.")
+    @Schema(title = "App ID")
     String appId;
 
-    @Schema(title = "The bot ID if the message was posted by a bot.")
+    @Schema(title = "Bot ID")
     String botId;
 
-    @Schema(title = "The bot link.")
+    @Schema(title = "Bot link")
     String botLink;
 
-    @Schema(title = "Whether the message should be displayed as if posted by a bot.")
+    @Schema(title = "Display as bot")
     Boolean isDisplayAsBot;
 
-    @Schema(title = "A single file attached to the message.")
+    @Schema(title = "Single attached file")
     FileOutput file;
 
-    @Schema(title = "List of files attached to the message.")
+    @Schema(title = "Attached files")
     List<FileOutput> files;
 
-    @Schema(title = "Whether this is an upload message.")
+    @Schema(title = "Is upload message")
     Boolean isUpload;
 
-    @Schema(title = "The parent user ID.")
+    @Schema(title = "Parent user ID")
     String parentUserId;
 
-    @Schema(title = "The user ID of the person who invited.")
+    @Schema(title = "Inviter user ID")
     String inviter;
 
-    @Schema(title = "The client message ID.")
+    @Schema(title = "Client message ID")
     String clientMsgId;
 
-    @Schema(title = "The topic for channel_topic subtype messages.")
+    @Schema(title = "Channel topic text")
     String topic;
 
-    @Schema(title = "The purpose for channel_purpose subtype messages.")
+    @Schema(title = "Channel purpose text")
     String purpose;
 
-    @Schema(title = "Edit information if the message was edited.")
+    @Schema(title = "Edit information")
     Edited edited;
 
-    @Schema(title = "Whether links should be unfurled.")
+    @Schema(title = "Unfurl links")
     Boolean isUnfurlLinks;
 
-    @Schema(title = "Whether media should be unfurled.")
+    @Schema(title = "Unfurl media")
     Boolean isUnfurlMedia;
 
-    @Schema(title = "Whether this is a thread broadcast message.")
+    @Schema(title = "Is thread broadcast")
     Boolean isThreadBroadcast;
 
-    @Schema(title = "Whether the message is locked.")
+    @Schema(title = "Is locked")
     Boolean isLocked;
 
-    @Schema(title = "The number of replies in the thread.")
+    @Schema(title = "Reply count")
     Integer replyCount;
 
-    @Schema(title = "List of user IDs who replied in the thread.")
+    @Schema(title = "User IDs who replied")
     List<String> replyUsers;
 
-    @Schema(title = "The number of users who replied in the thread.")
+    @Schema(title = "Reply user count")
     Integer replyUsersCount;
 
-    @Schema(title = "The timestamp of the latest reply in the thread.")
+    @Schema(title = "Latest reply timestamp")
     String latestReply;
 
-    @Schema(title = "Whether the user is subscribed to the thread.")
+    @Schema(title = "Is subscribed to thread")
     Boolean isSubscribed;
 
-    @Schema(title = "List of remote file IDs (x_files).")
+    @Schema(title = "Remote file IDs (x_files)")
     List<String> xFiles;
 
-    @Schema(title = "Whether the message is hidden.")
+    @Schema(title = "Is hidden")
     Boolean isHidden;
 
-    @Schema(title = "The timestamp of the last read message.")
+    @Schema(title = "Last read timestamp")
     String lastRead;
 
-    @Schema(title = "The item type.")
+    @Schema(title = "Item type")
     String itemType;
 
-    @Schema(title = "Whether there are no notifications for this message.")
+    @Schema(title = "No notifications")
     Boolean isNoNotifications;
 
     public static MessageOutput of(com.slack.api.model.Message message) {
@@ -201,10 +201,10 @@ public class MessageOutput implements io.kestra.core.models.tasks.Output {
     @Builder
     @Jacksonized
     public static class Edited {
-        @Schema(title = "The user ID who edited the message.")
+        @Schema(title = "Editor user ID")
         String user;
 
-        @Schema(title = "The timestamp when the message was edited.")
+        @Schema(title = "Edited timestamp")
         String timestamp;
 
         public static Edited of(com.slack.api.model.Message.Edited edited) {

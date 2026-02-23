@@ -14,61 +14,61 @@ import static io.kestra.plugin.slack.services.MessageService.fromSlackTimestamp;
 @Builder
 @Jacksonized
 public class UserOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "The user ID.")
+    @Schema(title = "User ID")
     String id;
 
-    @Schema(title = "The team ID.")
+    @Schema(title = "Team ID")
     String teamId;
 
-    @Schema(title = "The user name.")
+    @Schema(title = "Username")
     String name;
 
-    @Schema(title = "Whether the user is deleted.")
+    @Schema(title = "Is deleted")
     Boolean deleted;
 
-    @Schema(title = "The user's color.")
+    @Schema(title = "User color")
     String color;
 
-    @Schema(title = "The user's real name.")
+    @Schema(title = "Real name")
     String realName;
 
-    @Schema(title = "The user's timezone.")
+    @Schema(title = "Timezone")
     String tz;
 
-    @Schema(title = "The user's timezone label.")
+    @Schema(title = "Timezone label")
     String tzLabel;
 
-    @Schema(title = "The user's timezone offset.")
+    @Schema(title = "Timezone offset")
     Integer tzOffset;
 
-    @Schema(title = "The user profile information.")
+    @Schema(title = "User profile")
     UserProfile profile;
 
-    @Schema(title = "Whether the user is an admin.")
+    @Schema(title = "Is admin")
     Boolean isAdmin;
 
-    @Schema(title = "Whether the user is an owner.")
+    @Schema(title = "Is owner")
     Boolean isOwner;
 
-    @Schema(title = "Whether the user is a primary owner.")
+    @Schema(title = "Is primary owner")
     Boolean isPrimaryOwner;
 
-    @Schema(title = "Whether the user is restricted.")
+    @Schema(title = "Is restricted")
     Boolean isRestricted;
 
-    @Schema(title = "Whether the user is ultra restricted.")
+    @Schema(title = "Is ultra restricted")
     Boolean isUltraRestricted;
 
-    @Schema(title = "Whether the user is a bot.")
+    @Schema(title = "Is bot")
     Boolean isBot;
 
-    @Schema(title = "Whether the user is an app user.")
+    @Schema(title = "Is app user")
     Boolean isAppUser;
 
-    @Schema(title = "The timestamp when the user was last updated.")
+    @Schema(title = "Last updated")
     Instant updated;
 
-    @Schema(title = "Whether the user has 2FA enabled.")
+    @Schema(title = "Has 2FA")
     Boolean has2fa;
 
     public static UserOutput of(com.slack.api.model.User user) {
@@ -103,61 +103,61 @@ public class UserOutput implements io.kestra.core.models.tasks.Output {
     @Builder
     @Jacksonized
     public static class UserProfile {
-        @Schema(title = "The user's title.")
+        @Schema(title = "Title")
         String title;
 
-        @Schema(title = "The user's phone number.")
+        @Schema(title = "Phone number")
         String phone;
 
-        @Schema(title = "The user's Skype name.")
+        @Schema(title = "Skype name")
         String skype;
 
-        @Schema(title = "The user's real name.")
+        @Schema(title = "Real name")
         String realName;
 
-        @Schema(title = "The normalized real name.")
+        @Schema(title = "Real name (normalized)")
         String realNameNormalized;
 
-        @Schema(title = "The user's display name.")
+        @Schema(title = "Display name")
         String displayName;
 
-        @Schema(title = "The normalized display name.")
+        @Schema(title = "Display name (normalized)")
         String displayNameNormalized;
 
-        @Schema(title = "The user's status text.")
+        @Schema(title = "Status text")
         String statusText;
 
-        @Schema(title = "The user's status emoji.")
+        @Schema(title = "Status emoji")
         String statusEmoji;
 
-        @Schema(title = "The user's status expiration timestamp.")
+        @Schema(title = "Status expiration")
         Instant statusExpiration;
 
-        @Schema(title = "The user's avatar hash.")
+        @Schema(title = "Avatar hash")
         String avatarHash;
 
-        @Schema(title = "The user's email address.")
+        @Schema(title = "Email")
         String email;
 
-        @Schema(title = "The URL to the user's 24x24 profile image.")
+        @Schema(title = "Image 24x24 URL")
         String image24;
 
-        @Schema(title = "The URL to the user's 32x32 profile image.")
+        @Schema(title = "Image 32x32 URL")
         String image32;
 
-        @Schema(title = "The URL to the user's 48x48 profile image.")
+        @Schema(title = "Image 48x48 URL")
         String image48;
 
-        @Schema(title = "The URL to the user's 72x72 profile image.")
+        @Schema(title = "Image 72x72 URL")
         String image72;
 
-        @Schema(title = "The URL to the user's 192x192 profile image.")
+        @Schema(title = "Image 192x192 URL")
         String image192;
 
-        @Schema(title = "The URL to the user's 512x512 profile image.")
+        @Schema(title = "Image 512x512 URL")
         String image512;
 
-        @Schema(title = "The team ID.")
+        @Schema(title = "Team ID")
         String team;
 
         public static UserProfile of(com.slack.api.model.User.Profile profile) {

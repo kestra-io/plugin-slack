@@ -23,9 +23,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Delete a message from a channel.",
-    description = "Delete a message from a Slack channel. This action is permanent and cannot be undone. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Delete a Slack channel message",
+    description = "Permanently removes a message by channel and timestamp. Requires `chat:write`; deletion cannot be undone."
 )
 @Plugin(
     examples = {
@@ -69,15 +68,15 @@ import java.time.Instant;
 )
 public class Delete extends AbstractSlackClientConnection implements RunnableTask<Delete.Output> {
     @Schema(
-        title = "The channel ID where the message should be removed.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel containing the message",
+        description = "Channel ID or name where the target message exists."
     )
     @NotNull
     protected Property<String> channel;
 
     @Schema(
-        title = "The timestamp of the message to remove.",
-        description = "The timestamp is returned when posting a message and uniquely identifies the message within the channel."
+        title = "Message timestamp to delete",
+        description = "Slack `ts` of the message; must belong to the specified channel."
     )
     @NotNull
     protected Property<Instant> timestamp;
@@ -99,7 +98,7 @@ public class Delete extends AbstractSlackClientConnection implements RunnableTas
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the posted message.")
+        @Schema(title = "Timestamp of deleted message")
         @NotNull
         String timestamp;
     }

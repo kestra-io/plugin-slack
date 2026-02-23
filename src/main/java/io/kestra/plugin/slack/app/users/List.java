@@ -29,7 +29,8 @@ import java.net.URI;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "List all users in a Slack workspace."
+    title = "List Slack workspace users",
+    description = "Retrieves users with pagination and writes them to internal storage; emits record count."
 )
 @Plugin(
     examples = {
@@ -57,8 +58,8 @@ import java.net.URI;
 )
 public class List extends AbstractSlackClientConnection implements RunnableTask<List.Output> {
     @Schema(
-        title = "Include locale for each user.",
-        description = "Set to true to include locale information in the output. Default is false."
+        title = "Include locale",
+        description = "If true, locale fields are included. Default false."
     )
     @Builder.Default
     private Property<Boolean> includeLocale = Property.ofValue(false);
@@ -105,10 +106,10 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored users file")
+        @Schema(title = "URI of stored users file")
         URI uri;
 
-        @Schema(title = "The number of users fetched")
+        @Schema(title = "Number of users fetched")
         Long size;
     }
 }

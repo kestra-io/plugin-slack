@@ -33,7 +33,8 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "List Slack conversations (channels)."
+    title = "List Slack conversations",
+    description = "Lists channels by type with pagination handling. Stores results to internal storage and emits record count."
 )
 @Plugin(
     examples = {
@@ -62,22 +63,22 @@ import java.util.stream.Collectors;
 )
 public class List extends AbstractSlackClientConnection implements RunnableTask<List.Output> {
     @Schema(
-        title = "Mix and match channel types.",
-        description = "Types include: public_channel, private_channel, mpim, im. Default is public_channel."
+        title = "Channel types to include",
+        description = "Defaults to public channels. Allowed values: public_channel, private_channel, mpim, im."
     )
     @Builder.Default
     private Property<java.util.List<ConversationType>> types = Property.ofValue(java.util.List.of(ConversationType.PUBLIC_CHANNEL));
 
     @Schema(
-        title = "Exclude archived channels from the list.",
-        description = "Default is false."
+        title = "Exclude archived channels",
+        description = "If true, archived channels are filtered out. Default false."
     )
     @Builder.Default
     private Property<Boolean> excludeArchived = Property.ofValue(false);
 
     @Schema(
-        title = "Encoded team id.",
-        description = "Required if org token is used."
+        title = "Team ID",
+        description = "Encoded team ID required when using an org token."
     )
     private Property<String> teamId;
 
@@ -131,10 +132,10 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored conversations file")
+        @Schema(title = "URI of stored conversations file")
         URI uri;
 
-        @Schema(title = "The size of the rows fetch")
+        @Schema(title = "Number of conversations fetched")
         Long size;
     }
 }

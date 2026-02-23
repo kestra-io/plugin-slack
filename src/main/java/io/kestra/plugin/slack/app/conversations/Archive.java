@@ -19,7 +19,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Archive a Slack conversation (channel)."
+    title = "Archive a Slack channel",
+    description = "Archives the channel so it becomes read-only and hidden in lists. Requires channel ID and appropriate permissions."
 )
 @Plugin(
     examples = {
@@ -41,8 +42,8 @@ import lombok.experimental.SuperBuilder;
 )
 public class Archive extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the channel to archive.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to archive; use the Slack channel ID (e.g., C123...)."
     )
     @NotNull
     private Property<String> channel;

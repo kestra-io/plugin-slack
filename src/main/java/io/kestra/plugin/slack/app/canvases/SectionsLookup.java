@@ -24,7 +24,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Lookup sections in a Slack canvas."
+    title = "Find sections within a canvas",
+    description = "Searches a canvas for sections matching provided criteria (text, types, etc.) and returns matching sections."
 )
 @Plugin(
     examples = {
@@ -50,15 +51,15 @@ public class SectionsLookup extends AbstractSlackClientConnection implements Run
     private static final ObjectMapper OBJECT_MAPPER = JacksonMapper.ofJson();
 
     @Schema(
-        title = "The ID of the canvas.",
-        description = "The canvas ID to search for sections."
+        title = "Canvas ID",
+        description = "Canvas to search for matching sections."
     )
     @NotNull
     private Property<String> canvasId;
 
     @Schema(
-        title = "Search criteria.",
-        description = "Criteria to find sections. Should include properties like 'containsText', 'sectionTypes', etc."
+        title = "Section search criteria",
+        description = "Map converted to Slack `Criteria`; supports fields such as `containsText` or `sectionTypes`."
     )
     @NotNull
     private Property<Map<String, Object>> criteria;

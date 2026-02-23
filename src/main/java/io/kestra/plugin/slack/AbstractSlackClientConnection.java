@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public abstract class AbstractSlackClientConnection extends Task {
     @Schema(
-        title = "The slack token"
+        title = "The Slack token"
     )
     @NotNull
     protected Property<String> token;

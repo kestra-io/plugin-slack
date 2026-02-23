@@ -19,7 +19,8 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get a user's profile information."
+    title = "Get Slack user profile",
+    description = "Retrieves a user's profile; can include labels for structured fields."
 )
 @Plugin(
     examples = {
@@ -41,14 +42,14 @@ import lombok.extern.jackson.Jacksonized;
 )
 public class ProfileGet extends AbstractSlackClientConnection implements RunnableTask<ProfileGet.ProfileOutput> {
     @Schema(
-        title = "The user ID to get profile for.",
-        description = "If not provided, gets profile for the authenticated user."
+        title = "User ID (optional)",
+        description = "Target user; defaults to the authenticated user."
     )
     private Property<String> user;
 
     @Schema(
-        title = "Include labels for profile fields.",
-        description = "Include labels for highly structured profile fields. Default is false."
+        title = "Include field labels",
+        description = "If true, includes labels for structured profile fields. Default false."
     )
     @Builder.Default
     private Property<Boolean> includeLabels = Property.ofValue(false);

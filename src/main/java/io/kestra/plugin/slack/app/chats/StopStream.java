@@ -24,10 +24,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Stop a streaming conversation in a Slack channel.",
-    description = "Ends a streaming message started with StartStream and finalizes its content. " +
-        "Once stopped, the stream cannot be appended to anymore. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Stop a Slack stream",
+    description = "Finalizes a streaming message started with StartStream; no further appends are allowed after this. Optional final markdown, blocks, or metadata can be included. Requires `chat:write`."
 )
 @Plugin(
     examples = {
@@ -129,34 +127,34 @@ import java.util.Map;
 )
 public class StopStream extends AbstractSlackClientConnection implements RunnableTask<StopStream.Output> {
     @Schema(
-        title = "The channel ID where the stream is active.",
-        description = "Must match the channel where the stream was started."
+        title = "Stream channel",
+        description = "Channel ID or name where the stream was started."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "The timestamp of the stream message to stop.",
-        description = "This is the timestamp returned by the StartStream task."
+        title = "Stream message timestamp",
+        description = "Slack `ts` returned by StartStream."
     )
     @NotNull
     private Property<String> timestamp;
 
     @Schema(
-        title = "The final markdown text to append before stopping the stream.",
-        description = "Optional final content to add to the stream message."
+        title = "Final markdown content",
+        description = "Optional markdown appended before closing the stream."
     )
     private Property<String> markdownText;
 
     @Schema(
-        title = "Block Kit blocks to include in the final message.",
-        description = "Provide as a JSON array string."
+        title = "Final Block Kit blocks",
+        description = "JSON array string of blocks appended before closing."
     )
     private Property<String> blocks;
 
     @Schema(
-        title = "Message metadata to include in the final message.",
-        description = "Provide as a JSON object string."
+        title = "Final message metadata",
+        description = "JSON object string attached to the closing message."
     )
     private Property<String> metadata;
 
@@ -182,10 +180,10 @@ public class StopStream extends AbstractSlackClientConnection implements Runnabl
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the stream message.", description = "May be null if not returned by the Slack API.")
+        @Schema(title = "Stream message timestamp", description = "May be null if not returned by the Slack API.")
         String timestamp;
 
-        @Schema(title = "The channel where the stream was stopped.", description = "May be null if not returned by the Slack API.")
+        @Schema(title = "Stream channel", description = "May be null if not returned by the Slack API.")
         String channel;
     }
 }

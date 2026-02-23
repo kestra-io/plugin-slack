@@ -27,9 +27,8 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Update a message in a channel.",
-    description = "Update an existing message in a Slack channel. The message content and formatting can be changed. " +
-        "You need the `chat:write` scope in your Slack app to use this task."
+    title = "Update a Slack message",
+    description = "Replaces text, blocks, or attachments of an existing message by channel and timestamp. Requires `chat:write`."
 )
 @Plugin(
     examples = {
@@ -141,7 +140,7 @@ public class Update extends AbstractSlackClientConnection implements RunnableTas
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The timestamp of the updated message.")
+        @Schema(title = "Timestamp of updated message")
         @NotNull
         String timestamp;
     }

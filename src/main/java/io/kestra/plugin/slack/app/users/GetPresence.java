@@ -20,7 +20,8 @@ import lombok.extern.jackson.Jacksonized;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get user presence information."
+    title = "Get Slack user presence",
+    description = "Retrieves presence (active/away) and connection details for a user ID."
 )
 @Plugin(
     examples = {
@@ -42,8 +43,8 @@ import lombok.extern.jackson.Jacksonized;
 )
 public class GetPresence extends AbstractSlackClientConnection implements RunnableTask<GetPresence.Output> {
     @Schema(
-        title = "The user ID to get presence for.",
-        description = "User to get presence info on."
+        title = "User ID",
+        description = "User whose presence is requested."
     )
     @NotNull
     private Property<String> user;
@@ -70,22 +71,22 @@ public class GetPresence extends AbstractSlackClientConnection implements Runnab
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The user's presence status (active or away)")
+        @Schema(title = "Presence status")
         String presence;
 
-        @Schema(title = "Whether the user is online")
+        @Schema(title = "Is online")
         Boolean online;
 
-        @Schema(title = "Whether the user is auto away")
+        @Schema(title = "Is auto away")
         Boolean autoAway;
 
-        @Schema(title = "Whether the user is manually away")
+        @Schema(title = "Is manually away")
         Boolean manualAway;
 
-        @Schema(title = "The number of active connections")
+        @Schema(title = "Active connection count")
         Integer connectionCount;
 
-        @Schema(title = "The timestamp of the last activity")
+        @Schema(title = "Last activity timestamp")
         Integer lastActivity;
     }
 }

@@ -32,9 +32,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Get reactions for an item.",
-    description = "Retrieve all reactions on a specific message or file. Returns a list of reactions with user information. " +
-        "You need the `reactions:read` scope in your Slack app to use this task."
+    title = "Get Slack reactions for an item",
+    description = "Fetches reactions on a message, file, or file comment and writes them to storage. Requires `reactions:read`."
 )
 @Plugin(
     examples = {
@@ -89,27 +88,27 @@ import java.time.Instant;
 )
 public class Get extends AbstractSlackClientConnection implements RunnableTask<Get.Output> {
     @Schema(
-        title = "Channel, private group, or IM channel containing the message.",
-        description = "Can be an encoded ID or a name. To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel containing the message",
+        description = "Channel ID or name for the target message. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     protected Property<String> channel;
 
     @Schema(
-        title = "File to get reactions for.",
-        description = "File ID if getting reactions for a file instead of a message."
+        title = "File ID (optional)",
+        description = "Use when retrieving reactions for a file."
     )
     protected Property<String> file;
 
     @Schema(
-        title = "File comment to get reactions for.",
-        description = "File comment ID if getting reactions for a file comment."
+        title = "File comment ID (optional)",
+        description = "Use when retrieving reactions for a file comment."
     )
     protected Property<String> fileComment;
 
     @Schema(
-        title = "Timestamp of the message to get reactions for.",
-        description = "The timestamp uniquely identifies the message within the channel."
+        title = "Message timestamp (optional)",
+        description = "Slack `ts` of the message; required when targeting a message."
     )
     protected Property<Instant> timestamp;
 
@@ -147,7 +146,7 @@ public class Get extends AbstractSlackClientConnection implements RunnableTask<G
     @Builder
     @Jacksonized
     public static class Output implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "URI of the stored conversations file")
+        @Schema(title = "URI of stored reactions file")
         URI uri;
     }
 }

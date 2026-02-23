@@ -22,7 +22,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Open a direct message or multi-person direct message."
+    title = "Open a DM or MPIM",
+    description = "Opens a direct message with one user or a multi-person DM with several users. Can also resume an existing IM by ID."
 )
 @Plugin(
     examples = {
@@ -58,20 +59,20 @@ import java.util.List;
 )
 public class Open extends AbstractSlackClientConnection implements RunnableTask<ConversationOutput> {
     @Schema(
-        title = "User IDs to open a conversation with.",
-        description = "If one user ID is provided, opens a direct message. If multiple are provided, opens a multi-person direct message. To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
+        title = "User IDs to include",
+        description = "One ID opens a DM; multiple IDs open an MPIM. Provide Slack user IDs (U...). To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
     )
     private Property<List<String>> users;
 
     @Schema(
-        title = "Channel ID to open.",
-        description = "Resume a conversation by passing an im or mpim's ID. Or provide the users field instead."
+        title = "Existing IM/MPIM ID",
+        description = "Resume a conversation by ID instead of passing users."
     )
     private Property<String> channel;
 
     @Schema(
-        title = "Return an already existing DM instead of opening a new one.",
-        description = "If true, will not create a new direct message. Default is false."
+        title = "Reuse existing DM if present",
+        description = "If true, return existing DM instead of creating a new one. Default false."
     )
     @Builder.Default
     private Property<Boolean> returnIm = Property.ofValue(false);

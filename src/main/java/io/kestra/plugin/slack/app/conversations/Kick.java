@@ -20,15 +20,9 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Remove a user from a Slack conversation (channel).",
+    title = "Remove a user from a channel",
     description = """
-        This task removes a user from a conversation. The user will not receive a notification of this action.
-
-        Note:
-        Bot tokens (xoxb-...) cannot currently be used to remove users from conversations.
-        You must use a user token (xoxp-...) to remove the user rather than a bot token.
-
-        [See Slack documentation](https://docs.slack.dev/reference/methods/conversations.kick/)
+        Removes a user without notifying them. Slack requires a user token (xoxp-); bot tokens cannot call this API. See Slack docs for [conversations.kick](https://docs.slack.dev/reference/methods/conversations.kick/) limits.
         """
 )
 @Plugin(
@@ -52,15 +46,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class Kick extends AbstractSlackClientConnection implements RunnableTask<VoidOutput> {
     @Schema(
-        title = "The ID of the channel to remove the user from.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel to remove the user from (Slack channel ID). To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "User ID to remove from the channel.",
-        description = "To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
+        title = "User ID to remove",
+        description = "Member ID to remove (e.g., U123...); user must currently be in the channel. To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
     )
     @NotNull
     private Property<String> user;

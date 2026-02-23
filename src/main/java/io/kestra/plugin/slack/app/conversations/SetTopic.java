@@ -24,7 +24,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Set the topic of a Slack conversation (channel)."
+    title = "Set Slack channel topic",
+    description = "Updates the channel topic text (up to 250 characters)."
 )
 @Plugin(
     examples = {
@@ -47,15 +48,15 @@ import lombok.experimental.SuperBuilder;
 )
 public class SetTopic extends AbstractSlackClientConnection implements RunnableTask<ConversationTopicOutput> {
     @Schema(
-        title = "The ID of the channel.",
-        description = "To get the ID of a channel, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
+        title = "Channel ID",
+        description = "Channel whose topic to update; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
     private Property<String> channel;
 
     @Schema(
-        title = "The new topic for the channel.",
-        description = "The topic can be up to 250 characters."
+        title = "Channel topic",
+        description = "New topic text, maximum 250 characters."
     )
     @NotNull
     private Property<String> topic;

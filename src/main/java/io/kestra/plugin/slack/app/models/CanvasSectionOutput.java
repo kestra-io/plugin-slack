@@ -13,10 +13,10 @@ import java.util.List;
 @Builder
 @Jacksonized
 @Schema(
-    title = "Canvas section output information"
+    title = "Canvas sections output"
 )
 public class CanvasSectionOutput implements io.kestra.core.models.tasks.Output {
-    @Schema(title = "List of sections found in the canvas.")
+    @Schema(title = "Sections returned")
     @PluginProperty
     List<CanvasDocumentSection> sections;
 
