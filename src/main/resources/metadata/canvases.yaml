@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.canvases
 name: "canvases"
 title: "Slack Canvases"
-description: "Tasks for Slack canvases operations."
-body: "Create, edit, delete, and query sections in Slack canvases using app token tasks."
+description: "Tasks that create, edit, and secure Slack canvases."
+body: "Run with an app `token` that has canvases scopes; creation needs a `title` plus markdown `documentContent`, while updates/deletes require the target `canvasId` and relevant `sectionId`. Use these to publish documentation, adjust sections, or update access via flows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

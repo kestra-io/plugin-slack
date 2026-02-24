@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.conversations
 name: "conversations"
 title: "Slack Conversations"
-description: "Tasks for Slack conversations and channels."
-body: "Manage channels, members, history, and conversation metadata with Slack app token tasks."
+description: "Tasks that manage Slack channels, DMs, and conversation history."
+body: "Requires a bot `token` with conversation scopes; supply a `channel`/`conversationId` for membership changes, renames, archiving, or topic/purpose updates, and use `cursor`/`limit` options when listing or pulling history. Useful for provisioning channels, moderating membership, or paging archives from workflows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

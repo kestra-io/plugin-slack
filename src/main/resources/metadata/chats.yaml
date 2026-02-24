@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.chats
 name: "chats"
 title: "Slack Chats"
-description: "Tasks for Slack chat messages and streams."
-body: "Post, update, delete, schedule, and stream Slack messages with app token tasks."
+description: "Tasks that post, update, schedule, or stream Slack chat messages."
+body: "Use a bot `token` with `chat:write` to send JSON `payload` or `messageText` to a `channel`; updates/deletes/scheduling rely on the message `timestamp`, and streaming tasks share the `streamId` and `threadTs` outputs across Start/Append/Stop. Ideal for alerts, threaded updates, or long-running progress feeds."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

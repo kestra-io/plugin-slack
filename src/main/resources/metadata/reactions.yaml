@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.reactions
 name: "reactions"
 title: "Slack Reactions"
-description: "Tasks for Slack reactions."
-body: "Add, remove, and fetch reactions on Slack messages with app token tasks."
+description: "Tasks that add, remove, or fetch reactions on Slack messages."
+body: "Provide a bot `token` with reactions scopes plus the target `channel`, message `timestamp`, and emoji `name`; retrieval can return all users on a message for auditing or routing. Useful for lightweight approvals, acknowledgments, or counting engagement."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

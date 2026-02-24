@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.files
 name: "files"
 title: "Slack Files"
-description: "Tasks for Slack files operations."
-body: "Upload, inspect, and delete files in Slack with app token tasks."
+description: "Tasks that upload, inspect, and delete Slack files."
+body: "Run with a bot `token` that has `files:write`; uploads need a storage `from` URI plus `filename` (and optional `channels` or thread `timestamp`), while info/delete calls take a file `id`. Use these to publish generated reports or clean up shared artifacts from flows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

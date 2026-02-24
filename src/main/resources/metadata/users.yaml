@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.users
 name: "users"
 title: "Slack Users"
-description: "Tasks for Slack users operations."
-body: "List users, fetch user info, presence, profile, and user conversations with app token tasks."
+description: "Tasks that look up Slack users, profiles, and memberships."
+body: "Use a bot `token`; fetch by `userId` or `email` for details/presence, list all users with paging, or retrieve a user's conversations for routing. Helpful for targeting alerts, enriching audit logs, or resolving emails to Slack IDs in workflows."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"

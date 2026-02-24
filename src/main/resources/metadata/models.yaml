@@ -1,8 +1,8 @@
 group: io.kestra.plugin.slack.app.models
 name: "models"
 title: "Slack Models"
-description: "Output models used by Slack app tasks."
-body: "Shared output structures returned by Slack app tasks."
+description: "Tasks that expose reusable output models for Slack app tasks."
+body: "Reference these schemas (message, file, conversation, canvas, reaction, user outputs) to know which fields are emitted by Slack tasks and safely reuse them in downstream steps; no configuration is required beyond consuming task outputs."
 videos: []
 createdBy: "Kestra Core Team"
 managedBy: "Kestra Core Team"
