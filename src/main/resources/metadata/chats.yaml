@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.chats
+name: "chats"
+title: "Slack Chats"
+description: "Tasks for Slack chat messages and streams."
+body: "Post, update, delete, schedule, and stream Slack messages with app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app
+name: "app"
+title: "Slack App"
+description: "Slack app event trigger and app token based tasks."
+body: "Configure Slack app credentials to trigger flows from Slack events and execute app-scoped tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

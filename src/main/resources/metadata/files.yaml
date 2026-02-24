@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.files
+name: "files"
+title: "Slack Files"
+description: "Tasks for Slack files operations."
+body: "Upload, inspect, and delete files in Slack with app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

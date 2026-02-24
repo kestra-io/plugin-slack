@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.reactions
+name: "reactions"
+title: "Slack Reactions"
+description: "Tasks for Slack reactions."
+body: "Add, remove, and fetch reactions on Slack messages with app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

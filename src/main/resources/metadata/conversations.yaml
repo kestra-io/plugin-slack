@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.conversations
+name: "conversations"
+title: "Slack Conversations"
+description: "Tasks for Slack conversations and channels."
+body: "Manage channels, members, history, and conversation metadata with Slack app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

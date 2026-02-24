@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.canvases
+name: "canvases"
+title: "Slack Canvases"
+description: "Tasks for Slack canvases operations."
+body: "Create, edit, delete, and query sections in Slack canvases using app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

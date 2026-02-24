@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.models
+name: "models"
+title: "Slack Models"
+description: "Output models used by Slack app tasks."
+body: "Shared output structures returned by Slack app tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

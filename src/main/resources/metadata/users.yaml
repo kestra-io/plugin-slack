@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.users
+name: "users"
+title: "Slack Users"
+description: "Tasks for Slack users operations."
+body: "List users, fetch user info, presence, profile, and user conversations with app token tasks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
