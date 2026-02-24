@@ -33,7 +33,7 @@ public class FakeWebhookController {
         FakeWebhookController.data = data;
         request.getHeaders().forEach((name, values) -> {
             if (!values.isEmpty()) {
-                headers.put(name, values.get(0));
+                headers.put(name, values.getFirst());
             }
         });
 
