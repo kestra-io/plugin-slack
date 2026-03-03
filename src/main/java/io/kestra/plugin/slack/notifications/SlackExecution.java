@@ -82,7 +82,11 @@ import java.util.Map;
                 """
         )
     },
-    aliases = "io.kestra.plugin.notifications.slack.SlackExecution"
+    aliases = {
+        "io.kestra.plugin.notifications.slack.SlackExecution",
+        "io.kestra.plugin.slack.SlackExecution"
+    }
+
 )
 public class SlackExecution extends SlackTemplate implements ExecutionInterface {
     @Builder.Default

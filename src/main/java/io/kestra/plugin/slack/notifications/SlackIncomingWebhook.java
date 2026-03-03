@@ -146,7 +146,10 @@ import java.util.Map;
                 """
         ),
     },
-    aliases = "io.kestra.plugin.notifications.slack.SlackIncomingWebhook"
+    aliases = {
+        "io.kestra.plugin.notifications.slack.SlackIncomingWebhook",
+        "io.kestra.plugin.slack.SlackIncomingWebhook"
+    }
 )
 public class SlackIncomingWebhook extends AbstractSlackWebhookConnection implements MessagePayloadInterface {
     protected Property<String> payload;
