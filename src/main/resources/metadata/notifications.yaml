@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack
+name: "slack"
+title: "Slack"
+description: "Tasks that post Slack notifications through incoming webhooks or execution templates."
+body: "Use an incoming webhook `url` (https://hooks.slack.com/...) with either `messageText` or JSON `payload`; SlackExecution also needs an `executionId` to render the built-in status template. Ideal for alerting flows or any external webhook endpoint that accepts Slack-compatible payloads."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"
