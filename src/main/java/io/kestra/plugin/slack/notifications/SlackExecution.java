@@ -1,4 +1,4 @@
-package io.kestra.plugin.slack;
+package io.kestra.plugin.slack.notifications;
 
 import io.kestra.core.models.annotations.Example;
 import io.kestra.core.models.annotations.Plugin;
@@ -7,6 +7,7 @@ import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.plugins.notifications.ExecutionInterface;
 import io.kestra.core.plugins.notifications.ExecutionService;
 import io.kestra.core.runners.RunContext;
+import io.kestra.plugin.slack.SlackTemplate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -34,7 +35,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_alert
-                    type: io.kestra.plugin.slack.SlackExecution
+                    type: io.kestra.plugin.slack.notifications.SlackExecution
                     url: "{{ secret('SLACK_WEBHOOK') }}" # format: https://hooks.slack.com/services/xzy/xyz/xyz
                     executionId: "{{trigger.executionId}}"
 
@@ -60,7 +61,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_alert_to_rocket_chat
-                    type: io.kestra.plugin.slack.SlackExecution
+                    type: io.kestra.plugin.slack.notifications.SlackExecution
                     url: "{{ secret('ROCKET_CHAT_WEBHOOK') }}"
                     channel: "#errors"
                     username: "Kestra TEST"

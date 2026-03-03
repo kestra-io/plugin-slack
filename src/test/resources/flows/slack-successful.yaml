@@ -10,7 +10,7 @@ inputs:
 
 tasks:
   - id: slack-successful
-    type: io.kestra.plugin.slack.SlackExecution
+    type: io.kestra.plugin.slack.notifications.SlackExecution
     url: "{{ inputs.url }}/webhook-unit-test"
     channel: "#random"
     customFields:

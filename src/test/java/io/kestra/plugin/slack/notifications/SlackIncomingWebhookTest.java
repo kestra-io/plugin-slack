@@ -1,4 +1,4 @@
-package io.kestra.plugin.slack;
+package io.kestra.plugin.slack.notifications;
 
 
 import com.google.common.collect.ImmutableMap;
@@ -8,6 +8,8 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.serializers.JacksonMapper;
+import io.kestra.plugin.slack.AbstractSlackWebhookConnection;
+import io.kestra.plugin.slack.FakeWebhookController;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.server.EmbeddedServer;
 import jakarta.inject.Inject;

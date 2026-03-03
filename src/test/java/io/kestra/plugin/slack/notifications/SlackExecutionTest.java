@@ -1,8 +1,10 @@
-package io.kestra.plugin.slack;
+package io.kestra.plugin.slack.notifications;
 
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.repositories.LocalFlowRepositoryLoader;
 import io.kestra.core.runners.TestRunner;
+import io.kestra.plugin.slack.AbstractSlackTest;
+import io.kestra.plugin.slack.FakeWebhookController;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

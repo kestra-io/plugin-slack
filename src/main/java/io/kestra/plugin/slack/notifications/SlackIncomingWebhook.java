@@ -1,4 +1,4 @@
-package io.kestra.plugin.slack;
+package io.kestra.plugin.slack.notifications;
 
 import com.slack.api.Slack;
 import com.slack.api.SlackConfig;
@@ -10,6 +10,8 @@ import io.kestra.core.models.annotations.PluginProperty;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
+import io.kestra.plugin.slack.AbstractSlackWebhookConnection;
+import io.kestra.plugin.slack.MessagePayloadInterface;
 import io.kestra.plugin.slack.services.MessageService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -46,7 +48,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_slack_message
-                    type: io.kestra.plugin.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}"
                     messageText: "Hello from the workflow {{ flow.id }}"
                 """
@@ -67,7 +69,7 @@ import java.util.Map;
 
                 errors:
                   - id: alert_on_failure
-                    type: io.kestra.plugin.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}" # https://hooks.slack.com/services/xzy/xyz/xyz
                     payload: |
                       {
@@ -84,7 +86,7 @@ import java.util.Map;
 
                 tasks:
                   - id: send_slack_message
-                    type: io.kestra.plugin.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}"
                     payload: |
                       {
@@ -108,7 +110,7 @@ import java.util.Map;
                 namespace: company.team
                 tasks:
                   - id: send_rocket_chat_message
-                    type: io.kestra.plugin.slack.SlackIncomingWebhook
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
                     url: "{{ secret('ROCKET_CHAT_WEBHOOK') }}"
                     payload: |
                       {

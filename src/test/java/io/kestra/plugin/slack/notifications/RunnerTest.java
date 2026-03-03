@@ -1,4 +1,4 @@
-package io.kestra.plugin.slack;
+package io.kestra.plugin.slack.notifications;
 
 import io.kestra.core.junit.annotations.KestraTest;
 import io.kestra.core.junit.annotations.LoadFlows;
