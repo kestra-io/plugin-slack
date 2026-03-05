@@ -1,0 +1,8 @@
+group: io.kestra.plugin.slack.app.core
+name: "core"
+title: "Slack App"
+description: "Tasks that run Slack App workflows and triggers using bot tokens."
+body: "Provide a Slack app `token` (xoxb) for all method calls; the Event API trigger also needs the app `signingSecret` to verify requests. Use these when you need app-scoped actions or to start flows from Slack events instead of simple webhooks."
+videos: []
+createdBy: "Kestra Core Team"
+managedBy: "Kestra Core Team"

@@ -1,4 +1,4 @@
-package io.kestra.plugin.slack.app;
+package io.kestra.plugin.slack.app.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
