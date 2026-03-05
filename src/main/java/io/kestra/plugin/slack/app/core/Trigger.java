@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 
                 triggers:
                   - id: slack_event
-                    type: io.kestra.plugin.slack.app.Trigger
+                    type: io.kestra.plugin.slack.app.core.Trigger
                     botToken: "{{ secret('SLACK_BOT_TOKEN') }}"
                     signingSecret: "{{ secret('SLACK_SIGNING_SECRET') }}"
                     conditions:
@@ -89,7 +89,7 @@ import java.util.regex.Pattern;
 
                 triggers:
                   - id: slack_mention
-                    type: io.kestra.plugin.slack.app.Trigger
+                    type: io.kestra.plugin.slack.app.core.Trigger
                     botToken: "{{ secret('SLACK_BOT_TOKEN') }}"
                     signingSecret: "{{ secret('SLACK_SIGNING_SECRET') }}"
 
@@ -102,8 +102,9 @@ import java.util.regex.Pattern;
                     timestamp: "{{ trigger.body.ts }}"
                 """,
             full = true
-        )
-    }
+        ),
+    },
+    aliases = "io.kestra.plugin.slack.app.Trigger"
 )
 public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Trigger.Output> {
     private static final TypeReference<Map<String, Object>> MAP_TYPE_REFERENCE = new TypeReference<>() {};
