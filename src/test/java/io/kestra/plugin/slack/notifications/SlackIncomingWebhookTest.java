@@ -55,7 +55,7 @@ class SlackIncomingWebhookTest {
         SlackIncomingWebhook task = SlackIncomingWebhook.builder()
             .url(embeddedServer.getURI() + "/webhook-unit-test")
             .payload(
-                new Property<>(
+                Property.ofValue(
                     Files.asCharSource(
                         new File(
                             Objects.requireNonNull(
@@ -97,7 +97,7 @@ class SlackIncomingWebhookTest {
         headers.put("demo-api-key", "{{demoApiKey}}");
 
         AbstractSlackWebhookConnection.RequestOptions options = AbstractSlackWebhookConnection.RequestOptions.builder()
-            .headers(new Property<>(headers))
+            .headers(Property.ofValue(headers))
             .build();
 
         EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
@@ -107,7 +107,7 @@ class SlackIncomingWebhookTest {
             .url(embeddedServer.getURI() + "/webhook-unit-test/with-headers")
             .options(options)
             .payload(
-                new Property<>(
+                Property.ofValue(
                     Files.asCharSource(
                         new File(
                             Objects.requireNonNull(
