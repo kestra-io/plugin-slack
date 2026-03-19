@@ -97,7 +97,7 @@ class SlackIncomingWebhookTest {
         headers.put("demo-api-key", "{{demoApiKey}}");
 
         AbstractSlackWebhookConnection.RequestOptions options = AbstractSlackWebhookConnection.RequestOptions.builder()
-            .headers(Property.ofValue(headers))
+            .headers(Property.ofExpression(JacksonMapper.ofJson().writeValueAsString(headers)))
             .build();
 
         EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
