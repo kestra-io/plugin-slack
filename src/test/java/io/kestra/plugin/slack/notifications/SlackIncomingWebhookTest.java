@@ -55,7 +55,7 @@ class SlackIncomingWebhookTest {
         SlackIncomingWebhook task = SlackIncomingWebhook.builder()
             .url(embeddedServer.getURI() + "/webhook-unit-test")
             .payload(
-                Property.ofValue(
+                Property.ofExpression(
                     Files.asCharSource(
                         new File(
                             Objects.requireNonNull(
@@ -107,7 +107,7 @@ class SlackIncomingWebhookTest {
             .url(embeddedServer.getURI() + "/webhook-unit-test/with-headers")
             .options(options)
             .payload(
-                Property.ofValue(
+                Property.ofExpression(
                     Files.asCharSource(
                         new File(
                             Objects.requireNonNull(
