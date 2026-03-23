@@ -66,7 +66,8 @@ import okhttp3.Request;
                 tasks:
                   - id: fail
                     type: io.kestra.plugin.scripts.shell.Commands
-                    runner: PROCESS
+                    taskRunner:
+                      type: io.kestra.plugin.core.runner.Process
                     commands:
                       - exit 1
 
@@ -74,10 +75,7 @@ import okhttp3.Request;
                   - id: alert_on_failure
                     type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
                     url: "{{ secret('SLACK_WEBHOOK') }}" # https://hooks.slack.com/services/xzy/xyz/xyz
-                    payload: |
-                      {
-                        "text": "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"
-                      }
+                    messageText: "Failure alert for flow {{ flow.namespace }}.{{ flow.id }} with ID {{ execution.id }}"
                 """
         ),
         @Example(
@@ -94,14 +92,47 @@ import okhttp3.Request;
                     payload: |
                       {
                         "blocks": [
-                    		{
-                    			"type": "section",
-                    			"text": {
-                    				"type": "mrkdwn",
-                    				"text": "Hello from the workflow *{{ flow.id }}*"
-                    			}
-                    		}
-                    	]
+                          {
+                            "type": "header",
+                            "text": {
+                              "type": "plain_text",
+                              "text": "Workflow completed: {{ flow.id }}"
+                            }
+                          },
+                          {
+                            "type": "divider"
+                          },
+                          {
+                            "type": "section",
+                            "fields": [
+                              {
+                                "type": "mrkdwn",
+                                "text": "*Namespace:*\n{{ flow.namespace }}"
+                              },
+                              {
+                                "type": "mrkdwn",
+                                "text": "*Execution ID:*\n{{ execution.id }}"
+                              },
+                              {
+                                "type": "mrkdwn",
+                                "text": "*Status:*\n{{ execution.state }}"
+                              },
+                              {
+                                "type": "mrkdwn",
+                                "text": "*Start time:*\n{{ execution.startDate }}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "context",
+                            "elements": [
+                              {
+                                "type": "mrkdwn",
+                                "text": "Triggered by Kestra"
+                              }
+                            ]
+                          }
+                        ]
                       }
                 """
         ),
