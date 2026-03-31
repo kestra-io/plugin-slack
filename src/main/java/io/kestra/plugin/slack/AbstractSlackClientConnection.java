@@ -27,7 +27,7 @@ public abstract class AbstractSlackClientConnection extends Task {
     @NotNull
     protected Property<String> token;
 
-    // Only set in tests to redirect API calls to a mock server.
+    // we only set in tests to redirect API calls to a mock server.
     protected transient String methodsEndpointUrlPrefix;
 
     protected <R extends SlackApiTextResponse> R call(RunContext runContext, Rethrow.FunctionChecked<MethodsClient, R, Exception> call) {
