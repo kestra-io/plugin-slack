@@ -27,7 +27,7 @@ public class JoinTest extends AbstractSlackClientTest {
         Join task = Join.builder()
             .id(IdUtils.create())
             .type(Join.class.getName())
-            .slack(this.client("conversations"))
+            .methodsEndpointUrlPrefix(this.client("conversations"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .build();

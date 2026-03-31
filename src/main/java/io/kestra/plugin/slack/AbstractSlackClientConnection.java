@@ -27,8 +27,16 @@ public abstract class AbstractSlackClientConnection extends Task {
     @NotNull
     protected Property<String> token;
 
+    // Only set in tests to redirect API calls to a mock server.
+    protected transient String methodsEndpointUrlPrefix;
+
     protected <R extends SlackApiTextResponse> R call(RunContext runContext, Rethrow.FunctionChecked<MethodsClient, R, Exception> call) {
-        try (Slack slack = Slack.getInstance(new SlackConfig())) {
+        SlackConfig config = new SlackConfig();
+        if (methodsEndpointUrlPrefix != null) {
+            config.setMethodsEndpointUrlPrefix(methodsEndpointUrlPrefix);
+            config.setStatsEnabled(false);
+        }
+        try (Slack slack = Slack.getInstance(config)) {
             R response = call.apply(slack.methods(runContext.render(this.token).as(String.class).orElseThrow()));
 
             if (response.getWarning() != null) {

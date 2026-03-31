@@ -34,7 +34,7 @@ public class MembersTest extends AbstractSlackClientTest {
         Members task = Members.builder()
             .id(IdUtils.create())
             .type(Members.class.getName())
-            .slack(this.client("conversationsmembers"))
+            .methodsEndpointUrlPrefix(this.client("conversationsmembers"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .build();

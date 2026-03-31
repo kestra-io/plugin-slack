@@ -27,7 +27,7 @@ public class DeleteTest extends AbstractSlackClientTest {
         Delete task = Delete.builder()
             .id(IdUtils.create())
             .type(Delete.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .timestamp(Property.ofValue(MessageService.fromSlackTimestamp("2023-01-01T00:00:00Z")))

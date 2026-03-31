@@ -26,7 +26,7 @@ public class DeleteScheduledTest extends AbstractSlackClientTest {
         DeleteScheduled task = DeleteScheduled.builder()
             .id(IdUtils.create())
             .type(DeleteScheduled.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .scheduledMessageId(Property.ofValue("Q1234ABCD"))

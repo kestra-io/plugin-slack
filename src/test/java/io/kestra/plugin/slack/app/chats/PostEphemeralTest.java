@@ -29,7 +29,7 @@ public class PostEphemeralTest extends AbstractSlackClientTest {
     void ephemeral() throws Exception {
         PostEphemeral task = PostEphemeral.builder()
             .id(IdUtils.create())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .type(PostEphemeral.class.getName())
             .token(Property.ofValue("token"))
             .messageText(Property.ofValue("A message *with some bold text*"))

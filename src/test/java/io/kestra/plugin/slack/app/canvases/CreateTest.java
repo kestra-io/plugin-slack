@@ -27,7 +27,7 @@ public class CreateTest extends AbstractSlackClientTest {
         Create task = Create.builder()
             .id(IdUtils.create())
             .type(Create.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .title(Property.ofValue("Project Documentation"))
             .documentContent(

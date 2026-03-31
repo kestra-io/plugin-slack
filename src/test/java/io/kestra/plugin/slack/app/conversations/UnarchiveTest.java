@@ -26,7 +26,7 @@ public class UnarchiveTest extends AbstractSlackClientTest {
         Unarchive task = Unarchive.builder()
             .id(IdUtils.create())
             .type(Unarchive.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .build();

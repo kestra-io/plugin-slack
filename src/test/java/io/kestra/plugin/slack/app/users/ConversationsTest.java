@@ -35,7 +35,7 @@ public class ConversationsTest extends AbstractSlackClientTest {
         Conversations task = Conversations.builder()
             .id(IdUtils.create())
             .type(Conversations.class.getName())
-            .slack(this.client("usersconversations"))
+            .methodsEndpointUrlPrefix(this.client("usersconversations"))
             .token(Property.ofValue("token"))
             .user(Property.ofValue("U1234567890"))
             .build();
@@ -54,7 +54,7 @@ public class ConversationsTest extends AbstractSlackClientTest {
         Conversations task = Conversations.builder()
             .id(IdUtils.create())
             .type(Conversations.class.getName())
-            .slack(this.client("usersconversations"))
+            .methodsEndpointUrlPrefix(this.client("usersconversations"))
             .token(Property.ofValue("token"))
             .types(Property.ofValue(java.util.List.of(ConversationType.PUBLIC_CHANNEL, ConversationType.PRIVATE_CHANNEL)))
             .build();

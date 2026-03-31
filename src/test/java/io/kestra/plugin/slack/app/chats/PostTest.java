@@ -25,7 +25,7 @@ public class PostTest extends AbstractSlackClientTest {
     void run() throws Exception {
         Post task = Post.builder()
             .id(IdUtils.create())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .type(Post.class.getName())
             .token(Property.ofValue("token"))
             .messageText(Property.ofValue("A message *with some bold text*"))

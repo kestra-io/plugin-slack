@@ -27,7 +27,7 @@ public class UpdateTest extends AbstractSlackClientTest {
         Update task = Update.builder()
             .id(IdUtils.create())
             .type(Update.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .timestamp(Property.ofValue(Instant.ofEpochSecond(1234567890L, 123456000L)))

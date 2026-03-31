@@ -27,7 +27,7 @@ public class EditTest extends AbstractSlackClientTest {
         Edit task = Edit.builder()
             .id(IdUtils.create())
             .type(Edit.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .canvasId(Property.ofValue("F1234567890"))
             .changes(

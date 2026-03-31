@@ -26,7 +26,7 @@ public class GetPresenceTest extends AbstractSlackClientTest {
         GetPresence task = GetPresence.builder()
             .id(IdUtils.create())
             .type(GetPresence.class.getName())
-            .slack(this.client("usersgetpresence"))
+            .methodsEndpointUrlPrefix(this.client("usersgetpresence"))
             .token(Property.ofValue("token"))
             .user(Property.ofValue("U1234567890"))
             .build();

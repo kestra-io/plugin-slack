@@ -10,7 +10,6 @@ import org.junit.jupiter.api.TestInstance;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.slack.api.Slack;
 import com.slack.api.SlackConfig;
 
 import io.kestra.core.junit.annotations.KestraTest;
@@ -54,16 +53,12 @@ public class AbstractSlackClientTest {
         FakeWebhookController.data = null;
     }
 
-    protected Slack client() {
+    protected String client() {
         return this.client(null);
     }
 
-    protected Slack client(String path) {
-        SlackConfig slackConfig = new SlackConfig();
-        slackConfig.setMethodsEndpointUrlPrefix(embeddedServer.getURI() + "/webhook-unit-test/mock/" + (path != null ? path + "/" : ""));
-        slackConfig.setStatsEnabled(false);
-
-        return Slack.getInstance(slackConfig);
+    protected String client(String path) {
+        return embeddedServer.getURI() + "/webhook-unit-test/mock/" + (path != null ? path + "/" : "");
     }
 
     public static Map<String, Object> convertToSlack(Object obj) {

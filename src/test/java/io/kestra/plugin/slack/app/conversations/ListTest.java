@@ -39,7 +39,7 @@ public class ListTest extends AbstractSlackClientTest {
         List task = List.builder()
             .id(IdUtils.create())
             .type(List.class.getName())
-            .slack(this.client("conversationslist"))
+            .methodsEndpointUrlPrefix(this.client("conversationslist"))
             .token(Property.ofValue("token"))
             .build();
 
@@ -58,7 +58,7 @@ public class ListTest extends AbstractSlackClientTest {
         List task = List.builder()
             .id(IdUtils.create())
             .type(List.class.getName())
-            .slack(this.client("conversationslist"))
+            .methodsEndpointUrlPrefix(this.client("conversationslist"))
             .token(Property.ofValue("token"))
             .types(Property.ofValue(java.util.List.of(ConversationType.PRIVATE_CHANNEL, ConversationType.PUBLIC_CHANNEL)))
             .excludeArchived(Property.ofValue(true))

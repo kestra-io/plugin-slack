@@ -33,7 +33,7 @@ public class ListTest extends AbstractSlackClientTest {
         List task = List.builder()
             .id(IdUtils.create())
             .type(List.class.getName())
-            .slack(this.client("userslist"))
+            .methodsEndpointUrlPrefix(this.client("userslist"))
             .token(Property.ofValue("token"))
             .build();
 

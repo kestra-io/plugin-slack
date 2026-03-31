@@ -27,7 +27,7 @@ public class LookupByEmailTest extends AbstractSlackClientTest {
         LookupByEmail task = LookupByEmail.builder()
             .id(IdUtils.create())
             .type(LookupByEmail.class.getName())
-            .slack(this.client("users"))
+            .methodsEndpointUrlPrefix(this.client("users"))
             .token(Property.ofValue("token"))
             .email(Property.ofValue("john.doe@example.com"))
             .build();

@@ -27,7 +27,7 @@ public class AddTest extends AbstractSlackClientTest {
         Add task = Add.builder()
             .id(IdUtils.create())
             .type(Add.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .name(Property.ofValue("poopy"))

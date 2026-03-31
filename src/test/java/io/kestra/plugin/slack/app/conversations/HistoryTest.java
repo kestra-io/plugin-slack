@@ -39,7 +39,7 @@ public class HistoryTest extends AbstractSlackClientTest {
         History task = History.builder()
             .id(IdUtils.create())
             .type(History.class.getName())
-            .slack(this.client("conversationshistory"))
+            .methodsEndpointUrlPrefix(this.client("conversationshistory"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .build();
@@ -60,7 +60,7 @@ public class HistoryTest extends AbstractSlackClientTest {
         History task = History.builder()
             .id(IdUtils.create())
             .type(History.class.getName())
-            .slack(this.client("conversationshistory"))
+            .methodsEndpointUrlPrefix(this.client("conversationshistory"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .oldest(Property.ofValue(Instant.ofEpochSecond(1609459200)))

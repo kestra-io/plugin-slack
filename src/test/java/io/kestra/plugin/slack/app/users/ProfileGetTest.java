@@ -26,7 +26,7 @@ public class ProfileGetTest extends AbstractSlackClientTest {
         ProfileGet task = ProfileGet.builder()
             .id(IdUtils.create())
             .type(ProfileGet.class.getName())
-            .slack(this.client("usersprofile"))
+            .methodsEndpointUrlPrefix(this.client("usersprofile"))
             .token(Property.ofValue("token"))
             .user(Property.ofValue("U1234567890"))
             .build();

@@ -27,7 +27,7 @@ public class RemoveTest extends AbstractSlackClientTest {
         Remove task = Remove.builder()
             .id(IdUtils.create())
             .type(Remove.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .name(Property.ofValue("poopy"))

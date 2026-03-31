@@ -26,7 +26,7 @@ public class KickTest extends AbstractSlackClientTest {
         Kick task = Kick.builder()
             .id(IdUtils.create())
             .type(Kick.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .user(Property.ofValue("U1234567890"))

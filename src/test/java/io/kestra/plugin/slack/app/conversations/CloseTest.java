@@ -26,7 +26,7 @@ public class CloseTest extends AbstractSlackClientTest {
         Close task = Close.builder()
             .id(IdUtils.create())
             .type(Close.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("D1234567890"))
             .build();

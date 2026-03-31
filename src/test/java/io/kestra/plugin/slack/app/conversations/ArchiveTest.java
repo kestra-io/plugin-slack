@@ -26,7 +26,7 @@ public class ArchiveTest extends AbstractSlackClientTest {
         Archive task = Archive.builder()
             .id(IdUtils.create())
             .type(Archive.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .build();

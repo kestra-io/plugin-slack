@@ -27,7 +27,7 @@ public class SetTopicTest extends AbstractSlackClientTest {
         SetTopic task = SetTopic.builder()
             .id(IdUtils.create())
             .type(SetTopic.class.getName())
-            .slack(this.client("conversations"))
+            .methodsEndpointUrlPrefix(this.client("conversations"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .topic(Property.ofValue("New channel topic"))

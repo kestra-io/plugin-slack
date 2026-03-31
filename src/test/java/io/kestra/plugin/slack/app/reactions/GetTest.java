@@ -35,7 +35,7 @@ public class GetTest extends AbstractSlackClientTest {
         Get task = Get.builder()
             .id(IdUtils.create())
             .type(Add.class.getName())
-            .slack(this.client("reactionsget"))
+            .methodsEndpointUrlPrefix(this.client("reactionsget"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .timestamp(Property.ofValue(MessageService.fromSlackTimestamp("2023-01-01T00:00:00Z")))

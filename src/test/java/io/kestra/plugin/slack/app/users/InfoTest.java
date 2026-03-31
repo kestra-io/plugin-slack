@@ -27,7 +27,7 @@ public class InfoTest extends AbstractSlackClientTest {
         Info task = Info.builder()
             .id(IdUtils.create())
             .type(Info.class.getName())
-            .slack(this.client("users"))
+            .methodsEndpointUrlPrefix(this.client("users"))
             .token(Property.ofValue("token"))
             .user(Property.ofValue("U1234567890"))
             .build();
@@ -47,7 +47,7 @@ public class InfoTest extends AbstractSlackClientTest {
         Info task = Info.builder()
             .id(IdUtils.create())
             .type(Info.class.getName())
-            .slack(this.client("users"))
+            .methodsEndpointUrlPrefix(this.client("users"))
             .token(Property.ofValue("token"))
             .user(Property.ofValue("U1234567890"))
             .includeLocale(Property.ofValue(true))

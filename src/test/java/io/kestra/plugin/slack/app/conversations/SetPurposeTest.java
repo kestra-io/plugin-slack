@@ -27,7 +27,7 @@ public class SetPurposeTest extends AbstractSlackClientTest {
         SetPurpose task = SetPurpose.builder()
             .id(IdUtils.create())
             .type(SetPurpose.class.getName())
-            .slack(this.client("conversations"))
+            .methodsEndpointUrlPrefix(this.client("conversations"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .purpose(Property.ofValue("New channel purpose"))

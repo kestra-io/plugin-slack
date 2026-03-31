@@ -27,7 +27,7 @@ public class ScheduleTest extends AbstractSlackClientTest {
         Schedule task = Schedule.builder()
             .id(IdUtils.create())
             .type(Schedule.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("@channel"))
             .postAt(Property.ofValue(Instant.ofEpochSecond(1609459200)))

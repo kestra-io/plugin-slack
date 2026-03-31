@@ -28,7 +28,7 @@ public class InviteTest extends AbstractSlackClientTest {
         Invite task = Invite.builder()
             .id(IdUtils.create())
             .type(Invite.class.getName())
-            .slack(this.client("conversations"))
+            .methodsEndpointUrlPrefix(this.client("conversations"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .users(Property.ofValue(List.of("U1234567890", "U0987654321")))

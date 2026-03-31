@@ -27,7 +27,7 @@ public class RenameTest extends AbstractSlackClientTest {
         Rename task = Rename.builder()
             .id(IdUtils.create())
             .type(Rename.class.getName())
-            .slack(this.client("conversations"))
+            .methodsEndpointUrlPrefix(this.client("conversations"))
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("C1234567890"))
             .name(Property.ofValue("renamed-channel"))

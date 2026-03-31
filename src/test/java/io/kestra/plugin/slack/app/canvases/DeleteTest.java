@@ -26,7 +26,7 @@ public class DeleteTest extends AbstractSlackClientTest {
         Delete task = Delete.builder()
             .id(IdUtils.create())
             .type(Delete.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue("token"))
             .canvasId(Property.ofValue("F1234567890"))
             .build();

@@ -62,7 +62,7 @@ public class StreamTest extends AbstractSlackClientTest {
         StopStream stop = StopStream.builder()
             .id(IdUtils.create())
             .type(StopStream.class.getName())
-            .slack(this.client())
+            .methodsEndpointUrlPrefix(this.client())
             .token(Property.ofValue(botToken))
             .channel(Property.ofValue("C0ACC6BT2GK"))
             .timestamp(Property.ofValue(startOutput.getTimestamp()))
