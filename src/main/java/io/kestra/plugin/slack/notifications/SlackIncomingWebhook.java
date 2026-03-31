@@ -224,21 +224,22 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
                 );
             }
         } else {
-            Slack slack = createConfiguredSlackInstance(runContext);
-            WebhookResponse response = slack.send(rUrl, rPayloadJson);
+            try (Slack slack = createConfiguredSlackInstance(runContext)) {
+                WebhookResponse response = slack.send(rUrl, rPayloadJson);
 
-            logger.debug(
-                "Response: code={}, message={}, body={}",
-                response.getCode(), response.getMessage(), response.getBody()
-            );
-
-            if (response.getCode() == 200) {
-                logger.info("Request succeeded");
-            } else {
-                throw new IOException(
-                    "Slack webhook request failed with status " + response.getCode() +
-                        ": " + response.getMessage() + " - " + response.getBody()
+                logger.debug(
+                    "Response: code={}, message={}, body={}",
+                    response.getCode(), response.getMessage(), response.getBody()
                 );
+
+                if (response.getCode() == 200) {
+                    logger.info("Request succeeded");
+                } else {
+                    throw new IOException(
+                        "Slack webhook request failed with status " + response.getCode() +
+                            ": " + response.getMessage() + " - " + response.getBody()
+                    );
+                }
             }
         }
 
@@ -301,8 +302,8 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
         }
 
         SlackHttpClient httpClient = new SlackHttpClient(okHttpBuilder.build());
-        Slack slack = Slack.getInstance(config, httpClient);
-
-        return slack.send(url, payloadJson);
+        try (Slack slack = Slack.getInstance(config, httpClient)) {
+            return slack.send(url, payloadJson);
+        }
     }
 }
