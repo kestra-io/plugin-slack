@@ -24,6 +24,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -65,6 +66,7 @@ public class Members extends AbstractSlackClientConnection implements RunnableTa
         description = "Channel whose members to list; provide the Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Override

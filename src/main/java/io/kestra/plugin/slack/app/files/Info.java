@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -74,6 +75,7 @@ public class Info extends AbstractSlackClientConnection implements RunnableTask<
         description = "Slack file ID (e.g., F123...); obtain from Upload output or Slack API."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> fileId;
 
     @Override

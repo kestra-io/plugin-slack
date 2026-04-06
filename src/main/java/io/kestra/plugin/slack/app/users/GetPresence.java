@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -49,6 +50,7 @@ public class GetPresence extends AbstractSlackClientConnection implements Runnab
         description = "User whose presence is requested."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> user;
 
     @Override

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -50,6 +51,7 @@ public class Close extends AbstractSlackClientConnection implements RunnableTask
         description = "DM or MPIM ID to close (e.g., D123..., G123...)."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Override

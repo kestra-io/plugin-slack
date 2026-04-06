@@ -20,6 +20,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -84,6 +85,7 @@ public class PostEphemeral extends AbstractSlackClientConnection implements Runn
         title = "Recipient user ID",
         description = "User who sees the ephemeral message; must be a member of the channel (IDs usually start with `U`)."
     )
+    @PluginProperty(group = "main")
     private Property<String> user;
 
     private Property<String> payload;

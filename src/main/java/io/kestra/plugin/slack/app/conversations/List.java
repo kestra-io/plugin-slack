@@ -25,6 +25,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -73,12 +74,14 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
         description = "If true, archived channels are filtered out. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> excludeArchived = Property.ofValue(false);
 
     @Schema(
         title = "Team ID",
         description = "Encoded team ID required when using an org token."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> teamId;
 
     @Override

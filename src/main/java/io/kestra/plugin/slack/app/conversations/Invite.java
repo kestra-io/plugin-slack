@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -52,6 +53,7 @@ public class Invite extends AbstractSlackClientConnection implements RunnableTas
         description = "Channel to invite users to (Slack channel ID). To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
@@ -59,6 +61,7 @@ public class Invite extends AbstractSlackClientConnection implements RunnableTas
         description = "List of Slack user IDs (U...) to add. To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<List<String>> users;
 
     @Override

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -50,6 +51,7 @@ public class Unarchive extends AbstractSlackClientConnection implements Runnable
         description = "Channel to unarchive; must be provided as a Slack channel ID (e.g., C123...). To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Override

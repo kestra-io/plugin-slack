@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -50,6 +51,7 @@ public class SetPurpose extends AbstractSlackClientConnection implements Runnabl
         description = "Channel whose purpose to update; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
@@ -57,6 +59,7 @@ public class SetPurpose extends AbstractSlackClientConnection implements Runnabl
         description = "New purpose text, maximum 250 characters."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> purpose;
 
     @Override

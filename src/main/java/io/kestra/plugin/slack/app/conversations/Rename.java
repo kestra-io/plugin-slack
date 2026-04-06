@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -52,6 +53,7 @@ public class Rename extends AbstractSlackClientConnection implements RunnableTas
         description = "Channel to rename; Slack channel ID required. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
@@ -59,6 +61,7 @@ public class Rename extends AbstractSlackClientConnection implements RunnableTas
         description = "Lowercase letters, numbers, hyphens, and underscores only; max 80 characters."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> name;
 
     @Override

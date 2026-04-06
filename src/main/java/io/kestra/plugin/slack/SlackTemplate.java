@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -33,6 +34,7 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
             "[Current Webhooks](https://api.slack.com/messaging/webhooks)."
     )
     @Deprecated
+    @PluginProperty(group = "advanced")
     protected Property<String> channel;
 
     @Schema(
@@ -40,6 +42,7 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
         description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific username."
     )
     @Deprecated
+    @PluginProperty(group = "connection")
     protected Property<String> username;
 
     @Schema(
@@ -47,6 +50,7 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
         description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon URL."
     )
     @Deprecated
+    @PluginProperty(group = "connection")
     protected Property<String> iconUrl;
 
     @Schema(
@@ -54,17 +58,20 @@ public abstract class SlackTemplate extends SlackIncomingWebhook {
         description = "This property works only with legacy webhook URLs, new Slack incoming webhook URLs are already tied to a specific icon."
     )
     @Deprecated
+    @PluginProperty(group = "advanced")
     protected Property<String> iconEmoji;
 
     @Schema(
         title = "Template to use",
         hidden = true
     )
+    @PluginProperty(group = "advanced")
     protected Property<String> templateUri;
 
     @Schema(
         title = "Map of variables to use for the message template"
     )
+    @PluginProperty(group = "advanced")
     protected Property<Map<String, Object>> templateRenderMap;
 
     @SuppressWarnings("unchecked")

@@ -24,6 +24,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -64,6 +65,7 @@ public class List extends AbstractSlackClientConnection implements RunnableTask<
         description = "If true, locale fields are included. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> includeLocale = Property.ofValue(false);
 
     @Override

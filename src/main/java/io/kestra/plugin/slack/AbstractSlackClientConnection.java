@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -25,6 +26,7 @@ public abstract class AbstractSlackClientConnection extends Task {
         title = "Slack token"
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<String> token;
 
     // we only set in tests to redirect API calls to a mock server.

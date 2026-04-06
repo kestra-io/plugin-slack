@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -53,6 +54,7 @@ public class SetTopic extends AbstractSlackClientConnection implements RunnableT
         description = "Channel whose topic to update; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
@@ -60,6 +62,7 @@ public class SetTopic extends AbstractSlackClientConnection implements RunnableT
         description = "New topic text, maximum 250 characters."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> topic;
 
     @Override

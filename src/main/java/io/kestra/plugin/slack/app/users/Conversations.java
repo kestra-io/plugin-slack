@@ -25,6 +25,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -65,6 +66,7 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
         title = "User ID (optional)",
         description = "User to query; defaults to the authenticated user."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> user;
 
     @Schema(
@@ -72,6 +74,7 @@ public class Conversations extends AbstractSlackClientConnection implements Runn
         description = "If true, archived conversations are omitted. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> excludeArchived = Property.ofValue(false);
 
     @Schema(

@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -79,6 +80,7 @@ public class Remove extends AbstractSlackClientConnection implements RunnableTas
         description = "Channel ID or name where the target message lives. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<String> channel;
 
     @Schema(
@@ -86,6 +88,7 @@ public class Remove extends AbstractSlackClientConnection implements RunnableTas
         description = "Name without colons (e.g., thumbsup, white_check_mark, heart)."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<String> name;
 
     @Schema(
@@ -93,6 +96,7 @@ public class Remove extends AbstractSlackClientConnection implements RunnableTas
         description = "Slack `ts` of the message to remove the reaction from."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<Instant> timestamp;
 
     @Override

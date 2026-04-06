@@ -102,41 +102,47 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
         description = "Internal storage URI of the file to upload (inputs/outputs/other tasks)."
     )
     @NotNull
-    @PluginProperty(internalStorageURI = true)
+    @PluginProperty(internalStorageURI = true, group = "main")
     private Property<String> from;
 
     @Schema(
         title = "Target channels",
         description = "Channel IDs or names to share the file to; multiple allowed."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> channels;
 
     @Schema(title = "Filename")
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> filename;
 
     @Schema(
         title = "File title",
         description = "Optional display title shown in Slack."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> title;
 
     @Schema(
         title = "Alt text",
         description = "Accessibility text, useful for images or visual content."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> altTxt;
 
     @Schema(
         title = "Snippet language",
         description = "Syntax highlighting label for code snippets (e.g., python, java, javascript)."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> snippetType;
 
     @Schema(
         title = "Thread timestamp",
         description = "Slack `ts` to post the file as a thread reply; requires matching channel and `chat:write`."
     )
+    @PluginProperty(group = "advanced")
     private Property<Instant> timestamp;
 
     @Override

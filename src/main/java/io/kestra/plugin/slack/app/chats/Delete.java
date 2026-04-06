@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -73,6 +74,7 @@ public class Delete extends AbstractSlackClientConnection implements RunnableTas
         description = "Channel ID or name where the target message exists."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<String> channel;
 
     @Schema(
@@ -80,6 +82,7 @@ public class Delete extends AbstractSlackClientConnection implements RunnableTas
         description = "Slack `ts` of the message; must belong to the specified channel."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<Instant> timestamp;
 
     @Override

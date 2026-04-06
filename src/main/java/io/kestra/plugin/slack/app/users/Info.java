@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -49,6 +50,7 @@ public class Info extends AbstractSlackClientConnection implements RunnableTask<
         description = "Slack user ID to describe."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> user;
 
     @Schema(
@@ -56,6 +58,7 @@ public class Info extends AbstractSlackClientConnection implements RunnableTask<
         description = "If true, locale is returned. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> includeLocale = Property.ofValue(false);
 
     @Override

@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -115,6 +116,7 @@ public class AppendStream extends AbstractSlackClientConnection implements Runna
         description = "Channel ID or name where the stream was started."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
@@ -122,6 +124,7 @@ public class AppendStream extends AbstractSlackClientConnection implements Runna
         description = "Slack `ts` returned by StartStream."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> timestamp;
 
     @Schema(
@@ -129,6 +132,7 @@ public class AppendStream extends AbstractSlackClientConnection implements Runna
         description = "Additional markdown content appended to the stream."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> markdownText;
 
     @Override

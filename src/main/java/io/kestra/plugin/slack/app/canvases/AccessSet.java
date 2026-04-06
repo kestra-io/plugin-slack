@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -54,6 +55,7 @@ public class AccessSet extends AbstractSlackClientConnection implements Runnable
         description = "Target canvas to update access for (e.g., `F1234567890`)."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> canvasId;
 
     @Schema(
@@ -61,18 +63,21 @@ public class AccessSet extends AbstractSlackClientConnection implements Runnable
         description = "New access level to apply."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<AccessLevel> accessLevel;
 
     @Schema(
         title = "Channel IDs with access",
         description = "Channel IDs to update; cannot be set together with `userIds`."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> channelIds;
 
     @Schema(
         title = "User IDs with access",
         description = "User IDs to update; cannot be set together with `channelIds`."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> userIds;
 
     @Override

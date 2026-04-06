@@ -16,6 +16,7 @@ import io.kestra.plugin.slack.app.models.ConversationOutput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -63,12 +64,14 @@ public class Open extends AbstractSlackClientConnection implements RunnableTask<
         title = "User IDs to include",
         description = "One ID opens a DM; multiple IDs open an MPIM. Provide Slack user IDs (U...). To get a user ID, go to the user's profile, click the three dots, and select 'Copy member ID'."
     )
+    @PluginProperty(group = "advanced")
     private Property<List<String>> users;
 
     @Schema(
         title = "Existing IM/MPIM ID",
         description = "Resume a conversation by ID instead of passing users."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> channel;
 
     @Schema(
@@ -76,6 +79,7 @@ public class Open extends AbstractSlackClientConnection implements RunnableTask<
         description = "If true, return existing DM instead of creating a new one. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> returnIm = Property.ofValue(false);
 
     @Override

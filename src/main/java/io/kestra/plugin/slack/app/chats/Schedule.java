@@ -21,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -93,6 +94,7 @@ public class Schedule extends AbstractSlackClientConnection implements RunnableT
         description = "Future time to post the message; the Instant is converted to epoch seconds for Slack."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<Instant> postAt;
 
     @Override

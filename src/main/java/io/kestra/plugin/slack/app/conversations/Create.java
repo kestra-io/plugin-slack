@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -50,6 +51,7 @@ public class Create extends AbstractSlackClientConnection implements RunnableTas
         description = "Lowercase letters, numbers, hyphens, underscores only; max 80 characters."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> name;
 
     @Schema(
@@ -57,12 +59,14 @@ public class Create extends AbstractSlackClientConnection implements RunnableTas
         description = "If true, creates a private channel; defaults to public."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> isPrivate = Property.ofValue(false);
 
     @Schema(
         title = "Team ID",
         description = "Encoded team ID required when using an org token."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> teamId;
 
     @Override

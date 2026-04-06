@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -57,6 +58,7 @@ public class SectionsLookup extends AbstractSlackClientConnection implements Run
         description = "Canvas to search for matching sections."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> canvasId;
 
     @Schema(
@@ -64,6 +66,7 @@ public class SectionsLookup extends AbstractSlackClientConnection implements Run
         description = "Map converted to Slack `Criteria`; supports fields such as `containsText` or `sectionTypes`."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<Map<String, Object>> criteria;
 
     @Override

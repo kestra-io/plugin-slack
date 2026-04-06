@@ -27,6 +27,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -68,18 +69,21 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
         description = "Channel whose history to export; Slack channel ID. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> channel;
 
     @Schema(
         title = "Oldest timestamp",
         description = "Inclusive lower bound (Instant) converted to Slack ts."
     )
+    @PluginProperty(group = "advanced")
     private Property<Instant> oldest;
 
     @Schema(
         title = "Latest timestamp",
         description = "Inclusive upper bound (Instant) converted to Slack ts."
     )
+    @PluginProperty(group = "advanced")
     private Property<Instant> latest;
 
     @Schema(
@@ -87,6 +91,7 @@ public class History extends AbstractSlackClientConnection implements RunnableTa
         description = "If true, returns thread messages as well; defaults to false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> inclusive = Property.ofValue(false);
 
     @Override

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -65,6 +66,7 @@ public class Create extends AbstractSlackClientConnection implements RunnableTas
         description = "Title displayed at the top of the canvas."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> title;
 
     @Schema(
@@ -72,6 +74,7 @@ public class Create extends AbstractSlackClientConnection implements RunnableTas
         description = "Map with `type` and `markdown`; only markdown content is supported by the Slack API."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<Map<String, String>> documentContent;
 
     @Override

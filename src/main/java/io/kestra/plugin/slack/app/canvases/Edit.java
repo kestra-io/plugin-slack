@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -101,6 +102,7 @@ public class Edit extends AbstractSlackClientConnection implements RunnableTask<
         description = "Canvas to edit; find it in the canvas URL or from creation output."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> canvasId;
 
     @Schema(
@@ -108,6 +110,7 @@ public class Edit extends AbstractSlackClientConnection implements RunnableTask<
         description = "Each entry must set `operation` plus `documentContent` or `titleContent`. Supported operations: insert_after, insert_before, insert_at_start, insert_at_end, replace, delete, rename."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<List<Map<String, Object>>> changes;
 
     @Override

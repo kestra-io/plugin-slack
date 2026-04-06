@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -47,6 +48,7 @@ public class ProfileGet extends AbstractSlackClientConnection implements Runnabl
         title = "User ID (optional)",
         description = "Target user; defaults to the authenticated user."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> user;
 
     @Schema(
@@ -54,6 +56,7 @@ public class ProfileGet extends AbstractSlackClientConnection implements Runnabl
         description = "If true, includes labels for structured profile fields. Default false."
     )
     @Builder.Default
+    @PluginProperty(group = "advanced")
     private Property<Boolean> includeLabels = Property.ofValue(false);
 
     @Override

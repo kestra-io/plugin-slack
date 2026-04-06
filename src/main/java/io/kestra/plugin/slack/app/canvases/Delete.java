@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -48,6 +49,7 @@ public class Delete extends AbstractSlackClientConnection implements RunnableTas
         description = "Canvas to delete; deletion is irreversible in Slack."
     )
     @NotNull
+    @PluginProperty(group = "main")
     private Property<String> canvasId;
 
     @Override

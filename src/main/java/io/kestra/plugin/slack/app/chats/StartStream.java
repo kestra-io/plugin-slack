@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -100,30 +101,35 @@ public class StartStream extends AbstractSlackClientConnection implements Runnab
         title = "Channel for the stream",
         description = "Channel ID or name where the streaming message is posted."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> channel;
 
     @Schema(
         title = "Initial markdown content",
         description = "Markdown body to seed the streaming message."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> markdownText;
 
     @Schema(
         title = "Thread timestamp to reply to",
         description = "Slack `ts` to nest the stream inside an existing thread."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> timestamp;
 
     @Schema(
         title = "Recipient user ID",
         description = "Required when streaming into channels to target a specific user."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> recipientUserId;
 
     @Schema(
         title = "Recipient team ID",
         description = "Team ID for the recipient; required alongside `recipientUserId` for channel streams."
     )
+    @PluginProperty(group = "advanced")
     private Property<String> recipientTeamId;
 
     @Override

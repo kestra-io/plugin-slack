@@ -27,6 +27,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import reactor.core.publisher.Flux;
+import io.kestra.core.models.annotations.PluginProperty;
 
 @SuperBuilder
 @ToString
@@ -94,24 +95,28 @@ public class Get extends AbstractSlackClientConnection implements RunnableTask<G
         description = "Channel ID or name for the target message. To get the channel ID, right click on the channel name in Slack and select 'Copy Link'. The ID is the last part of the URL."
     )
     @NotNull
+    @PluginProperty(group = "main")
     protected Property<String> channel;
 
     @Schema(
         title = "File ID (optional)",
         description = "Use when retrieving reactions for a file."
     )
+    @PluginProperty(group = "advanced")
     protected Property<String> file;
 
     @Schema(
         title = "File comment ID (optional)",
         description = "Use when retrieving reactions for a file comment."
     )
+    @PluginProperty(group = "advanced")
     protected Property<String> fileComment;
 
     @Schema(
         title = "Message timestamp (optional)",
         description = "Slack `ts` of the message; required when targeting a message."
     )
+    @PluginProperty(group = "advanced")
     protected Property<Instant> timestamp;
 
     @Override
