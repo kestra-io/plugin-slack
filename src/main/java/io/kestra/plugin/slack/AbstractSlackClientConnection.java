@@ -26,7 +26,7 @@ public abstract class AbstractSlackClientConnection extends Task {
         title = "Slack token"
     )
     @NotNull
-    @PluginProperty(group = "main")
+    @PluginProperty(group = "main", secret = true)
     protected Property<String> token;
 
     // we only set in tests to redirect API calls to a mock server.

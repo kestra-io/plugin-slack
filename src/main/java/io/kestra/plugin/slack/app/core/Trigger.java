@@ -113,14 +113,14 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
     };
     private static final ObjectMapper MAPPER = JacksonMapper.ofJson().copy().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-    @PluginProperty(group = "connection")
+    @PluginProperty(group = "connection", secret = true)
     @Schema(
         title = "Slack bot token",
         description = "Bot token for the installed app, rendered at runtime (typically starts with `xoxb-`)."
     )
     private Property<String> botToken;
 
-    @PluginProperty(group = "connection")
+    @PluginProperty(group = "connection", secret = true)
     @Schema(
         title = "Slack signing secret",
         description = "Secret used to verify Slack signatures on every webhook request; required for all Event API calls."

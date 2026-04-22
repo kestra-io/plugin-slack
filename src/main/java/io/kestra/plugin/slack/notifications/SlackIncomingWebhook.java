@@ -193,7 +193,7 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
         title = "Slack incoming webhook URL",
         description = "Check the <a href=\"https://api.slack.com/messaging/webhooks#create_a_webhook\">Create an Incoming Webhook</a> documentation for more details."
     )
-    @PluginProperty(dynamic = true, group = "connection")
+    @PluginProperty(dynamic = true, group = "connection", secret = true)
     @NotEmpty
     private String url;
 
