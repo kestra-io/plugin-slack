@@ -2,7 +2,6 @@ package io.kestra.plugin.slack.notifications;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Map;
 
 import org.slf4j.Logger;
 
@@ -20,7 +19,6 @@ import io.kestra.core.runners.RunContext;
 import io.kestra.plugin.slack.AbstractSlackWebhookConnection;
 import io.kestra.plugin.slack.MessagePayloadInterface;
 import io.kestra.plugin.slack.services.MessageService;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.EqualsAndHashCode;
@@ -137,6 +135,46 @@ import okhttp3.Request;
                 """
         ),
         @Example(
+            title = "Send a Slack message through an outbound HTTP proxy.",
+            full = true,
+            code = """
+                id: slack_via_proxy
+                namespace: company.team
+
+                tasks:
+                  - id: send_slack_message
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
+                    url: "{{ secret('SLACK_WEBHOOK') }}"
+                    messageText: "Hello from behind a proxy!"
+                    options:
+                      proxy:
+                        address: "10.10.10.254"
+                        port: 3128
+                        type: HTTP
+                """
+        ),
+        @Example(
+            title = "Send a Slack message through an authenticated outbound HTTP proxy.",
+            full = true,
+            code = """
+                id: slack_via_authenticated_proxy
+                namespace: company.team
+
+                tasks:
+                  - id: send_slack_message
+                    type: io.kestra.plugin.slack.notifications.SlackIncomingWebhook
+                    url: "{{ secret('SLACK_WEBHOOK') }}"
+                    messageText: "Hello from behind an authenticated proxy!"
+                    options:
+                      proxy:
+                        address: "10.10.10.254"
+                        port: 3128
+                        type: HTTP
+                        username: "{{ secret('PROXY_USER') }}"
+                        password: "{{ secret('PROXY_PASSWORD') }}"
+                """
+        ),
+        @Example(
             title = "Send a Rocket Chat message via [Slack incoming webhook](https://docs.rocket.chat/docs/integrations#incoming-webhook-script).",
             full = true,
             code = """
@@ -199,54 +237,83 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
 
     @Override
     public VoidOutput run(RunContext runContext) throws Exception {
-        // Render variables once with 'r' prefix
         String rUrl = runContext.render(this.url);
         String rPayloadJson = MessageService.prepareMessageAsJson(runContext, this.payload, this.messageText);
         Logger logger = runContext.logger();
 
         logger.debug("Send Slack webhook: {}", rPayloadJson);
 
-        // Check if custom headers are provided
-        if (this.options != null && this.options.getHeaders() != null) {
-            WebhookResponse response = sendWithCustomHeaders(runContext, rUrl, rPayloadJson);
+        WebhookResponse response = sendWithOkHttpClient(runContext, rUrl, rPayloadJson);
 
-            logger.debug(
-                "Response: code={}, message={}, body={}",
-                response.getCode(), response.getMessage(), response.getBody()
-            );
+        logger.debug(
+            "Response: code={}, message={}, body={}",
+            response.getCode(), response.getMessage(), response.getBody()
+        );
 
-            if (response.getCode() == 200) {
-                logger.info("Request succeeded");
-            } else {
-                throw new IOException(
-                    "Slack webhook request failed with status " + response.getCode() +
-                        ": " + response.getMessage() + " - " + response.getBody()
-                );
-            }
+        if (response.getCode() == 200) {
+            logger.info("Request succeeded");
         } else {
-            try (Slack slack = createConfiguredSlackInstance(runContext)) {
-                WebhookResponse response = slack.send(rUrl, rPayloadJson);
-
-                logger.debug(
-                    "Response: code={}, message={}, body={}",
-                    response.getCode(), response.getMessage(), response.getBody()
-                );
-
-                if (response.getCode() == 200) {
-                    logger.info("Request succeeded");
-                } else {
-                    throw new IOException(
-                        "Slack webhook request failed with status " + response.getCode() +
-                            ": " + response.getMessage() + " - " + response.getBody()
-                    );
-                }
-            }
+            throw new IOException(
+                "Slack webhook request failed with status " + response.getCode() +
+                    ": " + response.getMessage() + " - " + response.getBody()
+            );
         }
 
         return null;
     }
 
-    private Slack createConfiguredSlackInstance(RunContext runContext) throws Exception {
+    /**
+    * Sends the Slack webhook request using OkHttpClient directly (via the Slack Java SDK's
+    * SlackHttpClient wrapper) rather than Kestra's internal HTTP client. This is intentional:
+    * the Slack Java SDK is built on OkHttp, and SlackHttpClient accepts an OkHttpClient instance,
+    * allowing us to configure proxy, timeouts, and interceptors in a way that integrates cleanly
+    * with the SDK's own request handling (auth, retries, response parsing).
+    * Using Kestra's HTTP client here would bypass the SDK entirely and require reimplementing
+    * Slack-specific request/response logic.
+    */
+    private WebhookResponse sendWithOkHttpClient(RunContext runContext, String url, String payloadJson)
+        throws Exception {
+
+        SlackConfig config = buildSlackConfig(runContext);
+        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
+
+        // Apply timeout settings to OkHttpClient (SlackConfig drives the underlying client,
+        // but we also set them on the builder for completeness when using SlackHttpClient directly)
+        if (options != null) {
+            var rConnectTimeout = runContext.render(options.getConnectTimeout()).as(Duration.class).orElse(null);
+            if (rConnectTimeout != null) {
+                okHttpBuilder.connectTimeout(rConnectTimeout);
+            }
+
+            var rReadTimeout = runContext.render(options.getReadTimeout()).as(Duration.class).orElse(null);
+            if (rReadTimeout != null) {
+                okHttpBuilder.readTimeout(rReadTimeout);
+            }
+
+            // Apply custom headers via interceptor
+            var rHeaders = runContext.render(options.getHeaders()).asMap(String.class, String.class);
+            if (rHeaders != null && !rHeaders.isEmpty()) {
+                okHttpBuilder.addInterceptor(chain -> {
+                    Request.Builder requestBuilder = chain.request().newBuilder();
+                    rHeaders.forEach(requestBuilder::addHeader);
+                    return chain.proceed(requestBuilder.build());
+                });
+            }
+        }
+
+        // Apply proxy settings — this is the fix for issue #8
+        applyProxy(okHttpBuilder, runContext);
+
+        SlackHttpClient httpClient = new SlackHttpClient(okHttpBuilder.build());
+        try (Slack slack = Slack.getInstance(config, httpClient)) {
+            return slack.send(url, payloadJson);
+        }
+    }
+
+    /**
+     * Builds a SlackConfig populated with timeout values from RequestOptions.
+     */
+    private SlackConfig buildSlackConfig(RunContext runContext) throws Exception {
         SlackConfig config = new SlackConfig();
 
         if (options != null) {
@@ -254,56 +321,8 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
             if (rReadTimeout != null) {
                 config.setHttpClientReadTimeoutMillis((int) rReadTimeout.toMillis());
             }
-
-            var rWriteTimeout = runContext.render(options.getReadIdleTimeout()).as(Duration.class).orElse(null);
-            if (rWriteTimeout != null) {
-                config.setHttpClientWriteTimeoutMillis((int) rWriteTimeout.toMillis());
-            }
-
-            var rCallTimeout = runContext.render(options.getConnectTimeout()).as(Duration.class).orElse(null);
-            if (rCallTimeout != null) {
-                config.setHttpClientCallTimeoutMillis((int) rCallTimeout.toMillis());
-            }
         }
 
-        return Slack.getInstance(config);
-    }
-
-    private WebhookResponse sendWithCustomHeaders(RunContext runContext, String url, String payloadJson)
-        throws Exception {
-        Map<String, String> rHeaders = runContext.render(this.options.getHeaders())
-            .asMap(String.class, String.class);
-
-        SlackConfig config = new SlackConfig();
-
-        var rReadTimeout = runContext.render(options.getReadTimeout()).as(Duration.class).orElse(null);
-        if (rReadTimeout != null) {
-            config.setHttpClientReadTimeoutMillis((int) rReadTimeout.toMillis());
-        }
-
-        var rWriteTimeout = runContext.render(options.getReadIdleTimeout()).as(Duration.class).orElse(null);
-        if (rWriteTimeout != null) {
-            config.setHttpClientWriteTimeoutMillis((int) rWriteTimeout.toMillis());
-        }
-
-        var rCallTimeout = runContext.render(options.getConnectTimeout()).as(Duration.class).orElse(null);
-        if (rCallTimeout != null) {
-            config.setHttpClientCallTimeoutMillis((int) rCallTimeout.toMillis());
-        }
-        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
-
-        if (rHeaders != null) {
-            okHttpBuilder.addInterceptor(chain ->
-            {
-                Request.Builder requestBuilder = chain.request().newBuilder();
-                rHeaders.forEach(requestBuilder::addHeader);
-                return chain.proceed(requestBuilder.build());
-            });
-        }
-
-        SlackHttpClient httpClient = new SlackHttpClient(okHttpBuilder.build());
-        try (Slack slack = Slack.getInstance(config, httpClient)) {
-            return slack.send(url, payloadJson);
-        }
+        return config;
     }
 }
