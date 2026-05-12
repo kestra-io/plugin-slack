@@ -15,6 +15,7 @@ import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.tenant.TenantService;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.slack.EnabledIfSlackTokenSet;
 import io.kestra.plugin.slack.FakeWebhookController;
 import io.kestra.plugin.slack.app.AbstractSlackClientTest;
 
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @KestraTest
 public class HistoryTest extends AbstractSlackClientTest {
-    @Value("${slack.bot-token}")
+    @Value("${slack.bot-token:}")
     private String botToken;
 
     @Inject
@@ -82,6 +83,7 @@ public class HistoryTest extends AbstractSlackClientTest {
     }
 
     @Test
+    @EnabledIfSlackTokenSet
     void runIntegration() throws Exception {
         History task = History.builder()
             .id(IdUtils.create())

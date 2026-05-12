@@ -10,6 +10,7 @@ import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContextFactory;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.slack.EnabledIfSlackTokenSet;
 import io.kestra.plugin.slack.app.AbstractSlackClientTest;
 import io.kestra.plugin.slack.app.models.CanvasSectionOutput;
 
@@ -19,8 +20,9 @@ import jakarta.inject.Inject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @KestraTest
+@EnabledIfSlackTokenSet
 public class IntegrationTest extends AbstractSlackClientTest {
-    @Value("${slack.bot-token}")
+    @Value("${slack.bot-token:}")
     private String botToken;
 
     @Inject

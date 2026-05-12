@@ -12,6 +12,7 @@ import io.kestra.core.models.flows.State;
 import io.kestra.core.queues.QueueException;
 import io.kestra.core.runners.FlowInputOutput;
 import io.kestra.core.runners.TestRunnerUtils;
+import io.kestra.plugin.slack.EnabledIfSlackTokenSet;
 
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Inject;
@@ -20,11 +21,12 @@ import static io.kestra.core.tenant.TenantService.MAIN_TENANT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @KestraTest(startRunner = true)
+@EnabledIfSlackTokenSet
 class RunnerTest {
     @Inject
     TestRunnerUtils runnerUtils;
 
-    @Value("${slack.bot-token}")
+    @Value("${slack.bot-token:}")
     private String botToken;
 
     @Inject

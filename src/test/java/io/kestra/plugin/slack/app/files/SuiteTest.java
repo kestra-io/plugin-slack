@@ -14,6 +14,7 @@ import io.kestra.core.storages.StorageInterface;
 import io.kestra.core.tenant.TenantService;
 import io.kestra.core.utils.IdUtils;
 import io.kestra.core.utils.TestsUtils;
+import io.kestra.plugin.slack.EnabledIfSlackTokenSet;
 import io.kestra.plugin.slack.app.AbstractSlackClientTest;
 import io.kestra.plugin.slack.app.models.FileOutput;
 
@@ -24,8 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @KestraTest
+@EnabledIfSlackTokenSet
 public class SuiteTest extends AbstractSlackClientTest {
-    @Value("${slack.bot-token}")
+    @Value("${slack.bot-token:}")
     private String botToken;
 
     @Inject
