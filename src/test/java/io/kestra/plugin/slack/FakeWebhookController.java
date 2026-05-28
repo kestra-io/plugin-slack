@@ -42,6 +42,27 @@ public class FakeWebhookController {
         return HttpResponse.ok("ok");
     }
 
+    @Post("/status-201")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public HttpResponse<String> postReturning201(@Body String data) {
+        FakeWebhookController.data = data;
+        return HttpResponse.created("ok");
+    }
+
+    @Post("/status-204")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public HttpResponse<Void> postReturning204(@Body String data) {
+        FakeWebhookController.data = data;
+        return HttpResponse.noContent();
+    }
+
+    @Post("/status-400")
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    public HttpResponse<String> postReturning400(@Body String data) {
+        FakeWebhookController.data = data;
+        return HttpResponse.badRequest("invalid_payload");
+    }
+
     @Post("/mock/conversationslist/{method}")
     @Consumes({ MediaType.ALL })
     public HttpResponse<?> mockConversationsList(HttpRequest<?> request, @Body String data) {

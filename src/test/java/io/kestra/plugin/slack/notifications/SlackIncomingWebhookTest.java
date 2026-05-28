@@ -162,6 +162,60 @@ class SlackIncomingWebhookTest {
     }
 
     @Test
+    void shouldSucceedOn201Response() throws Exception {
+        RunContext runContext = runContextFactory.of(ImmutableMap.of());
+
+        EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+
+        SlackIncomingWebhook task = SlackIncomingWebhook.builder()
+            .url(embeddedServer.getURI() + "/webhook-unit-test/status-201")
+            .messageText(Property.ofValue("hello"))
+            .build();
+
+        assertThatCode(() -> task.run(runContext))
+            .withFailMessage("HTTP 201 should be treated as success")
+            .doesNotThrowAnyException();
+    }
+
+    @Test
+    void shouldSucceedOn204Response() throws Exception {
+        RunContext runContext = runContextFactory.of(ImmutableMap.of());
+
+        EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+
+        SlackIncomingWebhook task = SlackIncomingWebhook.builder()
+            .url(embeddedServer.getURI() + "/webhook-unit-test/status-204")
+            .messageText(Property.ofValue("hello"))
+            .build();
+
+        assertThatCode(() -> task.run(runContext))
+            .withFailMessage("HTTP 204 should be treated as success")
+            .doesNotThrowAnyException();
+    }
+
+    @Test
+    void shouldThrowOnNon2xxResponse() throws Exception {
+        RunContext runContext = runContextFactory.of(ImmutableMap.of());
+
+        EmbeddedServer embeddedServer = applicationContext.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+
+        SlackIncomingWebhook task = SlackIncomingWebhook.builder()
+            .url(embeddedServer.getURI() + "/webhook-unit-test/status-400")
+            .messageText(Property.ofValue("hello"))
+            .build();
+
+        Exception thrown = assertThrows(
+            java.io.IOException.class,
+            () -> task.run(runContext),
+            "Expected IOException for HTTP 400"
+        );
+        assertThat(thrown.getMessage()).contains("400");
+    }
+
+    @Test
     void shouldThrowWhenInvalidJsonPayload() {
         RunContext runContext = runContextFactory.of(ImmutableMap.of());
 
