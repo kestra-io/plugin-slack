@@ -250,11 +250,12 @@ public class SlackIncomingWebhook extends AbstractSlackWebhookConnection impleme
             response.getCode(), response.getMessage(), response.getBody()
         );
 
-        if (response.getCode() == 200) {
+        int code = response.getCode();
+        if (code >= 200 && code < 300) {
             logger.info("Request succeeded");
         } else {
             throw new IOException(
-                "Slack webhook request failed with status " + response.getCode() +
+                "Slack webhook request failed with status " + code +
                     ": " + response.getMessage() + " - " + response.getBody()
             );
         }
