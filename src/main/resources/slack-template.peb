@@ -15,7 +15,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": {{ customMessage | json }}
+				"text": {{ customMessage | toJson }}
 			}
 		},
         {% endif %}
@@ -43,29 +43,29 @@
           "fields": [
               {
                   "title": "Namespace",
-                  "value": {{execution.namespace | json }},
+                  "value": {{execution.namespace | toJson }},
                   "short": true
               },
               {
                   "title": "Flow ID",
-                  "value": {{execution.flowId | json}},
+                  "value": {{execution.flowId | toJson}},
                   "short": true
               },
               {
                   "title": "Execution ID",
-                  "value": {{execution.id | json}},
+                  "value": {{execution.id | toJson}},
                   "short": true
               },
               {
                   "title": "Execution Status",
-                  "value": {{execution.state.current | json }},
+                  "value": {{execution.state.current | toJson }},
                   "short": true
               }
               {% if customFields is defined %}
               {% for entry in customFields %}
               ,{
-                  "title": {{entry.key | json}},
-                  "value": {{entry.value | json }},
+                  "title": {{entry.key | toJson}},
+                  "value": {{entry.value | toJson }},
                   "short": true
               }
               {% endfor %}
@@ -73,7 +73,7 @@
               ,
               {
                   "title": "Final task ID",
-                  "value": {{ lastTask.taskId | json }},
+                  "value": {{ lastTask.taskId | toJson }},
                   "short": true
               }
           ],
