@@ -75,25 +75,25 @@ public class ProfileGet extends AbstractSlackClientConnection implements Runnabl
     @Builder
     @Jacksonized
     public static class ProfileOutput implements io.kestra.core.models.tasks.Output {
-        @Schema(title = "The user's job title.")
+        @Schema(title = "The user's job title")
         String title;
 
-        @Schema(title = "The user's phone number.")
+        @Schema(title = "The user's phone number")
         String phone;
 
-        @Schema(title = "The user's real name.")
+        @Schema(title = "The user's real name")
         String realName;
 
-        @Schema(title = "The user's display name.")
+        @Schema(title = "The user's display name")
         String displayName;
 
-        @Schema(title = "The user's email address.")
+        @Schema(title = "The user's email address")
         String email;
 
-        @Schema(title = "The user's status text.")
+        @Schema(title = "The user's status text")
         String statusText;
 
-        @Schema(title = "The user's status emoji.")
+        @Schema(title = "The user's status emoji")
         String statusEmoji;
 
         public static ProfileOutput of(com.slack.api.model.User.Profile profile) {

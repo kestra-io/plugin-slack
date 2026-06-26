@@ -35,7 +35,7 @@ import okhttp3.Request;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Send a Slack message using an Incoming Webhook.",
+    title = "Send a Slack message using an Incoming Webhook",
     description = "Add this task to send direct Slack notifications. Check the <a href=\"https://api.slack.com/messaging/webhooks\">Slack documentation</a> for more details."
 )
 @Plugin(
@@ -105,19 +105,19 @@ import okhttp3.Request;
                             "fields": [
                               {
                                 "type": "mrkdwn",
-                                "text": "*Namespace:*\n{{ flow.namespace }}"
+                                "text": "*Namespace:*\\n{{ flow.namespace }}"
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*Execution ID:*\n{{ execution.id }}"
+                                "text": "*Execution ID:*\\n{{ execution.id }}"
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*Status:*\n{{ execution.state }}"
+                                "text": "*Status:*\\n{{ execution.state }}"
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*Start time:*\n{{ execution.startDate }}"
+                                "text": "*Start time:*\\n{{ execution.startDate }}"
                               }
                             ]
                           },

@@ -42,31 +42,31 @@ public abstract class AbstractSlackWebhookConnection extends Task implements Run
     @Getter
     @Builder
     public static class RequestOptions {
-        @Schema(title = "The time allowed to establish a connection to the server before failing.")
+        @Schema(title = "The time allowed to establish a connection to the server before failing")
         @PluginProperty(group = "execution")
         private final Property<Duration> connectTimeout;
 
-        @Schema(title = "The maximum time allowed for reading data from the server before failing.")
+        @Schema(title = "The maximum time allowed for reading data from the server before failing")
         @Builder.Default
         @PluginProperty(group = "execution")
         private final Property<Duration> readTimeout = Property.ofValue(Duration.ofSeconds(10));
 
-        @Schema(title = "The time allowed for a read connection to remain idle before closing it.")
+        @Schema(title = "The time allowed for a read connection to remain idle before closing it")
         @Builder.Default
         @PluginProperty(group = "execution")
         private final Property<Duration> readIdleTimeout = Property.ofValue(Duration.of(5, ChronoUnit.MINUTES));
 
-        @Schema(title = "The time an idle connection can remain in the client's connection pool before being closed.")
+        @Schema(title = "The time an idle connection can remain in the client's connection pool before being closed")
         @Builder.Default
         @PluginProperty(group = "execution")
         private final Property<Duration> connectionPoolIdleTimeout = Property.ofValue(Duration.ofSeconds(0));
 
-        @Schema(title = "The maximum content length of the response.")
+        @Schema(title = "The maximum content length of the response")
         @Builder.Default
         @PluginProperty(group = "execution")
         private final Property<Integer> maxContentLength = Property.ofValue(1024 * 1024 * 10);
 
-        @Schema(title = "The default charset for the request.")
+        @Schema(title = "The default charset for the request")
         @Builder.Default
         @PluginProperty(group = "advanced")
         private final Property<Charset> defaultCharset = Property.ofValue(StandardCharsets.UTF_8);

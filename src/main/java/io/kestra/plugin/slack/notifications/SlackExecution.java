@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @Schema(
-    title = "Send a Slack message with the execution information.",
+    title = "Send a Slack message with the execution information",
     description = "The message will include a link to the execution page in the UI along with the execution ID, namespace, flow name, the start date, duration, the final status of the execution, and the last task ID in an execution.\n\n"
         +
         "Use this notification task only in a flow that has a [Flow trigger](https://kestra.io/docs/administrator-guide/monitoring#alerting). Don't use this notification task in `errors` tasks. Instead, for `errors` tasks, use the [SlackIncomingWebhook](https://kestra.io/plugins/plugin-slack/io.kestra.plugin.slack.notifications.slackincomingwebhook) task."
