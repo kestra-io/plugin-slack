@@ -56,6 +56,7 @@ import lombok.extern.jackson.Jacksonized;
                     from: "{{ outputs.previous_task.uri }}"
                     filename: "report.pdf"
                     title: "Monthly Report"
+                    initialComment: "Here is the monthly report."
                 """
         ),
         @Example(
@@ -145,6 +146,13 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
     @PluginProperty(group = "advanced")
     private Property<Instant> timestamp;
 
+    @Schema(
+        title = "Initial comment",
+        description = "Optional message attached to the uploaded file."
+    )
+    @PluginProperty(group = "advanced")
+    private Property<String> initialComment;
+
     @Override
     public Output run(RunContext runContext) throws Exception {
         URI rFrom = new URI(runContext.render(this.from).as(String.class).orElseThrow());
@@ -166,7 +174,8 @@ public class Upload extends AbstractSlackClientConnection implements RunnableTas
         FilesUploadV2Request.FilesUploadV2RequestBuilder builder = FilesUploadV2Request.builder()
             .channels(runContext.render(this.channels).asList(String.class))
             .uploadFiles(List.of(slackUploadFiles))
-            .threadTs(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElse(null));
+            .threadTs(runContext.render(this.timestamp).as(Instant.class).map(MessageService::toSlackTimestamp).orElse(null))
+            .initialComment(runContext.render(this.initialComment).as(String.class).orElse(null));
 
         FilesUploadV2Response response = call(runContext, (client) -> client.filesUploadV2(builder.build()));
         com.slack.api.model.File uploadedFile = response.getFiles().getFirst();

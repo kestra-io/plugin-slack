@@ -24,6 +24,7 @@ import com.slack.api.bolt.util.SlackRequestParser;
 import com.slack.api.model.event.*;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
+import io.kestra.core.exceptions.InternalException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.models.annotations.Example;
@@ -250,12 +251,12 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
         } else {
                 context.webhookService().startExecution(maybeExecution.get()).subscribe();
 
-            WebhookResponse webhookResponse = context.webhookService().executionResponse(maybeExecution.get());
-
             try {
+                WebhookResponse webhookResponse = context.webhookService().executionResponse(maybeExecution.get());
+
                 return Response.json(200, JacksonMapper.ofJson().writeValueAsString(webhookResponse));
-            } catch (JsonProcessingException e) {
-                runContext.logger().error("Failed to serialize response", e);
+            } catch (JsonProcessingException | InternalException e) {
+                runContext.logger().error("Failed to build webhook response", e);
                 throw new RuntimeException(e);
             }
         }

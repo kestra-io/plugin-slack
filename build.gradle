@@ -1,16 +1,15 @@
 plugins {
-    id 'io.kestra.gradle.repository-conventions' version '1.2.5'
-    id "io.kestra.gradle.plugin-doc-lint" version "1.2.5"
-    id 'io.kestra.gradle.spotless-conventions' version '1.2.5'
+    id 'io.kestra.gradle.repository-conventions' version '1.2.6'
+    id "io.kestra.gradle.plugin-doc-lint" version "1.2.6"
+    id 'io.kestra.gradle.spotless-conventions' version '1.2.6'
     id "com.vanniktech.maven.publish" version "0.37.0"
-    id "io.kestra.gradle.inject-bom-versions" version "1.2.5"
+    id "io.kestra.gradle.inject-bom-versions" version "1.2.6"
     id 'java-library'
     id "idea"
     id 'jacoco'
-    id "com.adarshr.test-logger" version "4.0.0"
-    id "com.gradleup.shadow" version "9.5.1"
+    id "com.gradleup.shadow" version "9.6.1"
     id 'signing'
-    id "com.github.ben-manes.versions" version "0.54.0"
+    id "com.github.ben-manes.versions" version "0.61.0"
     id 'net.researchgate.release' version '3.1.0'
 }
 
@@ -53,8 +52,8 @@ dependencies {
     compileOnly group: "io.kestra", name: "core", version: kestraVersion
     compileOnly group: "io.kestra", name: "script", version: kestraVersion
 
-    implementation("com.slack.api:slack-api-client:1.49.0")
-    implementation("com.slack.api:bolt:1.49.0")
+    implementation("com.slack.api:slack-api-client:1.50.0")
+    implementation("com.slack.api:bolt:1.50.0")
 }
 
 
@@ -63,15 +62,6 @@ dependencies {
  **********************************************************************************************************************/
 test {
     useJUnitPlatform()
-}
-
-testlogger {
-    theme = "mocha-parallel"
-    showExceptions = true
-    showFullStackTraces = true
-    showStandardStreams = true
-    showPassedStandardStreams = false
-    showSkippedStandardStreams = true
 }
 
 dependencies {
@@ -103,6 +93,14 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.hamcrest:hamcrest"
     testImplementation "org.hamcrest:hamcrest-library"
+}
+
+/**********************************************************************************************************************\
+ * Allure Reports
+ **********************************************************************************************************************/
+dependencies {
+    testImplementation enforcedPlatform("io.kestra:platform:$kestraVersion")
+    testImplementation "io.qameta.allure:allure-junit5"
 }
 
 /**********************************************************************************************************************\

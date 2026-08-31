@@ -57,6 +57,7 @@ public class SuiteTest extends AbstractSlackClientTest {
             .filename(Property.ofValue("test-file.txt"))
             .title(Property.ofValue("Test File"))
             .channels(Property.ofValue(java.util.List.of("C0ACC6BT2GK")))
+            .initialComment(Property.ofValue("This is an initial comment"))
             .build();
 
         Upload.Output output = task.run(TestsUtils.mockRunContext(runContextFactory, task, Map.of()));
