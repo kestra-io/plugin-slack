@@ -24,6 +24,7 @@ import com.slack.api.bolt.util.SlackRequestParser;
 import com.slack.api.model.event.*;
 
 import io.kestra.core.exceptions.IllegalVariableEvaluationException;
+import io.kestra.core.exceptions.InternalException;
 import io.kestra.core.http.HttpRequest;
 import io.kestra.core.http.HttpResponse;
 import io.kestra.core.models.annotations.Example;
@@ -33,7 +34,6 @@ import io.kestra.core.models.executions.Execution;
 import io.kestra.core.models.property.Property;
 import io.kestra.core.models.tasks.common.EncryptedString;
 import io.kestra.core.models.triggers.TriggerOutput;
-import io.kestra.core.queues.QueueException;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
 import io.kestra.plugin.core.trigger.AbstractWebhookTrigger;
@@ -249,19 +249,14 @@ public class Trigger extends AbstractWebhookTrigger implements TriggerOutput<Tri
         if (maybeExecution.isEmpty()) {
             return slackContext.ack();
         } else {
-            try {
-                context.webhookService().startExecution(maybeExecution.get());
-            } catch (QueueException e) {
-                runContext.logger().error("Failed to start execution for slack webhook", e);
-                throw new RuntimeException(e);
-            }
-
-            WebhookResponse webhookResponse = context.webhookService().executionResponse(maybeExecution.get());
+                context.webhookService().startExecution(maybeExecution.get()).subscribe();
 
             try {
+                WebhookResponse webhookResponse = context.webhookService().executionResponse(maybeExecution.get());
+
                 return Response.json(200, JacksonMapper.ofJson().writeValueAsString(webhookResponse));
-            } catch (JsonProcessingException e) {
-                runContext.logger().error("Failed to serialize response", e);
+            } catch (JsonProcessingException | InternalException e) {
+                runContext.logger().error("Failed to build webhook response", e);
                 throw new RuntimeException(e);
             }
         }
