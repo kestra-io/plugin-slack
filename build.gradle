@@ -52,8 +52,8 @@ dependencies {
     compileOnly group: "io.kestra", name: "core", version: kestraVersion
     compileOnly group: "io.kestra", name: "script", version: kestraVersion
 
-    implementation("com.slack.api:slack-api-client:1.50.0")
-    implementation("com.slack.api:bolt:1.50.0")
+    implementation("com.slack.api:slack-api-client:1.51.0")
+    implementation("com.slack.api:bolt:1.51.0")
 }
 
 
