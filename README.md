@@ -48,6 +48,65 @@
 - Provides plugin components under `io.kestra.plugin.slack`.
 - Includes classes such as `SlackTemplate`, `SlackIncomingWebhook`, `SlackExecution`, `MessageService`.
 
+## Examples
+
+### Include error logs in a Slack failure alert
+
+The `errorLogs()` Pebble function only resolves logs for the current execution, so it is not available inside a `Flow` trigger that reacts to *other* flows failing. To surface those logs in a Slack alert, fetch them explicitly with `io.kestra.plugin.core.log.Fetch`, convert them to JSON, then read them back in the Slack payload:
+
+```yaml
+id: dbt_failure_notification
+namespace: alerts
+
+triggers:
+  - id: dbt_job_failure
+    type: io.kestra.plugin.core.trigger.Flow
+    states:
+      - FAILED
+
+tasks:
+  - id: get_error_logs
+    type: io.kestra.plugin.core.log.Fetch
+    level: ERROR
+    executionId: "{{ trigger.executionId ?? execution.id }}"
+    namespace: "{{ trigger.namespace ?? 'manual' }}"
+    flowId: "{{ trigger.flowId ?? 'triggered' }}"
+
+  - id: read_error_logs
+    type: io.kestra.plugin.serdes.json.IonToJson
+    from: "{{ outputs.get_error_logs.uri }}"
+    newLine: false
+
+  - id: slack_failure_alert
+    type: io.kestra.plugin.notifications.slack.SlackIncomingWebhook
+    url: "{{ secret('SLACK_WEBHOOK') }}"
+    payload: |
+      {% set errorLogs = fromJson(read(outputs.read_error_logs.uri)) %}
+      {
+        "blocks": [
+          {
+            "type": "header",
+            "text": {
+              "type": "plain_text",
+              "text": ":warning: Flow \"{{ errorLogs[0].flowId }}\" failed",
+              "emoji": true
+            }
+          },
+          {% for messages in errorLogs %}
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "```{{ messages.message }}```"
+            }
+          },
+          {% endfor %}
+        ]
+      }
+```
+
+See [plugin-slack#87](https://github.com/kestra-io/plugin-slack/issues/87) for the discussion behind this pattern.
+
 ## Documentation
 * Full documentation can be found under: [kestra.io/docs](https://kestra.io/docs)
 * Documentation for developing a plugin is included in the [Plugin Developer Guide](https://kestra.io/docs/plugin-developer-guide/)
