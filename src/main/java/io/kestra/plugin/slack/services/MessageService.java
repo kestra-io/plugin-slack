@@ -2,6 +2,9 @@ package io.kestra.plugin.slack.services;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+
 import io.kestra.core.models.property.Property;
 import io.kestra.core.runners.RunContext;
 import io.kestra.core.serializers.JacksonMapper;
@@ -18,16 +21,18 @@ public class MessageService {
             String rMessageText = runContext.render(messageText).as(String.class).orElseThrow();
 
             try {
-                // first we try as Json for more flexibility
-                Object jsonNode = JacksonMapper.ofJson().readTree(rMessageText);
-                return JacksonMapper.ofJson().writeValueAsString(jsonNode);
-            } catch (Exception e) {
-                // not valid Json, so proceed with markdown text
-                String rMessageTextMrkdwn = toSlackMrkdwn(rMessageText);
-                return JacksonMapper.ofJson().writeValueAsString(
-                    JacksonMapper.ofJson().createObjectNode().put("text", rMessageTextMrkdwn)
-                );
+                var jsonNode = JacksonMapper.ofJson().reader().with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(rMessageText);
+                if (jsonNode.isObject()) {
+                    return JacksonMapper.ofJson().writeValueAsString(jsonNode);
+                }
+            } catch (JsonProcessingException e) {
+                // Invalid JSON falls back to markdown text.
             }
+
+            var rMessageTextMrkdwn = toSlackMrkdwn(rMessageText);
+            return JacksonMapper.ofJson().writeValueAsString(
+                JacksonMapper.ofJson().createObjectNode().put("text", rMessageTextMrkdwn)
+            );
         }
 
         throw new IllegalArgumentException("Either 'messageText' or 'payload' must be provided");
