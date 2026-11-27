@@ -7,17 +7,10 @@ import okhttp3.Authenticator;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 
-/**
- * Applies an already rendered and validated proxy to an OkHttp client builder. Never logs the credentials.
- */
 public final class SlackProxyService {
     private SlackProxyService() {
     }
 
-    /**
-     * @param username Basic proxy username, only used (with the password) for HTTP proxies
-     * @param password Basic proxy password
-     */
     public static void apply(OkHttpClient.Builder builder, Proxy.Type type, String host, int port, String username, String password) {
         builder.proxy(new Proxy(type, new InetSocketAddress(host, port)));
 
@@ -33,15 +26,8 @@ public final class SlackProxyService {
                     .header("Proxy-Authorization", credential)
                     .build();
             });
-        }
-    }
-
-    /**
-     * Same as {@link #apply} but guarantees no authenticator is used when there are no credentials.
-     */
-    public static void applyExplicit(OkHttpClient.Builder builder, Proxy.Type type, String host, int port, String username, String password) {
-        apply(builder, type, host, port, username, password);
-        if (username == null || password == null) {
+        } else {
+            // a builder derived from the SDK client may carry system-proxy credentials
             builder.proxyAuthenticator(Authenticator.NONE);
         }
     }

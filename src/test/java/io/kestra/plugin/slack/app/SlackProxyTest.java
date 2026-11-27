@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,7 +68,8 @@ class SlackProxyTest {
         proxy.expected = Credentials.basic("user", "secret");
 
         assertThatThrownBy(() -> run(proxyConfig("user", "wrong")))
-            .hasStackTraceContaining("407");
+            .hasStackTraceContaining("Proxy authentication failed (HTTP 407)")
+            .hasStackTraceContaining("proxy.password");
 
         // one challenge, one authenticated retry, then give up
         assertThat(proxy.requests).isEqualTo(2);
@@ -170,8 +172,8 @@ class SlackProxyTest {
 
     @Test
     void systemProxyCredentialsAreNotSentToExplicitProxy() throws Exception {
-        List<String> keys = List.of("http.proxyHost", "http.proxyPort", "http.proxyUser", "http.proxyPassword");
-        Map<String, String> previous = new java.util.HashMap<>();
+        var keys = List.of("http.proxyHost", "http.proxyPort", "http.proxyUser", "http.proxyPassword");
+        var previous = new HashMap<String, String>();
         keys.forEach(k -> previous.put(k, System.getProperty(k)));
         try {
             System.setProperty("http.proxyHost", "localhost");
@@ -179,10 +181,15 @@ class SlackProxyTest {
             System.setProperty("http.proxyUser", "system-user");
             System.setProperty("http.proxyPassword", "system-pass");
 
-            run(proxyConfig(null, null));
+            // the proxy challenges, so a leaking system authenticator would answer with the system credentials
+            proxy.expected = Credentials.basic("proxy-user", "proxy-pass");
 
-            assertThat(proxy.served).isEqualTo(1);
+            assertThatThrownBy(() -> run(proxyConfig(null, null)))
+                .hasStackTraceContaining("Proxy authentication failed (HTTP 407)");
+
+            assertThat(proxy.authHeaders).doesNotContain(Credentials.basic("system-user", "system-pass"));
             assertThat(proxy.authHeaders).isEmpty();
+            assertThat(proxy.served).isZero();
         } finally {
             previous.forEach((k, v) ->
             {

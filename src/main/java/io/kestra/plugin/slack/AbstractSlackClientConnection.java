@@ -1,5 +1,6 @@
 package io.kestra.plugin.slack;
 
+import java.io.IOException;
 import java.net.Proxy;
 
 import com.slack.api.Slack;
@@ -21,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 @SuperBuilder
 @ToString
@@ -73,35 +75,32 @@ public abstract class AbstractSlackClientConnection extends Task {
         }
     }
 
-    /**
-     * Returns a client builder carrying the explicit proxy, or null when no proxy address is set.
-     * Validation errors are thrown as-is (not wrapped) so they stay actionable.
-     */
+    // Validation errors are thrown unwrapped so they stay actionable.
     private OkHttpClient.Builder proxiedClientBuilder(RunContext runContext, SlackConfig config) {
         try {
             if (this.proxy == null) {
                 return null;
             }
-            String address = runContext.render(proxy.getAddress()).as(String.class).filter(s -> !s.isBlank()).orElse(null);
-            if (address == null) {
+            var rAddress = runContext.render(proxy.getAddress()).as(String.class).filter(s -> !s.isBlank()).orElse(null);
+            if (rAddress == null) {
                 return null;
             }
 
-            Proxy.Type type = runContext.render(proxy.getType()).as(Proxy.Type.class).orElse(Proxy.Type.DIRECT);
-            if (type == Proxy.Type.DIRECT) {
+            var rType = runContext.render(proxy.getType()).as(Proxy.Type.class).orElse(Proxy.Type.DIRECT);
+            if (rType == Proxy.Type.DIRECT) {
                 throw new IllegalArgumentException("`proxy.address` is set but `proxy.type` is `DIRECT`, which means no proxy. Set `proxy.type: HTTP` (or `SOCKS`) to use the proxy.");
             }
-            Integer port = runContext.render(proxy.getPort()).as(Integer.class)
+            var rPort = runContext.render(proxy.getPort()).as(Integer.class)
                 .orElseThrow(() -> new IllegalArgumentException("`proxy.port` is required when `proxy.address` is set."));
-            if (port < 1 || port > 65535) {
+            if (rPort < 1 || rPort > 65535) {
                 throw new IllegalArgumentException("`proxy.port` must be between 1 and 65535.");
             }
-            String username = runContext.render(proxy.getUsername()).as(String.class).filter(s -> !s.isEmpty()).orElse(null);
-            String password = runContext.render(proxy.getPassword()).as(String.class).filter(s -> !s.isEmpty()).orElse(null);
-            if ((username == null) != (password == null)) {
+            var rUsername = runContext.render(proxy.getUsername()).as(String.class).filter(s -> !s.isEmpty()).orElse(null);
+            var rPassword = runContext.render(proxy.getPassword()).as(String.class).filter(s -> !s.isEmpty()).orElse(null);
+            if ((rUsername == null) != (rPassword == null)) {
                 throw new IllegalArgumentException("`proxy.username` and `proxy.password` must be set together: set both for Basic proxy authentication, or neither.");
             }
-            if (type == Proxy.Type.SOCKS && username != null) {
+            if (rType == Proxy.Type.SOCKS && rUsername != null) {
                 throw new IllegalArgumentException("Proxy credentials are not supported with a SOCKS proxy. Remove `proxy.username` and `proxy.password`, or use `proxy.type: HTTP`.");
             }
 
@@ -109,8 +108,28 @@ public abstract class AbstractSlackClientConnection extends Task {
             config.setProxyUrl(null);
             config.setProxyHeaders(null);
 
-            OkHttpClient.Builder builder = SlackHttpClient.buildOkHttpClient(config).newBuilder();
-            SlackProxyService.applyExplicit(builder, type, address, port, username, password);
+            var builder = SlackHttpClient.buildOkHttpClient(config).newBuilder();
+            SlackProxyService.apply(builder, rType, rAddress, rPort, rUsername, rPassword);
+
+            var message = "Proxy authentication failed (HTTP 407) for %s:%d: check the `proxy.username` and `proxy.password` values.".formatted(rAddress, rPort);
+            builder.addInterceptor(chain ->
+            {
+                Response response;
+                try {
+                    response = chain.proceed(chain.request());
+                } catch (IOException e) {
+                    // OkHttp throws a plain IOException when the CONNECT tunnel to an HTTPS target is refused with 407
+                    if ("Failed to authenticate with proxy".equals(e.getMessage())) {
+                        throw new IOException(message, e);
+                    }
+                    throw e;
+                }
+                if (response.code() == 407) {
+                    response.close();
+                    throw new IOException(message);
+                }
+                return response;
+            });
             return builder;
         } catch (RuntimeException e) {
             throw e;
