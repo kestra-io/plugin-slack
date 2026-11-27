@@ -1,6 +1,5 @@
 package io.kestra.plugin.slack;
 
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +13,7 @@ import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.models.tasks.VoidOutput;
 import io.kestra.core.runners.RunContext;
+import io.kestra.plugin.slack.services.SlackProxyService;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import okhttp3.Authenticator;
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 
 @SuperBuilder
@@ -179,24 +177,9 @@ public abstract class AbstractSlackWebhookConnection extends Task implements Run
             .as(ProxyType.class)
             .orElse(ProxyType.HTTP);
 
-        Proxy proxy = new Proxy(rProxyType.toJavaProxyType(), new InetSocketAddress(rAddress, rPort));
-        builder.proxy(proxy);
-
         String rUsername = runContext.render(proxyOptions.getUsername()).as(String.class).orElse(null);
         String rPassword = runContext.render(proxyOptions.getPassword()).as(String.class).orElse(null);
 
-        if (rUsername != null && rPassword != null) {
-            Authenticator proxyAuthenticator = (route, response) ->
-            {
-                if (response.request().header("Proxy-Authorization") != null) {
-                    return null;
-                }
-                String credential = Credentials.basic(rUsername, rPassword);
-                return response.request().newBuilder()
-                    .header("Proxy-Authorization", credential)
-                    .build();
-            };
-            builder.proxyAuthenticator(proxyAuthenticator);
-        }
+        SlackProxyService.apply(builder, rProxyType.toJavaProxyType(), rAddress, rPort, rUsername, rPassword);
     }
 }
