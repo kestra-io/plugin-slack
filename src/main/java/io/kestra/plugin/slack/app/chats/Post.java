@@ -49,6 +49,27 @@ import lombok.extern.jackson.Jacksonized;
                 """
         ),
         @Example(
+            title = "Post a message through an authenticated HTTP proxy",
+            full = true,
+            code = """
+                id: slack_post_through_proxy
+                namespace: company.team
+
+                tasks:
+                  - id: post_message
+                    type: io.kestra.plugin.slack.app.chats.Post
+                    token: "{{ secret('SLACK_TOKEN') }}"
+                    channel: "#general"
+                    messageText: "Hello from Kestra!"
+                    proxy:
+                      type: HTTP
+                      address: proxy.example.com
+                      port: 3128
+                      username: kestra
+                      password: "{{ secret('PROXY_PASSWORD') }}"
+                """
+        ),
+        @Example(
             title = "Post a message with custom payload",
             full = true,
             code = """
