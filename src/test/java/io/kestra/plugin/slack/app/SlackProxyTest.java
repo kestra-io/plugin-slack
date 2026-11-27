@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,15 @@ class SlackProxyTest {
     }
 
     @Test
+    void wrongCredentialsOnHttpsTunnel() {
+        proxy.expected = Credentials.basic("user", "secret");
+
+        assertThatThrownBy(() -> run(proxyConfig("user", "Wr0ng-pass"), "https://slack.proxy-test.invalid/api/"))
+            .hasStackTraceContaining("Proxy authentication failed (HTTP 407)")
+            .satisfies(e -> assertThat(ExceptionUtils.getStackTrace(e)).doesNotContain("Wr0ng-pass"));
+    }
+
+    @Test
     void passwordWithSpecialCharacters() throws Exception {
         String password = "p:ss@word:@";
         proxy.expected = Credentials.basic("us:er@x", password);
@@ -100,7 +110,7 @@ class SlackProxyTest {
             closedPort = s.getLocalPort();
         }
 
-        ProxyConfiguration config = ProxyConfiguration.builder()
+        var config = ProxyConfiguration.builder()
             .type(Property.ofValue(Proxy.Type.HTTP))
             .address(Property.ofValue("localhost"))
             .port(Property.ofValue(closedPort))
@@ -111,7 +121,7 @@ class SlackProxyTest {
 
     @Test
     void typeUnset() {
-        ProxyConfiguration config = ProxyConfiguration.builder()
+        var config = ProxyConfiguration.builder()
             .address(Property.ofValue("localhost"))
             .port(Property.ofValue(proxy.port()))
             .build();
@@ -123,7 +133,7 @@ class SlackProxyTest {
 
     @Test
     void missingPort() {
-        ProxyConfiguration config = ProxyConfiguration.builder()
+        var config = ProxyConfiguration.builder()
             .type(Property.ofValue(Proxy.Type.HTTP))
             .address(Property.ofValue("localhost"))
             .build();
@@ -135,7 +145,7 @@ class SlackProxyTest {
 
     @Test
     void portOutOfRange() {
-        ProxyConfiguration config = ProxyConfiguration.builder()
+        var config = ProxyConfiguration.builder()
             .type(Property.ofValue(Proxy.Type.HTTP))
             .address(Property.ofValue("localhost"))
             .port(Property.ofValue(70000))
@@ -156,7 +166,7 @@ class SlackProxyTest {
 
     @Test
     void socksWithCredentials() {
-        ProxyConfiguration config = ProxyConfiguration.builder()
+        var config = ProxyConfiguration.builder()
             .type(Property.ofValue(Proxy.Type.SOCKS))
             .address(Property.ofValue("localhost"))
             .port(Property.ofValue(proxy.port()))
@@ -213,10 +223,14 @@ class SlackProxyTest {
     }
 
     private void run(ProxyConfiguration config) throws Exception {
-        Post task = Post.builder()
+        run(config, SLACK_URL);
+    }
+
+    private void run(ProxyConfiguration config, String slackUrl) throws Exception {
+        var task = Post.builder()
             .id(IdUtils.create())
             .type(Post.class.getName())
-            .methodsEndpointUrlPrefix(SLACK_URL)
+            .methodsEndpointUrlPrefix(slackUrl)
             .token(Property.ofValue("token"))
             .channel(Property.ofValue("#general"))
             .messageText(Property.ofValue("hello"))

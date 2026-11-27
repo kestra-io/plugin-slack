@@ -56,7 +56,7 @@ public abstract class AbstractSlackClientConnection extends Task {
             config.setMethodsEndpointUrlPrefix(methodsEndpointUrlPrefix);
             config.setStatsEnabled(false);
         }
-        OkHttpClient.Builder proxied = proxiedClientBuilder(runContext, config);
+        var proxied = proxiedClientBuilder(runContext, config);
 
         try (Slack slack = proxied == null ? Slack.getInstance(config) : Slack.getInstance(config, new SlackHttpClient(proxied.build()))) {
             R response = call.apply(slack.methods(runContext.render(this.token).as(String.class).orElseThrow()));
